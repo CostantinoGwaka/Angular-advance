@@ -13,7 +13,7 @@ export class FilterComponent {
   constructor(private readonly cd: ChangeDetectorRef) {
     setInterval(() => {
       this.counter += 1;
-      // this.cd.detectChanges();
+      this.cd.detectChanges();
     }, 1000);
   }
 }
