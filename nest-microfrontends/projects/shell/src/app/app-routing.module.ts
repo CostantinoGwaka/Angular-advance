@@ -11,7 +11,7 @@ const routes: Routes = [
   },
   {
     path: 'mf1',
-    loadChildren: () => import('mf/HiModule').then(m => m.HiModule),
+    loadChildren: () => import('mf1/HiModule').then(m => m.HiModule),
   }
 ];
 

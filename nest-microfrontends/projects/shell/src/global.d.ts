@@ -1,1 +1,1 @@
-declare module 'mf/HiModule';
+declare module 'mf1/HiModule';
