@@ -29,3 +29,7 @@ npm run run:all
 npm start shell
 
 npm start mf1
+
+# Shared Library
+
+ng generate library shared-components
