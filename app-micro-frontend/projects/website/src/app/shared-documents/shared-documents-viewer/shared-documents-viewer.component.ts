@@ -1,20 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { ApolloNamespace } from 'src/app/apollo.config';
-import { SearchOperation } from "../../../store/global-interfaces/organizationHiarachy";
-import { GraphqlService } from "../../../services/graphql.service";
-import { NotificationService } from "../../../services/notification.service";
-import { ActivatedRoute, Router } from "@angular/router";
-import { AttachmentService } from "../../../services/attachment.service";
-import * as moment from "moment/moment";
-import {
-  GET_SHAREABLE_DOCUMENT_DATA_BY_UUID
-} from "../../../modules/nest-settings/store/shared-documents/shared-documents.graphql";
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { LoaderComponent } from '../../../shared/components/loader/loader.component';
 
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from "@angular/router";
 import { ParallaxContainerComponent } from '../../shared/components/parallax-container/parallax-container.component';
 import { LayoutComponent } from '../../shared/components/layout/layout.component';
+import { LoaderComponent } from 'projects/shared/components/loader/loader.component';
+import { SearchOperation } from 'projects/shared/components/store/data-request-input/data-request-input.model';
 
 export interface DocumentInterface {
   code: string;
@@ -33,8 +25,8 @@ export interface DocumentInterface {
   imports: [LayoutComponent, ParallaxContainerComponent, LoaderComponent, MatProgressSpinnerModule, MatIconModule]
 })
 export class SharedDocumentsViewerComponent implements OnInit {
-  documentUuid: string;
-  document: DocumentInterface;
+  documentUuid?: string;
+  document?: DocumentInterface;
   loading: boolean = false;
   loadingAttachment: any = {};
 
