@@ -23,3 +23,9 @@ ng add @angular-architects/module-federation@16.0.4 --project mf1 --port 4201 --
 # run all
 
 npm run run:all
+
+# run single app
+
+npm start shell
+
+npm start mf1
