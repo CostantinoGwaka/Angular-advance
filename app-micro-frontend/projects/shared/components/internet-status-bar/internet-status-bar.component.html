@@ -1,0 +1,55 @@
+@if (!networkStatus) {
+  <div class="bg-red-800 items-center justify-center fade-in-text h-6">
+    <p class="text-center text-white font-semibold">You're offline. Check your connection.</p>
+  </div>
+}
+
+@if (isTrainingInstance) {
+  <div
+    class="bg-yellow-300 flex justify-center items-center fade-in-text h-6"
+    >
+    <img src="/assets/images/hi.gif" alt="Animated GIF" width="20px" />
+    <p class="text-center text-black font-semibold mt-3 px-2">
+      You're in Training Instance !!!
+    </p>
+  </div>
+}
+
+@if (updateAvailable) {
+  <div class="flex justify-end fixed top-20 right-0 z-10 w-1/4">
+    <div class="flex flex-col justify-center text-center bg-white mr-4 mt-2 rounded shadow">
+      <div class="flex flex-row justify-end mx-2 mt-1">
+        <div
+          class="flex items-center items-center cursor-pointer aspect-square text-sm w-6 rounded-full !bg-[#FCD7D7]"
+          (click)="ignoreUpdate()"
+          >
+          <mat-icon class="text-[#FF0000]" inline>cancel</mat-icon>
+        </div>
+      </div>
+      <div class="flex flex-col px-4 mb-4">
+        <div
+          class="aspect-square text-4xl w-20 rounded-full m-auto !bg-primary/10 grid place-content-center !text-primary"
+          >
+          <mat-icon inline>campaign</mat-icon>
+        </div>
+        <span class="font-bold text-2xl mb-2">New Version Available</span>
+        <p class="text-black-50 text-sm mb-3">
+          We have added new features and fix some bugs to make your experience with NeST seamless.
+        </p>
+        <div class="border border-gray-300 my-2 rounded-md p-2">
+          <p class="text-red-800 text-sm mt-2">
+            If the changes are not reflecting, try pressing CTRL + SHIFT + R (or CMD + SHIFT + R on
+            macOS).
+          </p>
+        </div>
+        <div>
+          <span
+            class="bg-[#1394DB] rounded shadow text-white py-2 px-3 cursor-pointer"
+            (click)="hardReloadNest()"
+            >Update Now</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  }

@@ -1,0 +1,38 @@
+<div class="flex">
+  <div class="flex flex-col justify-center mr-[20px] -ml-[40px] space-y-3">
+    <button
+      class="h-[20px] mdmt-2 3xl:mt-10 aspect-square grid place-content-center translate-all duration-300 rounded-full bg-white/50 hover:bg-white"
+    >
+      <mat-icon color="primary">expand_less</mat-icon>
+    </button>
+    <button
+      class="h-[20px] aspect-square grid place-content-center translate-all duration-300 rounded-full bg-white/50 hover:bg-white"
+    >
+      <mat-icon color="primary">expand_more</mat-icon>
+    </button>
+  </div>
+
+  <div class="w-full lg:w-[45%] mb-20 space-y-2 3xl:space-y-5 pt-10 3xl:pt-20">
+    <h2
+      class="flex space-x-2 !font-bold text-[30px] 3xl:!text-[40px] leading-10 text-white"
+    >
+      <div class="!font-light">Why</div>
+      <div class="!text-secondary">Register?</div>
+    </h2>
+    <div class="text-white md:text-[10px] 3xl:text-[14px]">
+      Become an eligible supplier and receive email notifications for new
+      tenders. Obtain full and unrestricted access to documentation of published
+      tenders. receive reminders and notifications for important tender
+      activities. Participate actively in tenders. Submit your bids and request
+      for clarifications
+    </div>
+    <div class="">
+      <a
+        [routerLink]="['/register']"
+        class="py-2 3xl:py-3 px-3 3xl:px-4 flex-nowrap !text-primary rounded-lg !bg-white text-whites"
+      >
+        Register Now
+      </a>
+    </div>
+  </div>
+</div>

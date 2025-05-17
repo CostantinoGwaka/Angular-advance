@@ -1,0 +1,127 @@
+<div class="grid place-content-center h-[100vh] bg-gray-200">
+  <div class="flex items-center">
+    <div class="block bg-white mt-4 mb-2 p-3  md:rounded-xl shadow-xl">
+      <div class="flex justify-center items-center flex-wrap p-8">
+        <div class="w-full sm:w-1/2 md:w-1/3">
+          <div>
+            <div class="flex justify-center items-center">
+              <form class="flex justify-center items-center flex-wrap">
+                <div class="flex flex-col space-y-4 justify-center items-center w-full">
+                  <div>
+                    <img class="h-[80px] m-auto"
+                      src="../../../../assets/images/taneps.png"
+                      alt
+                      loading="lazy">
+                  </div>
+                  <div>
+                    <h1 class="text-2xl font-bold mb-2">OTP Verification</h1>
+                  </div>
+                  <div class="flex flex-col mt-3 mb-4">
+                    <span>
+                      Enter the OTP you received at
+                      <span class="font-bold">+{{phoneNumber}}</span>
+                    </span>
+                  </div>
+                </div>
+                <div class="flex justify-center items-center w-full">
+                  <input #otp1Input
+                    [(ngModel)]="oneNumber"
+                    (input)="otp2Input.focus()"
+                    (keydown.backspace)="otp1Input.focus()"
+                    (change)="oneNumberChange()"
+                    type="number"
+                    name="oneNumber"
+                    min="0"
+                    max="9"
+                    class="text-center w-16 h-16 border-2 border-gray-400 rounded-lg mx-1 outline-none focus:border-blue-500"
+                    maxlength="1">
+                  <input #otp2Input
+                    [(ngModel)]="twoNumber"
+                    (input)="otp3Input.focus()"
+                    (change)="twoNumberChange()"
+                    (keydown.backspace)="otp1Input.focus()"
+                    type="number"
+                    name="twoNumber"
+                    min="0"
+                    max="9"
+                    class="text-center w-16 h-16 border-2 border-gray-400 rounded-lg mx-1 outline-none focus:border-blue-500"
+                    maxlength="1">
+                  <input #otp3Input
+                    [(ngModel)]="threeNumber"
+                    (input)="otp4Input.focus()"
+                    (change)="threeNumberChange()"
+                    (keydown.backspace)="otp2Input.focus()"
+                    type="number"
+                    name="threeNumber"
+                    min="0"
+                    max="9"
+                    class="text-center w-16 h-16 border-2 border-gray-400 rounded-lg mx-1 outline-none focus:border-blue-500"
+                    maxlength="1">
+                  <input #otp4Input
+                    [(ngModel)]="fourthNumber"
+                    (input)="otp5Input.focus()"
+                    (change)="fourthNumberChange()"
+                    (keydown.backspace)="otp3Input.focus()"
+                    type="number"
+                    name="fourthNumber"
+                    min="0"
+                    max="9"
+                    class="text-center w-16 h-16 border-2 border-gray-400 rounded-lg mx-1 outline-none focus:border-blue-500"
+                    maxlength="1">
+                  <input #otp5Input
+                    [(ngModel)]="fiveNumber"
+                    (keydown.backspace)="otp4Input.focus()"
+                    (change)="fiveNumberChange()"
+                    (keydown)="handleKeyDown($event)"
+                    type="number"
+                    name="fiveNumber"
+                    min="0"
+                    max="9"
+                    class="text-center w-16 h-16 border-2 border-gray-400 rounded-lg mx-1 outline-none focus:border-blue-500"
+                    maxlength="1">
+                </div>
+              </form>
+            </div>
+            @if (verifyBool) {
+              <app-loader
+                [message]="'please wait ....'"
+                class="pl-4 pr-4 ml-4 mr-4"
+              @fadeIn></app-loader>
+            }
+            @if (!verifyBool && isNumber(oneNumber) && isNumber(twoNumber) && isNumber(threeNumber) && isNumber(fourthNumber) && isNumber(fiveNumber)) {
+              <div
+                class="flex justify-center items-center mt-3 cursor-pointer">
+                <div class="flex justify-center">
+                  <div (click)="verify()"
+                    mat-button
+                    class="!border !border-primary !bg-primary rounded !text-white p-2 text-center w-40">
+                    Verify Account
+                    <!-- <mat-icon color="white">verified_user</mat-icon> -->
+                  </div>
+                </div>
+              </div>
+            }
+            @if (showCount) {
+              <div class="countdown">{{ countdown }}</div>
+            }
+            @if (showCount) {
+              <div class="message">If you don't receive the code, please wait for three minutes.</div>
+            }
+            @if (!showCount) {
+              <div class="flex justify-center items-center text-center text-sm font-medium text-gray-500 mt-4">
+                <p>
+                  Didn't receive code?
+                  <a (click)="resendToken()"
+                    class="text-blue-600 cursor-pointer"
+                    rel="noopener noreferrer">
+                    Resend
+                  </a>
+                </p>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,25 @@
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .btn-primary,
+  .btn-secondary {
+    font-size: 14px;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .btn-primary {
+    background-color: #007bff;
+    color: #ffffff;
+    margin-right: 5px;
+  }
+  
+  .btn-secondary {
+    background-color: #ffffff;
+    color: #000000;
+    border: 1px solid #cccccc;
+  }
+  

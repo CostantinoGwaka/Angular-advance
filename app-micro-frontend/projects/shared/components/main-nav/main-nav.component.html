@@ -1,0 +1,248 @@
+<app-app-bar [usedInApps]="false" [showHome]="true" (sidenavToggle)="handleToggle()"> </app-app-bar>
+
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav
+    #drawer
+    class="sidenav no-print"
+    fixedInViewport="false"
+    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="!(isHandset$ | async) && isOpen"
+  >
+    <div class="flex h-full">
+      <div
+        class="bg-[#fcfcfc] border border-r-2 !border-r-[#dddddd] {{
+          hideModuleMenu ? 'd-none' : 'd-grid'
+        }} w-24 grid side-bar-module"
+      >
+        @if (!hideModuleMenu) {
+        <div #navigationRef class="justify-center">
+          @for (menu of menus; track menu; let i = $index) {
+          <div
+            (click)="setMenus(menu, menu.shortName === 'Reports')"
+            [routerLinkActive]="['active-main-link']"
+            [routerLink]="menu.route"
+            class="w-24 py-3 px-2 border-r-4 border-r-transparent hover:border-r-primary group transition grid place-items-center hover:cursor-pointer move-up animation-delay-500ms"
+            style="--order: {{ i * 0.7 }}"
+          >
+            <div
+              class="icon-div p-[10px] rounded-full shadow-sm group-hover:!shadow-lg transition-all duration-300 group-hover:bg-primary-400 grid place-items-center"
+            >
+              @if (menu?.icon) {
+              <mat-icon
+                [svgIcon]="menu?.icon"
+                class="h-4 w-4 transition-all duration-300"
+              ></mat-icon>
+              }
+            </div>
+            <div
+              class="icon-text leading-4 text-center mt-2 pt-1 translate-all duration-300 text-gray-800 group-hover:text-bold text-[12px] group-hover:font-bold group-hover:tracking-widest"
+            >
+              <span>{{ menu.shortName }}</span>
+            </div>
+          </div>
+          }
+        </div>
+        }
+      </div>
+      <div class="flex flex-col flex-grow justify-start gap-1 items-center bg-white">
+        <div class="w-full">
+          @if (fetchingReports) {
+          <app-loader message=""></app-loader>
+          }
+          <mat-divider></mat-divider>
+          @for (menu of menuItems; track menu; let i = $index) {
+          <div *appHasPermission="menu.authority" class="move-up" style="--order: {{ i * 0.7 }}">
+            @if (!menu.children) {
+            <div
+              (click)="onMenuClick(drawer)"
+              matRipple
+              class="group"
+              class="big-menu-items !p-5 transition group-hover:!bg-gray-100 transform border-r-4 border-r-transparent group-hover:!border-r-primary"
+              [routerLink]="menu?.route"
+              routerLinkActive="active-menu"
+            >
+              <div
+                class="flex justify-start items-center gap-2 group-hover:!gap-3 transition-all duration-300"
+              >
+                @if (menu?.icon) { @if (menu?.iconType == 'SVG') {
+                <mat-icon
+                  [svgIcon]="menu?.icon"
+                  class="!h-4 !w-4 !text-primary opacity-60 transition-all duration-300 group-hover:opacity-100"
+                ></mat-icon>
+                } @if (menu?.iconType == 'MATERIAL') {
+                <mat-icon
+                  class="!text-primary opacity-60 transition-all duration-300 group-hover:!opacity-100"
+                  >{{ menu?.icon }}</mat-icon
+                >
+                } }
+                <div>{{ menu?.name | translate }}</div>
+              </div>
+            </div>
+            <mat-divider></mat-divider>
+            } @if (menu?.children) {
+            <mat-accordion>
+              <mat-expansion-panel
+                [expanded]="!!menu?.key && menu?.key == currentMenu"
+                (click)="currentMenu = menu?.key"
+              >
+                <mat-expansion-panel-header
+                  class="hover:!bg-gray-100 transition transform hover:scale-x-102 border-r-4 border-r-transparent hover:border-r-primary"
+                >
+                  <mat-panel-title class="big-menu-items">
+                    <div class="flex justify-start items-center gap-2 pl-1">
+                      @if (menu?.icon) {
+                      <mat-icon
+                        [svgIcon]="menu?.icon"
+                        class="!h-4 !w-4 !text-primary opacity-70"
+                      ></mat-icon>
+                      }
+                      <div>{{ menu?.name | translate }}</div>
+                    </div>
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div class="flex flex-col">
+                  <mat-divider></mat-divider>
+                  @for (menuItem of menu?.children; track menuItem; let k = $index) {
+                  <div class="flex flex-col group">
+                    <ng-container *appHasPermission="menuItem.authority">
+                      @if (!menuItem.children && !menuItem?.hidden) {
+                      <div
+                        *appHasPermission="menuItem.authority"
+                        (click)="onMenuClick(drawer)"
+                        [routerLink]="menuItem.route"
+                        class="!pr-8 !pl-11 !py-5 cursor-pointer flex items-center group-hover:!bg-gray-100 transition transform border-r-4 border-r-transparent !hover:border-r-primary"
+                        routerLinkActive="active-menu"
+                      >
+                        <div
+                          class="h-[4px] w-[4px] transition-all duration-300 group-hover:w-[8px] rounded-full bg-gray-300 mr-3"
+                        ></div>
+                        <span>{{ menuItem.name | translate }}</span>
+                      </div>
+                      @if (menu.children.length != k + 1) {
+                      <mat-divider></mat-divider>
+                      } } @if (menuItem?.children) {
+                      <mat-accordion>
+                        <mat-expansion-panel
+                          [expanded]="
+                                  !!menuItem?.key &&
+                                  menuItem?.key == currentMenu
+                                "
+                          (click)="currentMenu = menuItem?.key"
+                        >
+                          <mat-expansion-panel-header
+                            class="hover:!bg-menu-hover transition transform hover:scale-x-102 border-r-4 border-r-transparent hover:border-r-primary"
+                          >
+                            <mat-panel-title class="big-menu-items !pl-4">
+                              @if (menuItem.icon) {
+                              <span class="ks-icon fa fa-{{ menuItem?.icon }}"></span>
+                              } @if (menuItem?.icon) {
+                              <span>&nbsp;</span>
+                              } {{ menuItem?.name | translate }}
+                            </mat-panel-title>
+                          </mat-expansion-panel-header>
+                          <div class="flex flex-col">
+                            <mat-divider></mat-divider>
+                            @for ( menuItemChild of menuItem?.children; track menuItemChild; let i =
+                            $index) {
+                            <div class="flex flex-col">
+                              <div
+                                *appHasPermission="
+                                        menuItemChild.authority
+                                      "
+                              >
+                                <a
+                                  [routerLink]="menuItemChild.route"
+                                  class="!pl-12 !py-5 font-light hover:!bg-menu-hover transition transform hover:scale-x-102 border-r-4 border-r-transparent hover:border-r-primary"
+                                  routerLinkActive="active-menu"
+                                >
+                                  @if (menuItemChild?.icon) {
+                                  <span>&nbsp;</span>
+                                  }
+                                  <span>{{ menuItemChild.name | translate }}</span>
+                                </a>
+                                @if ( menuItem.children?.length != i + 1 ) {
+                                <mat-divider></mat-divider>
+                                }
+                              </div>
+                            </div>
+                            }
+                          </div>
+                        </mat-expansion-panel>
+                      </mat-accordion>
+                      <mat-divider></mat-divider>
+                      }
+                    </ng-container>
+                  </div>
+                  }
+                </div>
+              </mat-expansion-panel>
+            </mat-accordion>
+            <mat-divider></mat-divider>
+            }
+          </div>
+          }
+        </div>
+        <div></div>
+      </div>
+    </div>
+  </mat-sidenav>
+
+  <!--  Help contents will stay here-->
+  <mat-sidenav
+    (openedChange)="check($event)"
+    class="w-5/12 helpmenu"
+    fixedInViewport="false"
+    #sideNav
+    mode="over"
+    [attr.role]="'dialog'"
+    [opened]="helpOpened$ | async"
+    position="end"
+  >
+    @if (helpOpened$ | async) {
+    <div class="help-text">
+      <app-view-help (closeHelp)="closeHelp()" [title]="(helpText$ | async) || ''"></app-view-help>
+    </div>
+    }
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <div id="main-content-container" class="main-content-container h-screen">
+      <common-realtime-clock [xPosition]="'right'"></common-realtime-clock>
+      <!-- Add Content Here -->
+      <div [class]="dynamicClass" id="content_wrapper" style="overflow-y: auto;">
+        <ng-content></ng-content>
+      </div>
+      <!-- <div
+          class="fixed right-0 top-1/2 transform -translate-y-1/2 flex flex-col cursor-pointer items-center space-y-4 p-2 bg-gray-800 rounded-l-lg shadow-lg"
+          >
+          @if(!isOpenBot){
+            <div (click)="!isOpenBot ? toggleOpen() : null">
+              <img src="/assets/images/bot.png" class="w-[6px] sm:w-5 xl:w-6" loading="lazy" />
+            </div>
+            } @if(isOpenBot){
+            <div class="flex flex-col p-2 items-center space-y-4">
+              <div class="flex place-items-center items-center w-full justify-between">
+                <div class="text-white">NeST</div>
+                <div class="mt-">
+                  <mat-icon (click)="toggleClose()" class="text-white cursor-pointer">close</mat-icon>
+                </div>
+              </div>
+              <div class="flex flex-col items-center place-content-center">
+                <div class="text-4xl">
+                  <img src="/assets/images/bot.png" class="w-[10px] sm:w-10 xl:w-10" loading="lazy" />
+                </div>
+                <div class="mt-2">
+                  <button
+                    (click)="toggleListening()"
+                    class="text-white font-medium bg-primary p-2 rounded-md"
+                    >
+                    {{ voiceService.isListening ? 'Stop Listening' : 'Start Listening' }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          }
+        </div> -->
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

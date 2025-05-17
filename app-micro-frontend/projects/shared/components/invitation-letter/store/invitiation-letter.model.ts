@@ -1,0 +1,51 @@
+export interface InvitationLetter {
+  accountingOfficerTitle: string,
+  departmentName: string,
+  documentUuid: string,
+  evaluationDays: number,
+  evaluationEndDate: string,
+  evaluationStartDate: string,
+  folioNumber: string,
+  headOfDepartment: string,
+  nameOfEvaluator: string,
+  originAccountingOfficerName: string,
+  position: string,
+  tenderDescription: string,
+  signedLetterUuid: string,
+  procuringEntityUuid: string,
+  isAppointmentLetterSigned: boolean,
+  tenderEvaluationCommitteeInfo: {
+    uuid
+    fullName
+  },
+  tenderNumber: string,
+  uuid: string,
+}
+
+
+// active: boolean,
+//   attachmentUuid: string,,
+//   checkNumber: string,,
+//   departmentName: string,,
+//   departmentUuid: string,,
+//   description: string,,
+//   designation: string,,
+//   email: string,,
+//   evaluationEndDate: string,,
+//   evaluationStartDate: string,,
+//   financialYearCode: string,,
+//   financialYearUuid: string,,
+//   fullName: string,,
+//   folioNumber: string,,
+//   isExternal: boolean,
+//   memberInstitution: string,,
+//   position: 'CHAIRPERSON'|'MEMBER',
+//   replaced: boolean,
+//   tenderEvaluationCommittee: {
+//   uuid: string,,
+//     fullName: string,
+// }
+// tenderNumber: string,,
+//   tenderUuid: string,,
+//   userUuid: string,,
+//   uuid: string,,

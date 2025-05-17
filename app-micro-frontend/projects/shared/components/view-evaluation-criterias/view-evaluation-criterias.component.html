@@ -1,0 +1,41 @@
+<table class="border-collapse border border-slate-400 w-full">
+  @for (criteria of evaluationCriterias; track criteria; ) {
+    <tr>
+      <td class="border border-slate-300 px-6 py-3">
+        <p class=" text-gray-600 font-bold px-1 text-base"> {{criteria.name | uppercase}}</p>
+        @if (criteria?.description) {
+          <p class="text-gray-500 px-1 text-sm">{{criteria?.description}}</p>
+        }
+        @if (criteria?.tendererResponseType && isFromPpraAdmin) {
+          <p class="text-gray-500 px-1 text-sm">Tenderer Response : {{criteria?.tendererResponseType}}</p>
+        }
+        @if (!criteria.hasSubCriteria && objectForEntityDetail) {
+          <app-criteria-details-form
+            class="px-2 "
+            [evaluationCriteria]="criteria"
+            [objectForEntityDetail]="objectForEntityDetail"
+            [enableActionButtons]="false"
+            [hideContinueButton]="true"
+            [showForm]="false">
+          </app-criteria-details-form>
+        }
+
+        @if(isFromPpraAdmin){
+
+          @if(isLoading(criteria.uuid)){
+            <app-loader [message]="getLoadingMessage(criteria?.uuid)"></app-loader>
+          } @else {
+            <div class="flex justify-end">
+              <button mat-stroked-button color="primary" class="mx-2" (click)="refreshTenderEvaluationCriteria(criteria?.uuid, criteria.name)">
+                {{'Refresh Evaluation Criteria'}}
+              </button>
+            </div>
+          }
+        }
+      </td>
+    </tr>
+  }
+</table>
+
+
+

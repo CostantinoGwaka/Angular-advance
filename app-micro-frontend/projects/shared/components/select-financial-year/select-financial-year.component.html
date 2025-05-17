@@ -1,0 +1,30 @@
+<div class="row">
+  @if (loadingFinancialYear || loadingCurrentFinancialYear) {
+  <app-loader [message]="'Loading Financial Year, Please wait'"></app-loader>
+  } @if (hasError) {
+  <div class="text-center space-y-2">
+    <button
+      (click)="fetchFinancialYear()"
+      class="text-xs font-medium mx-auto px-1 text-red-400 rounded border !border-red-400"
+    >
+      <span>Reload</span>
+    </button>
+  </div>
+  } @if (!hasError && financialYears?.length) {
+  <mat-card appearance="outlined">
+    <mat-form-field appearance="fill">
+      <mat-label>Financial Year</mat-label>
+      <mat-select
+        (selectionChange)="selectFinancialYear($event)"
+        [ngModel]="currentSelectedFinancialYear"
+      >
+        @for(financialYear of financialYears;track financialYear){
+        <mat-option [value]="financialYear.code">
+          {{financialYear.code}}
+        </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </mat-card>
+  }
+</div>

@@ -1,0 +1,51 @@
+@if (fetchingItem) {
+  <app-loader></app-loader>
+}
+
+<div class="container-fluid">
+  @if (selectedOfficeLocation) {
+    <div class="row">
+      <div class="col-sm-4">
+        <app-view-details-item key="Officer in Charge Title" [value]="selectedOfficeLocation.directorTitle"></app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item key="Phone" [value]="selectedOfficeLocation.phone"></app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item key="Telephone" [value]="selectedOfficeLocation.telephone"></app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item key="Email Address" [value]="selectedOfficeLocation.email"></app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item key="Physical Address" [value]="selectedOfficeLocation.physicalAddress"></app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item key="Postal Address" [value]="selectedOfficeLocation.postalAddress"></app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item key="Region" [value]="selectedOfficeLocation.region?.areaName"></app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item key="District" [value]="selectedOfficeLocation.district?.areaName"></app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item key="Council" [value]="selectedOfficeLocation.council?.areaName"></app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item key="Ward" [value]="selectedOfficeLocation.ward?.areaName"></app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item key="Street" [value]="selectedOfficeLocation.street?.areaName"></app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item key="Website" [value]="selectedOfficeLocation.website"></app-view-details-item>
+      </div>
+      @if (selectedOfficeLocation.isMainOffice) {
+        <div class="col-sm-4">
+          <span class="font-bold text-base py-2">This Office is Main Office</span>
+        </div>
+      }
+    </div>
+  }
+</div>

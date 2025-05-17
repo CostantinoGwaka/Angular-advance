@@ -1,0 +1,336 @@
+<div class="row bg-white rounded shadow p-2 m-1 mb-4">
+	@if (loadingShortlistedApplicants || loadingPrequalificationTenderer) {
+
+	<div class="mt-2 text-[#1394db]">
+		@if (mainLoaderProgress() <= 25) {
+		<p>
+			Hang in there, we’re loading your data. This may take a little while...
+		</p>
+		} @else if (mainLoaderProgress() <= 50) {
+		<p>
+			Thanks for your patience! We’re making good progress, more data is on its
+			way.
+		</p>
+		} @else if (mainLoaderProgress() <= 80) {
+		<p>
+			You’re almost there! Just a bit more and we’ll have everything ready for
+			you.
+		</p>
+		} @else {
+		<p>
+			Finalizing the last details… Your data will be ready in just a moment.
+		</p>
+		}
+		<simple-linear-progress-bar
+			[loaderProgress]="mainLoaderProgress() ?? 0"
+			loaderColor="[#1394db]"
+		></simple-linear-progress-bar>
+	</div>
+	} @else { @if (fetchTendererFailed) {
+
+	<div
+		class="flex items-center justify-start bg-red-200 text-red-400 rounded-[3px] px-[10px] py-[5px]"
+	>
+		<div class="">
+			Something went wrong @if (mainLoaderProgress()) { , only
+			{{ mainLoaderProgress() }}% of total un saved tenderers loaded } @else {
+			while loading un saved tenderers }.
+		</div>
+	</div>
+	<div class="flex items-center justify-star my-2">
+		<button (click)="getUnSavedTenderers()" mat-stroked-button extended>
+			<mat-icon>refresh</mat-icon>
+			{{
+				mainLoaderSavedTendererProgress()
+					? 'Fetch Remaining Tenderers'
+					: 'Fetch Tenderers'
+			}}
+		</button>
+	</div>
+	} @if (!fetchTendererFailed) {
+	<div class="col-12 pt-2">
+		<div
+			class="!bg-primary py-3 px-4 rounded-3 text-white font-medium flex-1 grid grid-cols-1 pb-4"
+		>
+			<div>
+				THIS TENDER USES {{ methodCategoryDescription }} CATEGORY @if (isCuis) {
+				<span>(Framework)</span>
+				} @if (marketApproach === 'DIRECT_FROM_MANUFACTURER') {
+				<span>(DIRECT FROM MANUFACTURER)</span>
+				}
+			</div>
+
+			<div class="text-right"></div>
+		</div>
+		@if (loadingTenderers) {
+		<app-loader
+			@fadeIn
+			[message]="'Loading Tenderers, Please wait'"
+		></app-loader>
+		} @if (!dataAlreadySaved) { @if (checkingPreQualification) {
+		<app-loader
+			[message]="'Checking Prequalifications, Please wait...'"
+		></app-loader>
+		} @if (preQualification && !isCuis) { @if (!isPrequalificationCompleted) {
+		<div
+			class="bg-orange-100 border-l-2 border-orange-500 text-orange-700 p-2 my-3"
+			role="alert"
+		>
+			<div>
+				<p>
+					There is an ongoing tenderer pre-qualification process that needs to
+					be completed to shortlist potential suppliers.
+				</p>
+			</div>
+			<div class="flex items-center justify-between">
+				<div>
+					If you are sure pre-qualification was completed , click button to
+					refresh tenderers list
+				</div>
+				<div>
+					@if (!loadingPrequalificationResults) {
+					<div
+						(click)="refreshPreQualification(preQualification)"
+						class="bg-blue-500 text-white cursor-pointer hover:shadow-sm rounded-[10px] px-4 py-3 flex items-center justify-center"
+					>
+						<div>Refresh Pre Qualification</div>
+					</div>
+					} @else {
+					<div
+						class="bg-blue-500 text-white cursor-pointer hover:shadow-sm rounded-[10px] px-4 py-3 flex items-center justify-center gap-[10px]"
+					>
+						<div>
+							<svg
+								class="animate-spin h-5 w-5 text-white"
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+							>
+								<circle
+									class="opacity-25"
+									cx="12"
+									cy="12"
+									r="10"
+									stroke="currentColor"
+									stroke-width="4"
+								></circle>
+								<path
+									class="opacity-75"
+									fill="currentColor"
+									d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+								></path>
+							</svg>
+						</div>
+						<div>Please wait...</div>
+					</div>
+					}
+				</div>
+			</div>
+		</div>
+		}
+		<p class="pt-4">Approved shortlisted tenderers</p>
+		<app-full-data-table
+			[tableList]="preQualificationSelectedTenderer"
+			[tableConfigurations]="preQualificationTendererTableConfiguration"
+			[loading]="
+				loadingShortlistedApplicants || loadingPrequalificationTenderer
+			"
+			[mapFunction]="mapFunctionForPreSelected"
+			(rowCheckBox)="onCheckBoxSelection($event)"
+			[title]="'Approved shortlisted tenderers'"
+		>
+		</app-full-data-table>
+		} @else {
+		<div
+			class="form-holder"
+			*appHasPermission="['ROLE_TNDR_INTN_TENDER_SV_TNDRR_INVT']"
+		>
+			@if (!shortListedQuery && !frameworkMainUuid) {
+			<main-dynamic-form
+				class="py-5"
+				[showRequiredTitle]="false"
+				[saveText]="'Get Tenderer(s)'"
+				[fields]="searchFields"
+				[form]="searchForm"
+				[confirmFirst]="false"
+				[loading]="
+					loadingShortlistedApplicants ||
+					loadingPrequalificationTenderer ||
+					loadingUnSavedTenderers
+				"
+				[loadingMessage]="'Getting data please wait...'"
+				(fieldData)="fieldData($event)"
+				(submit)="searchTenderers($event)"
+			>
+			</main-dynamic-form>
+			}
+		</div>
+
+		@if (loadingUnSavedTenderers) {
+		<div class="mt-2 text-[#1394db]">
+			<div class="flex items-center justify-end">
+				@if (totalRecordSignal() >= 1000) {
+				<div class="bg-blue-50 p-4 mx-1 border-l-4 !border-primary">
+					<div class="text-primary text-[18px] font-bold">
+						Too many records are being loaded, which may result in long loading
+						times or failure. Please narrow your search filters to a region or
+						district level for better performance.
+					</div>
+					<div class="mt-4 text-yellow-600 text-[16px]">
+						Currently you have loaded
+						<b>{{ totalRecordSavedTendererSignal() }}</b> out of
+						<b>{{ totalRecordSignal() }}</b> records!
+					</div>
+				</div>
+				} @else { @if (mainLoaderSavedTendererProgress() <= 25) {
+				<p>
+					Hang in there, we’re loading your data. This may take a little
+					while...
+				</p>
+				} @else if (mainLoaderSavedTendererProgress() <= 50) {
+				<p>
+					Thanks for your patience! We’re making good progress, more data is on
+					its way.
+				</p>
+				} @else if (mainLoaderSavedTendererProgress() <= 80) {
+				<p>
+					You’re almost there! Just a bit more and we’ll have everything ready
+					for you.
+				</p>
+				} @else {
+				<p>
+					Finalizing the last details… Your data will be ready in just a moment.
+				</p>
+				} }
+			</div>
+
+			<simple-linear-progress-bar
+				[loaderProgress]="
+					!(mainLoaderSavedTendererProgress() >= 0)
+						? 0
+						: mainLoaderSavedTendererProgress()
+				"
+				loaderColor="[#1394db]"
+			></simple-linear-progress-bar>
+		</div>
+		} @if (fetchTendererFailed) {
+		<div
+			class="flex items-center justify-start bg-red-200 text-red-400 rounded-[3px] px-[10px] py-[5px]"
+		>
+			<div class="">
+				Something went wrong @if (mainLoaderSavedTendererProgress()) { , only
+				{{ mainLoaderSavedTendererProgress() }}% of total saved tenderers loaded
+				} @else { while loading saved tenderers }.
+			</div>
+		</div>
+		<div class="flex items-center justify-start my-2">
+			<button (click)="fetchSavedTenderer()" mat-stroked-button extended>
+				<mat-icon>refresh</mat-icon>
+				{{
+					mainLoaderSavedTendererProgress()
+						? 'Fetch Remaining Tenderers'
+						: 'Fetch Tenderers'
+				}}
+			</button>
+		</div>
+		} @if (!loadingUnSavedTenderers && !fetchTendererFailed) {
+		<app-full-data-table
+			[tableList]="unSavedTenderersData"
+			[tableConfigurations]="tableConfigurations"
+			[loading]="
+				loadingShortlistedApplicants || loadingPrequalificationTenderer
+			"
+			(rowCheckBox)="onCheckBoxSelection($event)"
+			[mapFunction]="shortListedQuery ? mapFunctionFramework : mapFunction"
+			[title]="'Approved shortlisted tenderers'"
+		>
+		</app-full-data-table>
+		} }
+
+		<div class="mt-3">
+			@if (methodCategory == 'SINGLE SOURCE' &&
+			permanentSelectedTenderers?.length > 1) {
+			<h3 class="p-2 bg-red-600 text-white">
+				Only Single Tenderer Is Required
+			</h3>
+			}@else if(methodCategory == 'RESTRICTED' &&
+			permanentSelectedTenderers?.length < 2 && unSavedTenderersData.length>0){
+			<h3 class="p-2 bg-red-600 text-white">
+				At least two tenderers and above are required
+			</h3>
+			} @if (showSaveArea) {
+			<app-save-area
+				[confirmFirst]="true"
+				(save)="setTenderTenderers()"
+				[saveText]="saveText"
+				[confirmText]="
+					'You are about to add Tenderer(s) to this Tender. Do you want to continue?'
+				"
+				[savingData]="savingData"
+				[saveDisabled]="saveDisabled"
+				[loadingMessage]="loadingMessage"
+			>
+			</app-save-area>
+			}
+		</div>
+		} @else {
+		<p class="pt-4">List of selected tenderers</p>
+
+		<app-full-data-table
+			[tableList]="savedTenderersData"
+			[mapFunction]="mapFunction"
+			(rowCheckBox)="onCheckBoxSelection($event)"
+			[tableConfigurations]="
+				preQualification
+					? preQualificationTendererTableConfiguration
+					: tableConfigurations
+			"
+			[loading]="
+				loadingShortlistedApplicants || loadingPrequalificationTenderer
+			"
+			(rowDelete)="deleteTenderInvitation($event)"
+			[title]="'List of approved tenderer(s)'"
+		>
+		</app-full-data-table>
+
+		<!--     <app-paginated-data-table-->
+
+		<div
+			class="w-100 flex flex-row {{ showConfirm ? 'justify-center' : '' }} mt-3"
+		>
+			@if (discarding) {
+			<app-loader
+				[message]="'We\'re discarding records, kindly be patient...'"
+				@fadeSmooth
+			></app-loader>
+			} @if (showConfirm) {
+			<app-confirm-area
+				@fadeIn
+				[useYesNo]="true"
+				[useConfirmCancel]="true"
+				[title]="
+					'You are about to discard all selected tenderer(s). Do you want to continue?'
+				"
+				(confirm)="discardTenderers()"
+				(cancel)="showConfirm = false"
+			>
+			</app-confirm-area>
+			} @if (!showConfirm && !discarding && showDiscard) {
+			<div *appHasPermission="['ROLE_TNDR_INTN_TENDER_DLT_TNDRR_INVT']">
+				<button
+					mat-stroked-button
+					class="float-right no-button zoom-on-hover"
+					color="warn"
+					@fadeIn
+					(click)="showConfirm = true"
+				>
+					<mat-icon>delete</mat-icon>
+					DISCARD ALL TENDERERS
+				</button>
+			</div>
+			}
+		</div>
+		}
+	</div>
+	} }
+</div>

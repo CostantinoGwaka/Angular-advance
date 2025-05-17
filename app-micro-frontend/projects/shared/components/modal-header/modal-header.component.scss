@@ -1,0 +1,46 @@
+:host{
+    .modal-header-title{
+        position: relative;
+         border-bottom: 1px dashed #ddd;
+        .title{
+            font-weight: 600;
+            padding-bottom: 5px;
+            margin-top: 5px;
+            .handle{
+                position: absolute;
+                width: 90%;
+                height: 62px;
+                top: -24px;
+                opacity: 0;
+                cursor: move;
+            }
+        }
+        .close-modal{
+            position: absolute;
+            color: #696969;
+            right: 10px;
+            top: 15px;
+            cursor: pointer;
+            &:hover{
+                color: rgb(226, 24, 24);
+            }
+            ::ng-deep{
+                .material-icons{
+                    // font-size: 35px;
+                    font-size: 25px;
+                    margin-top: 2px;
+                    font-weight: 600;
+                }
+                svg{
+                    height: 16px !important;
+                }
+            }
+
+        }
+    }
+    ::ng-deep{
+        .mat-mdc-dialog-container{
+            border-radius: 0px !important;
+        }
+    }
+}

@@ -1,0 +1,36 @@
+<div class="relative">
+  <div
+    class="flex relative cursor-pointer p-3 bg-[#F5F5F5] !border border-[#EEEEEE] rounded"
+    placeholder="Search tender by keyword"
+    matRipple
+    (click)="showCategories = !showCategories"
+    (mouseenter)="mouseIn = true"
+    (mouseleave)="mouseIn = false"
+    >
+    <div class="absolute top-0 bottom-0 grid place-content-center">
+      <mat-icon>filter_list</mat-icon>
+    </div>
+    <div class="pl-10 pr-10 overflow-clip h-[20px]">
+      In {{ selectedCategory | translate}}
+    </div>
+    <div class="absolute right-0 pr-2 top-0 bottom-0 grid place-content-center">
+      <mat-icon>arrow_drop_down</mat-icon>
+    </div>
+  </div>
+  @if (showCategories) {
+    <div
+      class="absolute left-0 right-0 bg-white shadow rounded overflow-hidden z-10"
+      >
+      @for (category of categories; track category) {
+        <div
+          #container
+          class="p-3 cursor-pointer"
+          matRipple
+          (click)="selectCategory(category)"
+          >
+          {{ category.name | translate }}
+        </div>
+      }
+    </div>
+  }
+</div>

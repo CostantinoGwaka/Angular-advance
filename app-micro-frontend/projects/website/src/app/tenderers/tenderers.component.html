@@ -1,0 +1,147 @@
+<web-layout>
+  <parallax-container [title]="'Tenderers'" [description]="'List of Tenderers'">
+    <div>
+      <div class="bg-[#E2E2E2]">
+        <div class="px-5 py-2 md:flex md:items-center md:gap-4 md:justify-between">
+          <div>
+            <div class="p-3.5 space-y-6">
+              <div class="flex">
+                <div class="flex-1 flex items-center space-x-2">
+                  <div
+                    class="w-10 aspect-square place-content-center grid rounded"
+                    [ngClass]="'bg-[#D2F1D1]'"
+                    >
+                    <mat-icon class="text-[#348433]">done</mat-icon>
+                  </div>
+                  <div class="flex-1">
+                    <div class="text-lg text-gray-500">
+                      Tenderers
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      @if (dashboardLoading) {
+        <app-loader
+          [message]="'Loading tenderer please wait...'"
+        ></app-loader>
+      }
+      <div class="col-span-12 mt-[20px] pl-5">
+        <h2 class="!text-xl mb-0">Approved Tenderers</h2>
+      </div>
+      <div class="col-auto p-3">
+        <div class="grid grid-cols-12 gap-4">
+          <div class="col-span-4 mb-3 cursor-pointer">
+            <mat-card appearance="outlined" class="h-full zoom-on-hover cursor-pointer">
+              <quick-stats
+                class="cursor-pointer"
+                [icon]="'app_registration'"
+                [title]="'Total Tenderers'"
+                [value]="totalTenderer"
+                [iconColor]="'primary'"
+              ></quick-stats>
+            </mat-card>
+          </div>
+          <div class="col-span-4 mb-3 cursor-pointer">
+            <mat-card appearance="outlined" class="h-full">
+              <quick-stats
+                class="cursor-pointer"
+                [icon]="'app_registration'"
+                [title]="'Local Tenderers'"
+                [value]="localTenderer"
+                [showPercentageChart]="true"
+                [percentageChartColor]="'#1294db'"
+                [percentageChartValue]="localTendererPercent"
+              ></quick-stats>
+            </mat-card>
+          </div>
+          <div class="col-span-4 mb-3 cursor-pointer">
+            <mat-card appearance="outlined" class="h-full">
+              <quick-stats
+                class="cursor-pointer"
+                [icon]="'app_registration'"
+                [title]="'Foreign Tenderers'"
+                [value]="foreignTenderer"
+                [showPercentageChart]="true"
+                [percentageChartColor]="'#1294db'"
+                [percentageChartValue]="foreignTendererPercent"
+              ></quick-stats>
+            </mat-card>
+          </div>
+        </div>
+      </div>
+      <div class="col-span-12 mt-[20px] pl-5">
+        <h2 class="!text-xl mb-0">Tenderer Summary per procurement category</h2>
+      </div>
+      <div class="divide-y">
+        <div class="px-[14px] py-2">
+          <div class="grid grid-cols-12 gap-6 mt-3 items-stretch">
+            <div class="col-span-12 mb-3 max-h-[400px]">
+              <div class="!p-0 overflow-hidden h-full !shadow-none !border-none flex">
+                <div class="h-full chart-container w-1/2">
+                  <div class="d-flex center-all mt-3">
+                    <canvas
+                      baseChart
+                      [labels]="categories"
+                      [datasets]="doughnutChartDatasets"
+                      [options]="doughnutChartOptions"
+                      [legend]="false"
+                      [type]="'doughnut'"
+                      >
+                    </canvas>
+                  </div>
+                </div>
+                <div class="h-full w-1/2 statistics-container p-0 border-l border-[#E0E2E1]">
+                  <div class="flex flex-col h-full relative divide-y">
+                    <div class="max-h-[400px] overflow-y-auto bg-white">
+                      <div class="divide-y h-full">
+                        @for (category of categories; track category) {
+                          <app-tenderer-summary-view
+                            [tendererCategory]="category"
+                            [amount]="approvedCountByDescription[category]"
+                            [color]="'bg-[#1394db]'"
+                            >
+                          </app-tenderer-summary-view>
+                          <mat-divider></mat-divider>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-span-12 mt-[20px] pl-5">
+        <h2 class="!text-xl mb-0">Tenderer Summary per Tenderer type</h2>
+      </div>
+      <div class="col-span-12 p-3">
+        <div class="!p-0 overflow-hidden shadow-md bg-white rounded-md h-full flex">
+          <div class="h-full w-full statistics-container border-r border-[#E0E2E1]">
+            <div class="flex flex-col h-full relative divide-y">
+              <div class="h-full overflow-y-auto bg-white">
+                <div class="divide-y h-full">
+                  @for (category of localTendererType; track category; let i = $index) {
+                    <app-statistics-item
+                      [tendererType]="category.name"
+                      [show]="false"
+                      [totalTenderer]="approvedCountByTendererType[category.id]['totalTenderer']"
+                      [approved]="approvedCountByTendererType[category.id]['approvedCount']"
+                      [color]="categoriesTendererColor1[i]"
+                      >
+                    </app-statistics-item>
+                    <mat-divider></mat-divider>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </parallax-container>
+</web-layout>

@@ -1,0 +1,31 @@
+<h2 mat-dialog-title>List of users responsible for {{ task.taskName }}</h2>
+<mat-dialog-content class="mat-typography">
+  @if (loadingUsers) {
+    <div>
+      <app-loader [message]="'Loading users'"></app-loader>
+    </div>
+  }
+  @for (user of users; track user) {
+    <div>
+      <div class="p-5 w-[500px]">
+        <div class="flex space-x-3 items-center">
+          <div class="bg-gray-200 w-[50px] rounded-full aspect-square"></div>
+          <div class="text-sm">
+            <div>
+              {{ user.firstName }} {{ user.middleName }} {{ user.lastName }}
+            </div>
+            <div class="text-gray-500">{{ user.email }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+  <div>
+    @if (errorMessage) {
+      <span class="text-red-500">{{ errorMessage }}</span>
+    }
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+</mat-dialog-actions>

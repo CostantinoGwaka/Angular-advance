@@ -1,0 +1,258 @@
+@if (fetchingTenderDetail || loading) {
+  <app-loader
+    @fadeIn
+    [message]="loadingMessage">
+  </app-loader>
+}
+
+@if (!fetchingTenderDetail && !loading) {
+  <!--- planned dates inputs -->
+  <div @fadeInOut class="border border-gray-300 my-2 p-3 rounded-md">
+    <ng-container
+      @fadeIn
+      [ngTemplateOutletContext]="{ data : {title: 'Planned Evaluation', index: 1}}"
+      [ngTemplateOutlet]="listHeader">
+    </ng-container>
+    <div>
+      <mat-form-field appearance="outline">
+        <mat-label>Select Financial Year</mat-label>
+        <mat-select
+          (selectionChange)="selectFinancialYear($event.value)">
+          @for (financialYear of financialYears; track financialYear) {
+            <mat-option
+              [value]="financialYear.code">
+              {{ financialYear.code }}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      @if (!currentTender) {
+        <mat-form-field appearance="outline">
+          <mat-label>Tender Team Type</mat-label>
+          <mat-select
+            (selectionChange)="onSelectedEntityType($event.value)"
+            [(ngModel)]="selectedTeamType">
+            @for (option of entityTypeList; track option) {
+              <mat-option [value]="option">
+                {{option.name}}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      }
+      <mat-form-field appearance="outline" @fadeInOut>
+        <mat-label>Planned start date</mat-label>
+        <input
+          (dateInput)="updatePlannedDate($event.value, 'startDate')"
+          matInput
+          [min]="yesterday"
+          [matDatepicker]="pickerStartDate"
+          [(ngModel)]="teamDto.plannedEvaluationStartDate">
+        <mat-hint>DD/MM/YYYY</mat-hint>
+        <mat-datepicker-toggle [for]="pickerStartDate" matSuffix></mat-datepicker-toggle>
+        <mat-datepicker #pickerStartDate></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field appearance="outline" @fadeInOut>
+        <mat-label>Planned end date</mat-label>
+        <input
+          (dateInput)="updatePlannedDate($event.value, 'endDate')"
+          matInput
+          [min]="yesterday"
+          [matDatepicker]="pickerEndDate"
+          [(ngModel)]="teamDto.plannedEvaluationEndDate">
+        <mat-hint>DD/MM/YYYY</mat-hint>
+        <mat-datepicker-toggle [for]="pickerEndDate" matSuffix></mat-datepicker-toggle>
+        <mat-datepicker #pickerEndDate></mat-datepicker>
+      </mat-form-field>
+    </div>
+  </div>
+  <!--- end of planned dates inputs -->
+  <!-- tender selector --->
+  @if (teamDto.plannedEvaluationStartDate && teamDto.plannedEvaluationEndDate) {
+    <div @fadeInOut
+      class="border border-gray-300 my-2 p-2 rounded-md"
+      >
+      <ng-container
+        @fadeIn
+        [ngTemplateOutletContext]="{ data : {title: (currentTender) ? 'Selected' : 'Tender', index: 2}}"
+        [ngTemplateOutlet]="listHeader">
+      </ng-container>
+      @if (loadingTenders) {
+        <app-loader @fadeIn [message]="'Loading tenders please wait '"></app-loader>
+      }
+      @if (currentTender && !loadingTenders) {
+        <div class="p-2 font-bold">#:{{currentTender.lotNumber}}</div>
+        <div class="p-2 font-bold !text-primary text-lg">{{currentTender.lotDescription}}</div>
+      }
+      @if (tendersList.length == 0 && !loadingTenders) {
+        <app-custom-alert-box
+          [alertClass]="'bg-red-100 border-red-300  rounded'"
+          [alertButtonClass]="'border-grey !bg-white'"
+          [alertTextClass]="'text-[#302e2e] text-lg'"
+          [alertInfo]="noDataAlert"
+          (buttonClicked)="refreshData()">
+        </app-custom-alert-box>
+      }
+      @if (!currentTender && selectedTeamEntityType && !loadingTenders && tendersList.length) {
+        <mat-form-field appearance="outline"
+          >
+          <mat-label>Tender</mat-label>
+          <mat-select
+            (selectionChange)="onSelectedTender($event)"
+            [(ngModel)]="tenderUuid">
+            @for (option of tendersList; track option) {
+              <mat-option [value]="option.uuid">
+                {{option.name}}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      }
+    </div>
+  }
+  <!-- end of tender selector --->
+  @if (commiteeChairman) {
+    <mat-divider @fadeIn class="my-4"></mat-divider>
+  }
+  <!-- selected chairperson --->
+  @if (!commiteeChairman) {
+    @if (teamDto.mainEntityUuid) {
+      <div @fadeInOut class="border border-gray-300 my-2 p-2 rounded-md">
+        <ng-container
+          @fadeIn
+          [ngTemplateOutletContext]="{ data : {title:'Select Chairperson', index: 3}}"
+          [ngTemplateOutlet]="listHeader">
+        </ng-container>
+        <app-paginated-select
+          [field]="chairmanInstitutionField"
+          (fieldValue)="getInstitutionMembers($event, 'chairMan')"
+          [(ngModel)]="chairmanInstitutionUuid">
+        </app-paginated-select>
+        @if (loadingChairmanUsers) {
+          <app-loader [message]="'Loading users please wait...'"></app-loader>
+        }
+        @if (!loadingChairmanUsers) {
+          <mat-form-field class="mt-2" appearance="outline">
+            <mat-label>Select</mat-label>
+            <mat-select [(ngModel)]="commiteeChairmanUuid" (selectionChange)="onSelectedChairman($event)">
+              <div class="mat-select-search-inner mat-typography mat-datepicker-content mat-tab-header">
+                <input
+                  autocomplete="off"
+                  class="mat-select-search-input mat-input-element"
+                  [(ngModel)]="searchChairPersonString"
+                  type="text" placeholder="Search">
+              </div>
+              <mat-option class="mt-5">--Select--</mat-option>
+              @for (user of chairmanUsers|search:'fullName,jobTitle,departmentName':searchChairPersonString; track user) {
+                <mat-option value="{{user.uuid}}"
+                  >
+                  {{user?.fullName}} - {{user?.jobTitle}} - {{user?.departmentName}}
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        }
+      </div>
+    }
+  }
+  <!-- end of selected chairperson --->
+  <!-- selector chairperson --->
+  @if (commiteeChairman) {
+    <div @fadeIn class="py-2 border border-green-700   rounded-md p-2">
+      <ng-container
+        @fadeIn
+        [ngTemplateOutletContext]="{ data : {title:'Team Chairperson', index: 3}}"
+        [ngTemplateOutlet]="listHeader">
+      </ng-container>
+      <mat-divider class="py-2"></mat-divider>
+      <div class="text-lg font-medium">
+        @if (commiteeChairman?.fullName) {
+          <span>{{commiteeChairman?.fullName}}</span>
+        }
+        <!--      <span *ngIf="!commiteeChairman?.fullName">-->
+        <!--        {{commiteeChairman.firstName}} {{commiteeChairman.middleName}} {{commiteeChairman.lastName}}-->
+      <!--      </span>-->
+    </div>
+    <!--    <div>-->
+    <!--      <span class="font-medium mr-1">Institution:</span>-->
+    <!--      <span-->
+    <!--        *ngIf="commiteeChairman?.procuringEntityName">{{commiteeChairman?.procuringEntityName}}-->
+  <!--      </span>-->
+  <!--      <span-->
+  <!--        *ngIf="!commiteeChairman?.procuringEntityName">{{commiteeChairman.memberInstitution}}-->
+<!--      </span>-->
+<!--    </div>-->
+<p><span class="font-medium  mr-1">Department:</span>{{commiteeChairman?.departmentName}}</p>
+<p><span class="font-medium  mr-1">Title: </span>{{commiteeChairman?.jobTitle}}</p>
+<div (click)="changeChairperson()"
+         class="inline-block p-2 border-2 !border-primary
+      bg-blue-200 rounded-md hover:!bg-primary hover:text-white
+       cursor-pointer active:bg-blue-200 active:!border-primary active:shadow-md">
+  Change Chairperson
+</div>
+</div>
+}
+<!-- end of selector chairperson --->
+@if (commiteeChairman) {
+  <mat-divider @fadeInOut class="my-4"></mat-divider>
+}
+<!-- selector team members selector --->
+@if (hasChairman) {
+  <ng-container @fadeInOut>
+    @if (commiteeChairman) {
+      <div @fadeInOut class="py-2 border border-green-700 rounded-md p-2">
+        <ng-container
+          @fadeIn
+          [ngTemplateOutletContext]="{ data : {title:'Select Team Members', index: 4}}"
+          [ngTemplateOutlet]="listHeader">
+        </ng-container>
+        <app-paginated-select
+          [field]="institutionField"
+          (fieldValue)="getInstitutionMembers($event, 'members')"
+          [(ngModel)]="institutionUuid">
+        </app-paginated-select>
+        <div class="mt-2 mb-2">
+          <app-nest-multi-select
+            [loading]="loading"
+            [hasChairman]="hasChairman"
+            (onPositionChanged)="positionChanged($event)"
+            [available]="users"
+            [selected]="members"
+            (onSelectionChange)="selectionOfItem($event)">
+          </app-nest-multi-select>
+        </div>
+      </div>
+    }
+    <ng-container *appHasPermission="['ROLE_TNDR_EVL_TEAM_MANAGEMENT_CREATE']">
+      <div class="mt-3">
+        @if (isSaving) {
+          <app-loader @fadeIn [message]="'Saving please wait...'"></app-loader>
+        }
+        <app-save-area
+          [saveDisabled]="!isValidSelection || !teamDto.mainEntityUuid"
+          [isSubmit]="isSaving"
+          [confirmFirst]="true"
+          (cancel)="onCancelForm()"
+          [confirmText]="'You are about to create evaluation team. Do you want to continue?'"
+          (save)="save()">
+        </app-save-area>
+      </div>
+    </ng-container>
+  </ng-container>
+}
+<!-- end of team members selector --->
+}
+
+<ng-template #listHeader let-data="data">
+  <div class="flex flex-row items-center mb-2 gap-2">
+    <div class="h-6 aspect-square flex justify-center">
+      <div class="rounded-full h-6 w-6 bg-[#1394db]
+             flex justify-center items-center
+              text-white text-xs font-bold">
+        <span>{{data.index}}</span>
+      </div>
+    </div>
+
+    <span class="font-bold">{{data.title}}</span>
+  </div>
+</ng-template>

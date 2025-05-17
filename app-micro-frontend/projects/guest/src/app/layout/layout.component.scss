@@ -1,0 +1,18 @@
+#bg-image {
+  animation: zoom 20s ease-in-out infinite alternate;
+}
+
+@keyframes zoom {
+  0% {
+    transform: scale(1.8);
+  }
+
+  100% {
+    transform: scale(2);
+  }
+}
+.custom-gradient {
+  background: linear-gradient(to top right, #C8EBFF, #D6EDDB);
+}
+
+

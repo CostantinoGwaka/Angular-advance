@@ -1,0 +1,25 @@
+<div class="text-center p-2 space-y-3">
+  <div>
+    <simple-linear-progress-bar
+      [loaderProgress]="loaderProgress"
+      [loaderColor]="!failed ? 'accent' : 'danger'"
+      >
+    </simple-linear-progress-bar>
+  </div>
+  <div>
+    @if(failed){
+      <div class="text-red-500">
+        {{ retryMessage }}
+      </div>
+      }@else{
+      <div>Loading filled BOQ items</div>
+    }
+  </div>
+  @if (showRetryButton) {
+    <div>
+      <button mat-flat-button color="primary" (click)="retryLoading()">
+        Retry
+      </button>
+    </div>
+  }
+</div>

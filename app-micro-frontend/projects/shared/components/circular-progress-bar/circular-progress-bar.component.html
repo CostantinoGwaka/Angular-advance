@@ -1,0 +1,28 @@
+<div class="wrapper">
+    <canvas
+      baseChart
+      class="{{ class }}"
+      [style]="style"
+      [datasets]="doughnutProgressChartDatasets"
+      [options]="doughnutProgressChartOptions"
+      [type]="'doughnut'"
+    ></canvas>
+
+  <div class="info-wrapper">
+    <div>
+      @if (showValue) {
+        <div [style]="valueStyle" class="value-wrapper">
+          {{ value }}
+          @if (valueIsPercent) {
+          <span>%</span>
+        }
+        </div>
+      }
+      @if (text) {
+        <div class="value-text" [style]="textStyle">
+          {{ text }}
+        </div>
+      }
+    </div>
+  </div>
+</div>

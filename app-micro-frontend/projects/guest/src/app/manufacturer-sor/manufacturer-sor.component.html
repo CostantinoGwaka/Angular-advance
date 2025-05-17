@@ -1,0 +1,67 @@
+@if (loadingStatus) {
+  <app-loader [message]="'......'"></app-loader>
+}
+
+@if (mainLoaderProgress !== 100 && !displayForm) {
+  <div
+    @fadeInOut
+    class="flex flex-row justify-center pt-4"
+    >
+    <app-progress-circular-loader
+      [mainLoaderMessage]="mainLoaderMessage"
+      [mainLoaderProgress]="mainLoaderProgress"
+      [mainLoading]="mainLoading"
+      >
+    </app-progress-circular-loader>
+  </div>
+}
+
+<div class="grid place-content-center h-[100vh] bg-gray-200">
+  <div class="flex items-center">
+    @if (tokenStatus && displayForm) {
+      <div class="w-[80vw]">
+        <div class="block bg-white mt-4 mb-2 p-3 md:rounded-xl shadow-xl">
+          <div class="flex flex-col space-y-2 justify-center">
+            <div class="text-center space-y-5">
+              <div class="container-fluid">
+                <div @fadeIn @fadeOut class="form-holder">
+                  <div>
+                    <h3 class="!font-bold text-[#049E26]">
+                      Manufacturer Invitation
+                    </h3>
+                    <p class="justify-center">Accept/Reject Invitation</p>
+                    <main-dynamic-form
+                      class="py-5"
+                      [fields]="fields"
+                      [form]="supportForm"
+                      [confirmFirst]="true"
+                      [loading]="loading"
+                      [loadingMessage]="'Saving data please wait...'"
+                      confirmMessage="You are about to Submit. Do you want to continue?"
+                      (closeForm)="close(false)"
+                      (fieldData)="fieldSelected($event)"
+                      (submit)="submitForm($event)"
+                      >
+                    </main-dynamic-form>
+                  </div>
+                </div>
+                <div @fadeIn @fadeOut class="max-w-8xl mx-auto p-2"></div>
+              </div>
+              <div class="col-sm-12 col-xl-12 p-0 ml-4 mt-8">
+                <a
+                  [routerLink]="['']"
+                  mat-button
+                  href=""
+                  class="!-ml-[20px] !border !border-primary !bg-primary rounded !text-white"
+                  >
+                  <mat-icon matPrefix class="mr-3">keyboard_backspace</mat-icon>
+                  Home
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

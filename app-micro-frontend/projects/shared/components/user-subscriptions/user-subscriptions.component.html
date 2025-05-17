@@ -1,0 +1,42 @@
+<div class="h-full" @fadeIn>
+  <div class="container mx-auto">
+    <div class="block bg-white mt-4 mb-2 p-3 md:rounded-md">
+      <div class="flex flex-wrap justify-content-between items-center mb-4">
+        <h2>Subscriptions</h2>
+        <!-- <button
+        *ngIf="user?.rolesListStrings?.includes('TENDERER_ADMIN')"
+        mat-flat-button
+        color="primary"
+        [routerLink]="['', 'tenderer_registration', 'add-subscription']"
+        class="!m-0 py-1 pb-1 pl-3 pr-3  cursor-pointer items-center flex flex-wrap gen__button btn__primary">
+        <mat-icon>edit</mat-icon> Update Subscriptions
+      </button> -->
+    </div>
+
+    @if (loading) {
+      <app-loader [message]="'loading your subscriptions .....'"></app-loader>
+    }
+
+    @if (!loading && businessLineList.length > 0) {
+      <div class="grid md:grid-cols-3 gap-4">
+        @for (item of businessLineList; track item) {
+          <div class="flex flex-row" @fadeIn>
+            <app-item-detail-with-icon
+              [icon]="'business_center'"
+              [label]="item.tenderCategory?.name"
+              [title]="item.description"
+              >
+            </app-item-detail-with-icon>
+          </div>
+        }
+      </div>
+    }
+
+    @if (!loading && businessLineList.length === 0) {
+      <div>
+        You have not subscribed to any notification
+      </div>
+    }
+  </div>
+</div>
+</div>

@@ -1,0 +1,52 @@
+<div class="grid grid-cols-3 gap-4">
+  @if (!showAddForm) {
+    <div class="col-span-3" @fadeIn>
+      @if (!readOnly) {
+        <div class="my-3 flex flex-row justify-end">
+          <button
+            (click)="onAddContractActivityProgress()"
+            class="text-sm !bg-primary text-white p-2 rounded-sm">
+            <mat-icon inline>add</mat-icon>
+            <span>Add Activity Progress</span>
+          </button>
+        </div>
+      }
+      @if (mustHaveFilters.length) {
+        <app-paginated-table-expandable-row
+          [query]="contractImplementationProgress"
+          [apolloNamespace]="apolloNamespace"
+          [tableConfigurations]="tableConfigurations"
+          [filters]="mustHaveFilters"
+          [resetTable]="resetTable"
+          (totalRecords)="checkTotalRecords($event)"
+          [title]="'Activity Progress'">
+          <ng-template #actions let-data="data">
+            <app-view-details-item
+              key="Progress Note"
+              [showBottomLine]="false"
+              [value]="data?.progressNotes"
+            ></app-view-details-item>
+          </ng-template>
+        </app-paginated-table-expandable-row>
+      }
+    </div>
+  }
+
+  @if (showAddForm && form) {
+    <div class="col-span-3" @fadeIn>
+      <main-dynamic-form
+        class="py-5"
+        [fields]="fields"
+        [form]="form"
+        [confirmFirst]="true"
+        [loadingMessage]="'Complete contract activity progress. please wait...'"
+        confirmMessage="You are about to save contract activity progress. Do you want to continue?"
+        [showCancel]="true"
+        cancelText="Close"
+        (closeForm)="closeForm()"
+        (submit)="createContractImplementationProgress($event)">
+      </main-dynamic-form>
+    </div>
+  }
+</div>
+

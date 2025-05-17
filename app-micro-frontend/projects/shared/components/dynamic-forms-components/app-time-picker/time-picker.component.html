@@ -1,0 +1,26 @@
+<mat-form-field [appearance]="'outline'" [formGroup]="group">
+  <mat-label> {{ field.label }} </mat-label>
+  <input
+    readonly
+    matInput
+    (click)="onClick()"
+    [value]="selectedTime"
+    [placeholder]="'--:--'"
+    [formControlName]="field.key || null"
+    [required]="(field.key && group?.get(field.key)?.errors !== null && group?.get(field.key)?.errors['required']) || field.required"
+    #timeInput
+    />
+  <mat-icon style="cursor: pointer;" (click)="openDialog()" matSuffix>access_time</mat-icon>
+  <!-- <mat-icon matSuffix  class="pointer text-gray-400 hover:!text-primary" (click)="openHelpPage()">help_outline</mat-icon> -->
+
+  <mat-hint [align]="'start'">{{field.hint}}</mat-hint>
+  @for (validation of field.validations; track validation) {
+    <ng-container ngProjectAs="mat-error">
+      @if (field.key && group?.get(field.key)?.hasError(validation.name)) {
+        <mat-error>{{validation.message}}</mat-error>
+      }
+    </ng-container>
+  }
+</mat-form-field>
+
+

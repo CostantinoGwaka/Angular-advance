@@ -1,0 +1,84 @@
+@if (loading) {
+  <app-loader [message]="'Getting letter details, please wait'"></app-loader>
+}
+@if (!loading && htmlContent && !reportFile) {
+  <div @fadeIn class="p-10">
+    <div #container [innerHTML]="htmlContent| doNotSanitize" id="sectionToPrint"></div>
+    <div class="flex flex-row justify-end">
+      <div class="flex flex-col">
+        @if (!invitationLetter.isAppointmentLetterSigned) {
+          <p *appHasPermission="['ROLE_TNDR_EVL_TEAM_MANAGEMENT_SIGN_APPOINTMENT_LETTER']"
+            class="text-danger font-bold mb-2">
+            Pending signature from Accounting Officer
+          </p>
+        }
+        @if (!signDocument && !invitationLetter.isAppointmentLetterSigned) {
+          <button
+            *appHasPermission="['ROLE_TNDR_EVL_TEAM_MANAGEMENT_SIGN_APPOINTMENT_LETTER']"
+            @fadeIn
+            class="mx-3"
+            (click)="signDocument = true"
+            mat-raised-button color="primary">
+            Sign appointment letter
+          </button>
+        }
+        @if (signDocument) {
+          <div class="flex flex-col">
+            @if (loadingTemplate || savingData) {
+              <app-loader [message]="loadingMessage"></app-loader>
+            }
+            @if (!loadingTemplate && !savingData) {
+              <span class="font-size-18 !font-bold">Enter Key phrase to sign appointment letter</span>
+              <div class="flex flex-row justify-center pt-3">
+                <mat-form-field appearance="outline">
+                  <mat-label>Key phrase</mat-label>
+                  <input
+                    matInput placeholder="enter your key phrase"
+                    [type]="hide ? 'password' : 'text'"
+                    [(ngModel)]="passphrase">
+                  <mat-icon class="mx-2 cursor-pointer" matSuffix (click)="hide = !hide">{{hide ? "visibility_off" : "visibility"}}</mat-icon>
+                </mat-form-field>
+                <div class="ml-2 pt-2">
+                  @if (passphrase) {
+                    <button
+                      @fadeIn
+                      mat-raised-button color="primary"
+                      (click)="getSignedHtmlDocument();" type="submit">
+                      <mat-icon>edit</mat-icon>
+                      Sign Document
+                    </button>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+}
+
+@if (reportFile) {
+  <div class="p-10">
+    <div class="flex justify-between mb-4">
+      <div>
+        <p class="lead m-0" style="padding-top: 13px">{{appointmentLetterTitle}} </p>
+      </div>
+      @if (!!reportFile) {
+        <div class="flex">
+          <div class="mr-1">
+            <button (click)="exportReport('PDF')" mat-button>
+              <mat-icon>file_download</mat-icon>
+              Download
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+    @if (!!reportFile) {
+      <iframe [src]="'data:application/pdf;base64,'+ reportFile | safeHtml" class="!h-[720px] mb-10"
+        height="100%" title="data" width="100%">
+      </iframe>
+    }
+  </div>
+}

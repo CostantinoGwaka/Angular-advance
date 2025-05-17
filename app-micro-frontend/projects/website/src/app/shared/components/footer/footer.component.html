@@ -1,0 +1,157 @@
+<div class="bg-gray-100 !text-xs mt-20">
+  <div class="web-container mt-20 pt-10">
+    <div class="grid xl:grid-cols-12 gap-2 2xl:gap-10">
+      <div class="col-span-4 pr-9 !font-light">
+        <div>
+          <img loading="lazy" src="/assets/images/logo.png" class="h-20 mb-10" />
+        </div>
+        <p>
+          {{ "TOP_DESCRIPTION" | translate }}
+        </p>
+
+        <p>
+          {{ "BOTTOM_DESCRIPTION" | translate }}
+        </p>
+      </div>
+      <div class="col-span-2">
+        <div class="font-bold pr-4 pb-2 !border-b-2 !border-b-primary mb-4 !inline-block">
+          {{ "USEFUL_LINKS" | translate }}
+        </div>
+        <ul class="space-y-3 !ml-0 !pl-0 !font-light text-gray">
+          <li>
+            <a [routerLink]="['/annual-procurement-plans']" class="hover:text-gray-900 text-gray-700">
+              {{ "GENERAL_PROCUREMENT_NOTES" | translate }}
+            </a>
+          </li>
+          <li>
+            <a [routerLink]="['/tenders/published-tenders']" class="hover:text-gray-900 text-gray-700">
+              {{ "CURRENT_TENDERS" | translate }}
+            </a>
+          </li>
+          <li>
+            <a [routerLink]="['/special-groups']" class="hover:text-gray-900 text-gray-700">
+              {{ "Special Groups" | translate }}
+            </a>
+          </li>
+          <li>
+            <a [routerLink]="['/tenders/awarded-tenders']" class="hover:text-gray-900 text-gray-700">
+              {{ "AWARDED_CONTRACTS" | translate }}
+            </a>
+          </li>
+          <li>
+            <a [routerLink]="['/tenders/published-tenders']" class="hover:text-gray-900 text-gray-700">
+              {{ "ADVANCED_SEARCH" | translate }}
+            </a>
+          </li>
+          <li>
+            <a [routerLink]="['/documents/forms']" class="hover:text-gray-900 text-gray-700">
+              {{ "NEST_FORMS" | translate }}
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-span-2">
+        <div class="font-bold pr-4 pb-2 !border-b-2 !border-b-primary mb-4 !inline-block">
+          {{ "HELP" | translate }}
+        </div>
+        <ul class="space-y-3 !ml-0 !pl-0 !font-light">
+          <li>
+            <a target="_blank"
+              href="https://www.youtube.com/watch?v=zhNaeWnwFH4&list=PL0xdBmzPXCeGgX720ipgt2M2rQxyqGQ73"
+              class="cursor-pointer hover:text-gray-900 text-gray-700">
+              {{ "SUPPLIER_TRAINING_VIDEO" | translate }}
+            </a>
+          </li>
+          <!--          <li>-->
+          <!--            <a target="_blank" href="https://www.youtube.com/watch?v=UWSiguvU0fE&list=PL0xdBmzPXCeGVk1ZddyeHXAl8Dyz4EME8"-->
+          <!--               class="cursor-pointer hover:text-gray-900 text-gray-700">-->
+          <!--              {{ "PE_TRAINING_VIDEO" | translate }}-->
+          <!--            </a>-->
+          <!--          </li>-->
+          <li [routerLink]="['/coming-soon']" class="cursor-pointer">
+            {{ "USER_GUIDES" | translate }}
+          </li>
+          <li [routerLink]="['/terms-and-conditions']" class="cursor-pointer">
+            {{ "TERMS_AND_CONDITIONS" | translate }}
+          </li>
+        </ul>
+      </div>
+      <div class="col-span-2">
+        <div class="font-bold pr-4 pb-2 !border-b-2 !border-b-primary mb-4 !inline-block">
+          {{ "CONTACTS" | translate }}
+        </div>
+        <div class="flex space-x-4">
+          <div class="!text-primary">
+            <mat-icon>mail</mat-icon>
+          </div>
+          <div class="!font-light">
+            <a href="mailto:support@nest.go.tz" style="text-decoration: none; color: black;">support&#64;nest.go.tz</a>
+          </div>
+        </div>
+        <div class="flex space-x-4">
+          <div class="!text-primary">
+            <mat-icon>call</mat-icon>
+          </div>
+          <div>
+            <ul class="space-y-3 !ml-0 !pl-0 !font-light">
+              <!--              <li><a href="tel:+255262963854" style="text-decoration: none; color:black;">+255 (0)26 2963854</a></li>-->
+              <!--              <li><a href="tel:+255624494949" style="text-decoration: none; color:black;">+255 (0)624 494949</a></li>-->
+              <li>
+                <a href="tel:+255736494948" style="text-decoration: none; color: black;">+255 (0)736 494948</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-span-2">
+        <div class="font-bold pr-4 pb-2 !border-b-2 !border-b-primary mb-4 !inline-block">
+          {{ "DOWNLOAD_MOBILE_APP" | translate }}
+        </div>
+        <div class="text-right">
+          <div class="mb-1">
+            <a href="https://play.google.com/store/apps/details?id=com.tz.go.ppra.nest&hl=en&gl=US" target="_blank"
+              class="cursor-pointer">
+              <img loading="lazy" src="/assets/images/google playstore.png" class=" " />
+            </a>
+          </div>
+          <div>
+            <a href="https://apps.apple.com/app/id1660520548" target="_blank" class="cursor-pointer">
+              <img loading="lazy" src="/assets/images/play-store-button.png" class=" " />
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="py-3 border-t border-t-gray-300 mt-5 flex items-center">
+    <div class="web-container flex items-center justify-between">
+      <div>
+        Copyright &copy; {{ curretYear }}. All Rights Reserved. Version 1.0.0
+      </div>
+      <div class="flex space-x-3">
+        <a href="http://www.facebook.com/PPRA_Tanzania-2588600117819083" target="_blank" title="PPRA On Facebook">
+          <div class="aspect-square h-10 bg-gray-500 text-center !text-white rounded-full grid place-content-center">
+            <img loading="lazy" src="/assets/images/facebook.png" class=" " />
+          </div>
+        </a>
+        <a href="http://www.twitter.com/PpraTanzania" target="_blank" title="PPRA On Twitter">
+          <div class="aspect-square h-10 bg-gray-500 text-center !text-white rounded-full grid place-content-center">
+            <img loading="lazy" src="/assets/images/twitter.png" class=" " />
+          </div>
+        </a>
+
+        <a href="http://www.instagram.com/ppra_tanzania" target="_blank" title="PPRA On Instagram">
+          <div class="aspect-square h-10 bg-gray-500 text-center !text-white rounded-full grid place-content-center">
+            <img loading="lazy" src="/assets/images/instagram.png" class=" " />
+          </div>
+        </a>
+
+        <a href="https://www.youtube.com/@ppratanzania668" target="_blank" title="PPRA On Youtube">
+          <div class="aspect-square h-10 bg-gray-500 text-center !text-white rounded-full grid place-content-center">
+            <img loading="lazy" src="/assets/images/youtube.png" class=" " />
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

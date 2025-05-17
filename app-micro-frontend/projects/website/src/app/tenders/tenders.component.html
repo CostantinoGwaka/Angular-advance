@@ -1,0 +1,92 @@
+<web-layout>
+  <parallax-container
+    [title]="'Tenders'"
+    [description]="'View and filter tenders'"
+  >
+    <div class="flex">
+      <div class="w-[315px] bg-[#DCE6EB] h-[100%] p-4">
+        <div class="font-bold mb-2">Advanced Search</div>
+        <div>
+          <mat-form-field appearance="outline">
+            <mat-label>Keywoard</mat-label>
+            <input matInput placeholder="Enter keyword" />
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="mr-4">
+            <mat-label>Select Tender Category</mat-label>
+            <mat-select>
+              <mat-option>All Tender Catgories</mat-option>
+              <mat-option>Goods</mat-option>
+              <mat-option>Works</mat-option>
+              <mat-option>Consultance</mat-option>
+              <mat-option>Non-Consultance</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="mr-4">
+            <mat-label>Tender Status</mat-label>
+            <mat-select>
+              <mat-option>Any</mat-option>
+              <mat-option>Active</mat-option>
+              <mat-option>Closed</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="mr-4">
+            <mat-label>Procuring Entity</mat-label>
+            <mat-select>
+              <mat-option>Any</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Tender number</mat-label>
+            <input matInput placeholder="Tender number" />
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="mr-4">
+            <mat-label>Procurement Method</mat-label>
+            <mat-select>
+              <mat-option>Any</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div class="mt-2">
+            <button
+              class="!bg-accent w-full !text-white px-2 py-3 rounded-md !border-accent"
+            >
+              Search
+            </button>
+            <button
+              class="w-full mt-2 !text-gray-500 px-2 py-2 rounded-md !border !border-gray-500"
+            >
+              Clear
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="flex-1">
+        <div
+          class="flex justify-between p-3 items-center text-sm !border-b border-b-gray-200"
+        >
+          <div class="font-bold">20 Tenders found matching your selection</div>
+          <div
+            class="flex space-x-1 py-1 px-2 !border bg-gray-100 border-gray-300 cursor-pointer rounded-md items-center"
+            [matMenuTriggerFor]="sorter"
+          >
+            <div class="text-gray-400">Sort by:</div>
+            <div class="text-gray-600 flex items-center">
+              <div>Publication date - Descending</div>
+              <mat-icon inline>arrow_drop_down</mat-icon>
+            </div>
+          </div>
+          <mat-menu #sorter="matMenu">
+            <button mat-menu-item>Publication date - Descending</button>
+            <button mat-menu-item>Publication date - Ascending</button>
+            <button mat-menu-item>Submission Deadline - Ascending</button>
+            <button mat-menu-item>Submission Deadline - Ascending</button>
+            <button mat-menu-item>Procuring Entity - Descending</button>
+            <button mat-menu-item>Procuring Entity - Ascending</button>
+          </mat-menu>
+        </div>
+        <div class="p-2">
+          <web-tenders-list></web-tenders-list>
+        </div>
+      </div>
+    </div>
+  </parallax-container>
+</web-layout>

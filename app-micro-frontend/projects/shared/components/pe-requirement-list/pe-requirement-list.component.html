@@ -1,0 +1,25 @@
+@if (criteria.peRequirementType !== null && !criteria.hasSubCriteria) {
+  @if (isCurrentIndex && !criteria.hasSubCriteria && objectForEntityDetail) {
+    <app-criteria-details-form
+      [evaluationCriteria]="criteria" [tenderSubCategory]="tenderSubCategory" [useDefaultCriteria]="useDefaultCriteria"
+      [objectForEntityDetail]="objectForEntityDetail" [enableActionButtons]="true"
+      [showActionButton]="isCurrentIndex && !criteria.hasSubCriteria && !misConfiguredCriteriaStatus"
+      [refreshDetails]="selectedCriteriaForm == criteria.uuid" [showForm]="false" [showTable]="true"
+      [isLastStep]="isLastCriteria" (onEdit)="editEvent($event, criteria)" (onContinueAction)="continueAction($event)"
+      (completeStep)="completeStep($event, criteria)" (setLoading)="setLoading($event, criteria.uuid)"
+      (misConfiguredCriteria)="misConfiguredCriteria(criteria.uuid)"
+      (filledData)="setFilledDataStatus($event, criteria.uuid)">
+    </app-criteria-details-form>
+  }
+  @if (!criteria.hasSubCriteria && misConfiguredCriteriaStatus) {
+    <app-custom-alert-box (click)="stepperAction.emit()" [alertClass]="'bg-red-100 border-red-300  rounded'"
+      [alertButtonClass]="'border-grey !bg-white'" [alertTextClass]="'text-[#302e2e]'"
+      [alertInfo]="misConfigInformationAlertMin">
+    </app-custom-alert-box>
+  }
+}
+
+@if (!criteria.hasSubCriteria && criteria.peRequirementType === null) {
+  <app-custom-alert-box (click)="stepperAction.emit()" [alertInfo]="informationAlertMin">
+  </app-custom-alert-box>
+}

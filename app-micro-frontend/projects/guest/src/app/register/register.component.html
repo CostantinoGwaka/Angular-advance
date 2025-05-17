@@ -1,0 +1,253 @@
+@if (!networkStatus) {
+  <div class="bg-red-800 items-center justify-center fade-in-text h-6">
+    <p class="text-center text-white font-semibold">
+      You're offline. Check your connection.
+    </p>
+  </div>
+}
+<guest-layout
+  [page_title]="'Register as a tenderer (Jisajili kama mzabuni)'"
+  [page_name]="'CREATE_ACCOUNT' | translate"
+  [page_description]="'Register as a tenderer to create an account'"
+  [bodyBackgroundImage]="'/assets/images/register-bg-4.jpg'"
+  >
+  <div class="p-2">
+    <div class="container-fluid">
+      @if (savedSuccessful) {
+        <div class="row">
+          <h1 class="text-center">
+            {{ "EMAIL_SENT_TO" | translate }}
+            <span class="text-blue-500">{{ email }}</span>
+          </h1>
+          <p class="text-gray-600 text-center mt-2">
+            {{ "OPEN_YOUR_EMAIL_TO_COMPLETE_REGISTRATION" | translate }}
+          </p>
+          @if (resendEmailcheck) {
+            <div
+              class="text-muted cursor-pointer text-sm text-center mt-4 mb-4 center mt-10"
+              >
+              {{ "EMAIL_RESENT_TO" | translate }}
+              <div (click)="resendEmail(email)" class="font-medium !text-primary">
+                {{ "RESEND_EMAIL" | translate }}
+              </div>
+            </div>
+          }
+          @if (!resendEmailcheck) {
+            <div
+              class="text-muted cursor-pointer text-sm text-center mt-4 mb-4 center mt-10"
+              >
+              {{ "DID_YOU_NOT_RECEIVE_EMAIL" | translate }}
+              <div (click)="resendEmail(email)" class="font-medium !text-primary">
+                {{ "RESEND_EMAIL" | translate }}
+              </div>
+            </div>
+          }
+          <div class="grid place-items-center mt-3">
+            <button
+              [routerLink]="['']"
+              mat-raised-button
+              class="!border-1 !border-blue-800 !rounded-3xl"
+              >
+              <mat-icon>close</mat-icon> {{ "CLOSE" | translate }}
+            </button>
+          </div>
+        </div>
+      }
+
+      @if (!savedSuccessful) {
+        <div [ngClass]="routeAnimationsElements">
+          <div class="p-0">
+            <mat-form-field appearance="outline">
+              <mat-label>{{ "SELECT_COUNTRY" | translate }}</mat-label>
+              @if (selectedCountry) {
+                <img
+                  matPrefix
+                  style="height: 15px; width: 25px; margin-right: 10px;"
+                  src="assets/flags/{{ selectedCountry.isoCode.toLowerCase() }}.png"
+                  alt="country"
+                  loading="lazy"
+                  />
+              }
+              <mat-select
+                (selectionChange)="countrySelected($event.value)"
+                [(ngModel)]="selectedCountryId"
+                placeholder="{{ 'SELECT_COUNTRY' | translate }}"
+                name="ampm"
+                class="ampm"
+                >
+                <app-mat-select-search [(ngModel)]="countrySearch"> </app-mat-select-search>
+                @for (
+                  country of countryList | search : 'name' : countrySearch
+                  ; track
+                  country) {
+                  <mat-option
+                    [value]="country.phoneCode"
+                    >
+                    <div class="flex flex-row gap-2 items-center">
+                      <img
+                        alt="flag"
+                        style="height: 15px; width: 25px;"
+                        src="assets/flags/{{ country.isoCode.toLowerCase() }}.png"
+                        loading="lazy"
+                        />
+                      <span>(+{{ country.phoneCode }}) {{ country.name }}</span>
+                    </div>
+                  </mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+          @if (selectedCountry) {
+            <div class="p-0" @fadeIn>
+              <div class="p-0 phone-number1" @fadeIn>
+                <mat-form-field appearance="outline">
+                  <mat-label>{{ "PHONE_NUMBER" | translate }}</mat-label>
+                  <div class="flex space-x-1">
+                    <div matPrefix>+{{ selectedCountryCode }}</div>
+                    <div>
+                      <input
+                        [(ngModel)]="phoneNumber"
+                        matInput
+                        type="number"
+                        (keydown)="onKeyDown($event)"
+                        (input)="onInputChange()"
+                        placeholder="XXXXXXXXX"
+                        maxlength="15"
+                        #myInput
+                        class="no-scroll"
+                        />
+                      <!-- maxlength="15" -->
+                    </div>
+                  </div>
+                  <mat-icon matSuffix>phone</mat-icon>
+                </mat-form-field>
+                @if (phoneError) {
+                  <mat-error>Invalid Phone Number</mat-error>
+                }
+              </div>
+            </div>
+          }
+          @if (phoneNumberValid()) {
+            <div class="p-0" @fadeIn>
+              <mat-form-field appearance="outline">
+                <mat-label> {{ "EMAIL_ADDRESS" | translate }}</mat-label>
+                <input
+                  matInput
+                  type="email"
+                  placeholder="{{ 'EMAIL_ADDRESS' | translate }}"
+                  (input)="fieldChange($event, 'email')"
+                  [(ngModel)]="email"
+                  />
+                <mat-icon matSuffix>mail_outline</mat-icon>
+              </mat-form-field>
+            </div>
+          }
+          @if (!selectedCountry) {
+            <div [ngClass]="routeAnimationsElements">
+              <p class="mt-3 mb-3 text-muted lead text-center">
+                {{ "SELECT_COUNTRY_TO_REGISTER" | translate }}
+              </p>
+            </div>
+          }
+          @if (!phoneNumberValid() && selectedCountry) {
+            <div>
+              <p class="mt-3 mb-3 text-muted lead text-center">
+                {{ "ENTER_YOUR_PHONE_NUMBER" | translate }}
+              </p>
+            </div>
+          }
+          @if (phoneNumberValid()) {
+            <div
+              class="place-self-center"
+              style="display: flex; align-items: center; justify-content: center;"
+              >
+              @if (email != '') {
+                <re-captcha
+                  (resolved)="resolved($event)"
+                  siteKey="6LeLb5siAAAAAP4BEIURi24SFg6xhftWAa9FLtlk"
+                ></re-captcha>
+              }
+            </div>
+          }
+          @if (captcha != '' && !showConfirm) {
+            <div class="p-0 mt-3" @fadeIn>
+              <button
+                (click)="showConfirm = true"
+            [disabled]="
+              !validateEmail(email) ||
+              !phoneNumberValid() ||
+              !selectedCountry ||
+              !captcha
+            "
+                class="rounded-md !bg-accent w-full text-white p-3"
+                >
+                {{ "REGISTER" | translate }}
+              </button>
+            </div>
+          }
+          @if (userAccountNotActive) {
+            <div
+              class="text-muted cursor-pointer text-sm text-center mb-4 center mt-10"
+              >
+              {{ "RESEND_ACTIVATION_LINK_TO_YOUR_EMAIL" | translate }}
+              <div (click)="resendEmail(email)" class="font-medium !text-primary">
+                {{ "RESEND_EMAIL" | translate }}
+              </div>
+            </div>
+          }
+          @if (!userAccountNotActive) {
+            <div>
+              @if (showConfirm && !savingData) {
+                <div
+                  class="p-3 mt-3 grid place-items-center rounded-md !border !border-accent bg-accent/5"
+                  @fadeIn
+                  >
+                  <div class="text-center p-2 text-accent m-0">
+                    {{ "YOUR_WILL_RECEIVE_EMAIL_AT_TO_THE_SPECIFIED_ADDRESS" | translate }}
+                  </div>
+                  <div class="text-gray-800 font-normal text-lg py-2">
+                    {{ email }}
+                  </div>
+                  <div class="confirm-div mt-3 flex items-center gap-2">
+                    <button
+                      mat-stroked-button
+                      class="no-button zoom-on-hover"
+                      color="warn"
+                      @fadeIn
+                      (click)="onCancelShowConfirm()"
+                      >
+                      <mat-icon>clear</mat-icon> {{ "CANCEL" | translate }}
+                    </button>
+                    <button
+                      mat-flat-button
+                      class="yes-button zoom-on-hover text-white"
+                      color="accent"
+                      @fadeIn
+                      (click)="onSave(false)"
+                      >
+                      <mat-icon>done</mat-icon> {{ "CONTINUE" | translate }}
+                    </button>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+          @if (savingData) {
+            <div class="col-sm-12 p-0 mt-3" @fadeIn>
+              <app-loader message="Saving user details please wait..."></app-loader>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="text-center center mt-10">
+    <div class="text-center center w-full">
+      {{ "ALREADY_HAVE_AN_ACCOUNT" | translate }}
+      <a [routerLink]="['/login']" href="" class="font-medium !text-primary"
+        >{{ "SIGNIN" | translate }}</a
+        >
+      </div>
+    </div>
+  </guest-layout>

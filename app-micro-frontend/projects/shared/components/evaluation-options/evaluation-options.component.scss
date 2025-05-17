@@ -1,0 +1,28 @@
+.comply-btn {
+  margin-right: 10px;
+  border-radius: 5px;
+  margin-top: 10px;
+  padding: 5px 25px;
+  font-size: 15px;
+}
+
+tr:nth-child(even) {
+  background-color: #f4f6fb!important;
+}
+
+table {
+  width: 100%;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+
+  td {
+    padding-left: 10px !important;
+  }
+
+  th {
+    padding-left: 10px!important;
+    color: #000!important;
+    font-weight: bolder!important;
+    background-color: #0000001a!important;
+    opacity: .8!important;
+  }
+}

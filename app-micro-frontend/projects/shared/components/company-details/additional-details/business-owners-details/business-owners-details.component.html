@@ -1,0 +1,158 @@
+@if (!hideTitle) {
+  <div class="flex justify-between items-center">
+    <div>
+      <span class="text-lg">Business Ownership Details</span>
+    </div>
+    <div>
+      @if (tendererSide && businessOwnerShipData?.ownershipAgreementDocumentUuid) {
+        <button
+          (click)="openOwnerSheetSheet()"
+          class="block uppercase mx-auto border-primary !bg-primary hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs w-20 h-10 rounded float-right"
+          >
+          Add
+        </button>
+      }
+    </div>
+  </div>
+}
+
+@if (loading) {
+  <app-loader message="Fetching Business Ownership details..."></app-loader>
+}
+
+@if (!loading) {
+  <div class="mt-4">
+    <mat-card appearance="outlined">
+      <!-- {{ businessOwnerShipData.ownershipAgreementDocumentUuid | json}} -->
+      @if (businessOwnerShipData) {
+        <div class="row">
+          <!-- tendererSide {{ tendererSide }} -->
+          <div class="col-sm-6">
+            <app-view-details-item
+              key="Business Ownership Type"
+              [value]="businessOwnerShipData.businessOwnership  | replace: '_': ' '"
+            ></app-view-details-item>
+          </div>
+          <div class="col-sm-6">
+            @if (businessOwnerShipData.tendererBusinessOwnershipStructure == 'PERCENT') {
+              <app-view-details-item
+                key="Ownership Structure"
+                [value]="'PERCENTAGE'"
+              ></app-view-details-item>
+            }
+            @if (businessOwnerShipData.tendererBusinessOwnershipStructure != 'PERCENT') {
+              <app-view-details-item
+                key="Ownership Structure"
+                [value]="businessOwnerShipData.tendererBusinessOwnershipStructure"
+              ></app-view-details-item>
+            }
+          </div>
+          @if (businessOwnerShipData?.ownershipAgreementDocumentUuid) {
+            <div class="col-sm-4">
+              <div class="flex-col">
+                <span class="text-grey mb-3 mr-2">Ownership Agreement Document</span>
+                @if (!fetchingAttachment) {
+                  <button
+                    class="py-1 whitespace-nowrap px-2 !border !border-grey-300 rounded !text-grey"
+                    (click)="viewDocument(businessOwnerShipData?.ownershipAgreementDocumentUuid)"
+                    >
+                    <div class="flex">
+                      <img src="assets/images/pdf-icon.png" class="h-[20px] pr-1" />
+                      <span class="text-grey">View Document</span>
+                    </div>
+                  </button>
+                }
+                @if (fetchingAttachment) {
+                  <div class="flex mt-[20px] sm:mt-auto space-x-2">
+                    <mat-progress-spinner [diameter]="30" mode="indeterminate"></mat-progress-spinner>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+        @if (businessOwnerShipData.tendererBusinessOwnersDetails.length !== 0) {
+          <div class="mt-4">
+            <div class="flex flex-row">
+              <div class="!border !border-grey-300 font-bold p-2 w-[5%] bg-gray-50">#</div>
+              <div class="!border !border-grey-300 font-bold p-2 w-[30%] bg-gray-50">
+                Business Owner(s) Name
+              </div>
+              <div class="!border !border-grey-300 font-bold p-2 w-[30%] bg-gray-50">E-mail</div>
+              <div class="!border !border-grey-300 font-bold p-2 w-[20%] bg-gray-50">Phone Number</div>
+              <div class="!border !border-grey-300 font-bold p-2 w-[20%] bg-gray-50">Country</div>
+              <div class="!border !border-grey-300 font-bold p-2 w-[15%] bg-gray-50">
+                {{getDistributionValue(businessOwnerShipData.tendererBusinessOwnershipStructure)}}
+              </div>
+              @if (tendererSide && businessOwnerShipData?.ownershipAgreementDocumentUuid) {
+                <div
+                  class="!border !border-grey-300 font-bold p-2 w-[15%] bg-gray-50"
+                  >
+                  Actions
+                </div>
+              }
+            </div>
+            @for (item of businessOwnerShipData.tendererBusinessOwnersDetails; track item; let i = $index) {
+              <div class="flex flex-row">
+                <div class="!border !border-grey-300 p-2 w-[5%]">{{i+1}}</div>
+                <div class="!border !border-grey-300 p-2 w-[30%]">{{item?.name}}</div>
+                <div class="!border !border-grey-300 break-words p-2 w-[30%]">{{item.email}}</div>
+                <div class="!border !border-grey-300 p-2 w-[20%]">{{item.phoneNumber}}</div>
+                <div class="!border !border-grey-300 p-2 w-[20%]">{{item.country?.name ?? ""}}</div>
+                <div class="!border !border-grey-300 p-2 w-[15%]">{{item.ownershipValue}}</div>
+                @if (tendererSide && businessOwnerShipData?.ownershipAgreementDocumentUuid) {
+                  <div
+                    class="!border !border-grey-300 p-2 w-[15%]"
+                    >
+                    @if (businessOwnerShipData?.ownershipAgreementDocumentUuid) {
+                      <span (click)="openOwnerSheetSheet(item)" title="Click to Edit">
+                        <mat-icon svgIcon="edit"></mat-icon>
+                      </span>
+                    }
+                    @if (businessOwnerShipData?.ownershipAgreementDocumentUuid) {
+                      <ng-container>
+                        @if (!showConfirm && !showDelete) {
+                          <span
+                            [matTooltipPosition]="'right'"
+                            (click)="confirmDelete(item?.uuid)"
+                            matTooltip="Click to Delete"
+                            >
+                            <mat-icon svgIcon="trash_delete"></mat-icon>
+                          </span>
+                        }
+                        @if (showDelete && showDeleteConfirm[item?.uuid]) {
+                          <div
+                            @fadeIn
+                            class="inline-block"
+                            >
+                            Are you sure?
+                            <div
+                              (click)="deleteOwner(item)"
+                              class="inline-block text-white bg-green-600 cursor-pointer hover:shadow-md p-2 rounded-md"
+                              >
+                              Yes
+                            </div>
+                            &nbsp;
+                            <div
+                              (click)="showDelete = false; showConfirm = false"
+                              class="inline-block text-white cursor-pointer hover:shadow-md bg-red-600 p-2 rounded-md"
+                              >
+                              No
+                            </div>
+                          </div>
+                        }
+                      </ng-container>
+                    }
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
+      }
+      @if (!businessOwnerShipData) {
+        <div>No details found</div>
+      }
+    </mat-card>
+  </div>
+}

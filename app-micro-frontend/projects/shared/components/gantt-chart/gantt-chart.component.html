@@ -1,0 +1,186 @@
+<div class="bg-white p-2">
+  <div class="rounded bg-white">
+    <div class="flex min-h-[500px]">
+      <div>
+        <table
+          style="font-size: 12px; width: max-content"
+          [cellPadding]="0"
+          [cellSpacing]="0"
+          >
+          <tr>
+            <td
+              [attr.colspan]="totalInfoColumns()"
+              height="40"
+              [style]="commonTDStyle"
+              >
+              <div class="h-full flex items-center p-[2px]">
+                <button
+                  (click)="onAddTaskClick()"
+                  class="p-1 px-2 !border bg-primary/20 !border-primary rounded-sm !text-primary"
+                  >
+                  + Add Task
+                </button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td
+              [attr.colspan]="totalInfoColumns()"
+              height="60"
+              [style]="commonTDStyle"
+              >
+              <div class="p-[2px]">
+                <div class="flex space-x-2">
+                  <div class="">Start Date:</div>
+                  <button class="">
+                    <span class="border-b border-dashed">
+                      {{ startDate() | date : "dd/MM/yyyy" }}
+                    </span>
+                    {{ " " }}
+                    <span>(Edit)</span>
+                  </button>
+                </div>
+                <div class="flex space-x-2">
+                  <div class="">End Date:</div>
+                  <button class="">
+                    <span class="border-b border-dashed">
+                      {{ endDate() | date : "dd/MM/yyyy" }}
+                    </span>
+                    {{ " " }}
+                    <span>(Edit)</span>
+                  </button>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr style="font-weight: bold">
+            <td width="40" height="42" [style]="infoColumnsTDStyle">No.</td>
+            <td width="370" [style]="infoColumnsTDStyle">Task Name</td>
+            <td width="70" [style]="infoColumnsTDStyle">Start Date</td>
+            <td width="70" [style]="infoColumnsTDStyle">End Date</td>
+            <td width="40" [style]="infoColumnsTDStyle">Days</td>
+            @if (showTaskOwner) {
+              <td width="80" [style]="infoColumnsTDStyle">
+                Task owner
+              </td>
+            }
+            @if (showProgress) {
+              <td width="40" [style]="infoColumnsTDStyle">
+                %
+              </td>
+            }
+          </tr>
+          @for (task of tasks(); track task; let i = $index) {
+            <tr>
+              <td width="40" [style]="commonTDStyle">
+                <div [style]="textWrapperStyle" class="w-[40px]">
+                  {{ task.number }}&nbsp;
+                </div>
+              </td>
+              <td width="170" [style]="commonTDStyle">
+                <div [style]="textWrapperStyle" class="w-[170px]">
+                  {{ task.name }}
+                </div>
+              </td>
+              <td width="70" [style]="commonTDStyle">
+                <div [style]="textWrapperStyle" class="w-[70px]">
+                  {{ task.startDate | date : "dd/MM/yyyy" }}
+                </div>
+              </td>
+              <td width="70" [style]="commonTDStyle">
+                <div [style]="textWrapperStyle" class="w-[70px]">
+                  {{ task.endDate | date : "dd/MM/yyyy" }}
+                </div>
+              </td>
+              <td width="40" [style]="commonTDStyleNumber">
+                <div [style]="textWrapperStyle" class="w-[40px]">
+                  {{ task.days | number : "1.0-0" }}
+                </div>
+              </td>
+              @if (showTaskOwner) {
+                <td width="80" [style]="commonTDStyle">
+                  <div [style]="textWrapperStyle" class="w-[80px]">
+                    {{ task.owner?.name }}
+                  </div>
+                </td>
+              }
+              @if (showProgress) {
+                <td width="40" [style]="commonTDStyleNumber">
+                  {{ task.progress }}
+                </td>
+              }
+            </tr>
+          }
+        </table>
+      </div>
+      <div class="overflow-x-scroll">
+        <table
+          style="font-size: 12px; width: max-content"
+          [cellPadding]="0"
+          [cellSpacing]="0"
+          >
+          <tr style="font-weight: bold">
+            @for (week of weeks(); track week) {
+              <td
+                colspan="7"
+                height="40"
+                [style]="weeksTDStyle"
+                >
+                WEEK {{ week }}
+              </td>
+            }
+          </tr>
+          <tr>
+            @for (date of dates(); track date) {
+              <td
+                height="60"
+                width="20"
+                [style]="datesTDStyle"
+                >
+                <div
+                style="
+                  transform: rotate(-90deg);
+                  width: 20px;
+                  text-align: center;
+                  font-size: 10px;
+                  text-wrap: nowrap;
+                "
+                  >
+                  {{ date | date : "dd MMM" }}
+                </div>
+              </td>
+            }
+          </tr>
+          <tr style="font-weight: bold">
+            @for (date of dates(); track date) {
+              <td
+                width="20"
+                height="42"
+                [style]="daysTDStyle"
+                >
+                {{ getDayName(date) }}
+              </td>
+            }
+          </tr>
+          @for (task of tasks(); track task; let i = $index) {
+            <tr
+              style="font-weight: bold"
+              >
+              @for (date of dates(); track date) {
+                <td
+                  width="20"
+                  [style]="getTaskDayStyle(task, date)"
+                  >
+                  &nbsp;
+                </td>
+              }
+            </tr>
+          }
+        </table>
+      </div>
+    </div>
+
+    <div></div>
+    <div></div>
+  </div>
+</div>

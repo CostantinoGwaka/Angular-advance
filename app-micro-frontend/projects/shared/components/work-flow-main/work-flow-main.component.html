@@ -1,0 +1,248 @@
+<!-- Main Container -->
+<div class="flex flex-col space-y-4">
+  <!-- Content Projection -->
+  <ng-content select="work-flow-content"></ng-content>
+
+  <!-- Comments Section -->
+  @if (!hideCommentSection) {
+  <ng-container
+    [ngTemplateOutletContext]="{comments}"
+    [ngTemplateOutlet]="
+			approvalModelName === 'ProcurementRequisition' ? ifComments : elseComments
+		"
+  >
+  </ng-container>
+  }
+
+  <!-- Comments Templates -->
+  <ng-template #ifComments let-data="comments">
+    @if (!procurementReq?.workflowTask?.isSubTask && (data || []).length > 0) {
+    <app-sharable-comments-viewer
+      [assignedUser]="procurementReq?.assignedUserEmail"
+      [approvalStartDate]="approvalWorkflowStartDate || null"
+      [comments]="data"
+      [showMinimumComments]="true"
+      [minimumCommentsCount]="minimumCommentsCount"
+    >
+    </app-sharable-comments-viewer>
+    }
+  </ng-template>
+
+  <ng-template #elseComments let-data="comments">
+    @if ((data || []).length) {
+    <app-sharable-comments-viewer
+      [assignedUser]="procurementReq?.assignedUserEmail"
+      [approvalStartDate]="approvalWorkflowStartDate || null"
+      [comments]="data"
+      [showMinimumComments]="true"
+      [minimumCommentsCount]="minimumCommentsCount"
+    >
+    </app-sharable-comments-viewer>
+    }
+  </ng-template>
+
+  <!-- Audio Elements -->
+  <!-- <div class="hidden">
+    <audio #sound>
+      <source src="assets/audio/subm_cancel.mp3" type="audio/mpeg" />
+    </audio>
+    <audio #soundApprove>
+      <source src="assets/audio/reject_approve.mp3" type="audio/mpeg" />
+    </audio>
+    <audio #soundReview>
+      <source src="assets/audio/review_return_forward.mp3" type="audio/mpeg" />
+    </audio>
+  </div> -->
+
+  <!-- Workflow Submission Section -->
+  @if (allowWorkflowSubmission) {
+  <!-- Cancel Action Section -->
+  @if (cancelAction) {
+  <div class="space-y-4">
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Task Action</mat-label>
+      <mat-select (selectionChange)="onSelectingTaskAction($event)" [(ngModel)]="taskAction">
+        @for (action of [cancelAction]; track action) {
+        <mat-option [value]="action">{{ action }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    @if (taskAction) {
+    <div @fadeIn class="approval-comment-field">
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Comments *</mat-label>
+        <textarea [(ngModel)]="comment" matInput name="comment" rows="4"></textarea>
+      </mat-form-field>
+    </div>
+    }
+  </div>
+  }
+
+  <!-- Response Area -->
+  @if (!hideAction &&!cancelAction) {
+  <div class="mt-4 p-6 rounded-lg bg-white shadow-sm" id="response-area">
+    <!-- Merged Procurement Section -->
+    @if (type === 'MergedMainProcurementRequisition') {
+    <!-- Termination Loading State -->
+    @if (loadingTermination) {
+    <app-loader [message]="'Just a moment... Updating tender info...'"></app-loader>
+    }
+
+    <!-- Paused State -->
+    @if (mergedProcurementReq?.approvalStatus === 'PAUSED') {
+    <div class="flex items-center space-x-4 p-4 bg-blue-50 rounded-lg">
+      <mat-icon class="text-primary text-5xl">info</mat-icon>
+      <p class="text-gray-700">
+        Tender TERMINATION/WITHDRAW was initiated causing the approval to pause for this tender...
+      </p>
+    </div>
+    }}
+    <!-- Actions Section -->
+    @if ((possibleActions || []).length > 0) { @if(canRespond) {
+    <!-- Warning Messages -->
+    @if (showCheckDetailsWarning) {
+    <app-custom-alert-box
+      [alertClass]="'bg-red-100 border-red-300 rounded-lg mb-4'"
+      [alertButtonClass]="'border-grey !bg-white'"
+      [alertTextClass]="'text-gray-800 text-lg'"
+      [alertInfo]="errorMessage"
+    >
+    </app-custom-alert-box>
+    } @if (showInvitationDateError) {
+    <div class="p-4 mb-4 bg-red-50 rounded-lg">
+      <span class="text-red-600">
+        The invitation date for this tender has expired. Please return the tender to the procurement
+        officer to change invitation date.
+      </span>
+    </div>
+    }
+
+    <!-- Workflow Selection -->
+    @if (usePossibleFlows && !hideActions && workflowTask?.workflowTaskDefinition?.possibleFlows) {
+    <app-work-flow-action-selector
+      [workflowTask]="workflowTask"
+      [stageName]="stageName"
+      [possibleFlows]="workflowTask?.workflowTaskDefinition?.possibleFlows"
+      [mapFunction]="possibleFlowsMapFunction"
+      (selectionChange)="onFlowSelected($event)"
+      [(ngModel)]="selectedWorkFlow"
+    >
+    </app-work-flow-action-selector>
+    } @if (!usePossibleFlows) {
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Task Action</mat-label>
+      @if (!workflowTask?.workflowTaskDefinition?.possibleFlows) {
+      <mat-select (selectionChange)="onSelectingTaskAction($event)" [(ngModel)]="taskAction">
+        @for (action of possibleActions; track action) {
+        <mat-option [value]="action">{{ action }}</mat-option>
+        }
+      </mat-select>
+      } @if (workflowTask?.workflowTaskDefinition?.possibleFlows) {
+      <mat-select (selectionChange)="onSelectingFlow($event)" [(ngModel)]="selectedWorkFlow">
+        @for (flow of workflowTask.workflowTaskDefinition.possibleFlows; track flow) {
+        <mat-option [value]="flow">{{ flow.action }}</mat-option>
+        }
+      </mat-select>
+      }
+    </mat-form-field>
+    } } @else {
+    <app-attention-message
+      type="danger"
+      [message]="'You do not have permission to respond to this task'"
+      [actionButtonLabel]="'Go back'"
+      (onActionButtonClick)="goBack()"
+    >
+    </app-attention-message>
+    }
+
+    <!-- Department Users Selection -->
+    @if (departmentUsers.length > 0) {
+    <div @fadeIn class="mt-4">
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Assigned User</mat-label>
+        <mat-select [(ngModel)]="assigneeUuid" placeholder="Select User">
+          @for (user of departmentUsers; track user) {
+          <mat-option [value]="user.uuid">
+            {{ user.firstName + ' ' + user.middleName + ' ' + user.lastName }} {{ user.email ? '(' +
+            user.email + ')' : '' }}
+          </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+    }
+
+    <!-- Custom Form Content -->
+    <ng-content select="work-flow-custom-form"></ng-content>
+
+    <!-- Comments Input -->
+    @if (hasAttempted && !hideCommentInput) {
+    <div @fadeIn class="mt-4">
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Task comments*</mat-label>
+        <textarea [(ngModel)]="comment" matInput name="comment" rows="4"></textarea>
+      </mat-form-field>
+    </div>
+    }
+
+    <!-- <button
+      (click)="onDoneSubmitTask()"
+      mat-flat-button
+      color="primary"
+      class="px-6 py-2 text-base rounded-md"
+    >
+      <mat-icon class="mr-2">save</mat-icon>
+      Check
+    </button> -->
+
+    <!-- Action Buttons -->
+    @if (hasAttempted && !usesCustomForm && showCompleteTaskButton) {
+    <div @fadeIn class="flex justify-end space-x-4 mt-6">
+      <button
+        (click)="isNegative = null; hasAttempted = false; taskAction = null"
+        mat-stroked-button
+        color="warn"
+        class="px-6 py-2 text-base rounded-md hover:bg-red-50"
+      >
+        <mat-icon class="mr-2">close</mat-icon>
+        {{ 'Close' | translate }}
+      </button>
+      <button
+        (click)="
+					additionalDetails
+						? completeTaskWithAdditionalDetails(taskAction, additionalDetails)
+						: completeTask(taskAction)
+				"
+        mat-flat-button
+        color="primary"
+        [disabled]="
+					!(
+						taskAction &&
+						comment &&
+						(departmentUsers.length > 0 ? assigneeUuid : true)
+					) ||
+					loading ||
+					onSelectionChangeLoading
+				"
+        class="px-6 py-2 text-base rounded-md"
+      >
+        <mat-icon class="mr-2">save</mat-icon>
+        {{ saveButtonText | translate }}
+      </button>
+    </div>
+    } }
+
+    <!-- Loading States -->
+    @if (checkingWorkflow) {
+    <app-loader [message]="'Checking workflow...'"></app-loader>
+    } @if (updatingWorkflow) {
+    <app-loader [message]="'Updating workflow...'"></app-loader>
+    } @if (loading) {
+    <app-loader @fadeIn [message]="message"></app-loader>
+    }
+  </div>
+  }@else {
+  <app-attention-message type="danger" [message]="reasonForHideAction"> </app-attention-message>
+  } }
+</div>

@@ -1,0 +1,55 @@
+@if (alertInfo) {
+<div class="
+  w-full mt-2 mb-2 p-4 border-4 border-dotted
+  border-spacing-3 rounded-md
+  {{alertClass}}"
+    >
+    <div class="w-full flex flex-col">
+      <span class="text-black text-lg">{{alertInfo.title}}</span>
+      <div class="flex flex-row justify-between float {{alertTextClass}} mt-3">
+        <div class="flex flex-col">
+          @for (detail of alertInfo.details; track detail) {
+            <div >
+              <div class="flex flex-row">
+                <div class="mr-1 my-auto">
+                  <mat-icon>{{detail.icon}}</mat-icon>
+                </div>
+                <div class="text-sm my-auto">
+                  {{detail.message}}
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+        @if (alertInfo.showButton) {
+          <div class="flex justify-center">
+            @if (permissions.length) {
+              <ng-container *appHasPermission="permissions">
+                <ng-container *ngTemplateOutlet="unlocked_button"></ng-container>
+              </ng-container>
+            } @else {
+              <ng-container *ngTemplateOutlet="unlocked_button"></ng-container>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+}
+
+<ng-template #unlocked_button>
+  @if (!loading) {
+    <button
+      (click)="buttonClicked.emit($event)"
+      class="mx-auto {{alertButtonClass}}
+        focus:shadow-outline focus:outline-none h-10 rounded">
+      <span class="p-2">{{alertInfo.buttonTitle}}</span>
+    </button>
+  }
+
+  @if (loading) {
+    <mat-spinner
+      [diameter]="18">
+    </mat-spinner>
+  }
+</ng-template>

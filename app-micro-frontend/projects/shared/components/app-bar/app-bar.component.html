@@ -1,0 +1,1245 @@
+<!-- FF0000 -->
+<!-- <div class="bg-red-800 items-center justify-center fade-in-text h-6" *ngIf="!networkStatus">
+<p class="text-center text-white font-semibold">You're offline. Check your connection.</p>
+</div> -->
+<app-internet-status-bar></app-internet-status-bar>
+@if(canCelebrate){
+<app-nest-lauche [replay]="replayCelebrate"></app-nest-lauche>
+}
+
+<div class="top-bar">
+  <div class="top-bar-logo">
+    <div>
+      <div class="logo-img">
+        <a (click)="onLogoClick()">
+          <img
+            alt="NeST Logo"
+            class="inner-logo hover:cursor-pointer"
+            src="/assets/images/logo.png"
+            title="Nest Logo"
+          />
+        </a>
+      </div>
+      <div class="logo-title hover:cursor-pointer">
+        <a (click)="onLogoClick()">
+          National e-Procurement
+          <br />
+          System of Tanzania
+        </a>
+      </div>
+      <!-- animate-pulse -->
+      <!-- <div class="timer text-sm bg-blue-100 text-blue-800 px-2 py-2 rounded-lg font-mono">
+        {{ timeRemaining() || 0 }}
+      </div> -->
+    </div>
+  </div>
+  <div class="top-bar-content">
+    <div class="top-bar-left ml-4">
+      <div class="flex space-x-4">
+        <div>
+          @if (showMenuToggle) {
+          <button (click)="onToggleSidenav()" mat-icon-button aria-label="menu">
+            <mat-icon>menu</mat-icon>
+          </button>
+          }
+        </div>
+        <!-- <div *ngIf="user$ | async as user"
+        class="ml-2">
+        <div *ngIf='user.tenderer'
+          (click)="onYoutubeClick()"
+          title="Profile Sections"
+          class="bg-[#FF0000] w-30 h-10 drop-shadow-lg rounded-md cursor-pointer flex text-white text-xl absolute hover:bg-[#FF0000] hover:drop-shadow-2xl hover:animate-bounce duration-500"
+          style="animation: pulse 1s infinite">
+          <div class="m-2 flex cursor-pointer items-center">
+            <img src="assets/images/1youtube.png"
+              class="md:rounded-full 2xl:rounded-full h-6">
+            <span class="pl-2 text-sm text-white font-extrabold">Guide Video</span>
+          </div>
+        </div>
+      </div> -->
+      </div>
+    </div>
+
+    @if (showSearchbar) {
+    <div class="flex flex-1 justify-items-center pr-14">
+      <system-search-area class="w-full"></system-search-area>
+    </div>
+    }
+    <!-- href="https://helpdesk.nest.go.tz/login/{{ token }}" -->
+    <div class="flex items-center space-x-2">
+      <!-- <a
+    class="cursor-pointer"
+    onMouseOver="window.status=' '; return true;"
+    href="https://livechat.nest.go.tz"
+    target="_blank"
+    >
+    <div class="items-center flex">
+      <div class="col-sm-12 col-xl-12">
+        <div class="flex space-x-2">
+          <div
+            style="padding-top: 0.2em; padding-bottom: 0.2rem"
+            class="flex items-center space-x-1 text-xs px-3 py-2 rounded-md"
+            >
+            <div>
+              <mat-icon
+                [svgIcon]="'help_desk'"
+                class="align-middle"
+              ></mat-icon>
+            </div>
+            <div class="text-black font-bold">
+              {{ "HELP_DESK" | translate }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </a> -->
+      <!-- <div class="items-center flex">
+  <div class="col-sm-12 col-xl-12">
+    <div class="flex space-x-2" *ngIf="networkStatus">
+      <div
+        style="padding-top: 0.2em; padding-bottom: 0.2rem"
+        class="flex items-center space-x-1 text-xs px-3 py-2 bg-green-100 text-gray-800 rounded-full"
+        >
+        <div
+          style="width: 0.4rem; height: 0.4rem"
+          class="bg-green-600 rounded-full"
+        ></div>
+        <div class="text-gray-600 font-bold">Online</div>
+      </div>
+    </div>
+    <div class="flex space-x-2" *ngIf="!networkStatus">
+      <div
+        style="padding-top: 0.2em; padding-bottom: 0.2rem"
+        class="flex items-center space-x-1 text-xs px-3 py-2 bg-red-100 text-gray-800 rounded-full"
+        >
+        <div
+          style="width: 0.4rem; height: 0.4rem"
+          class="bg-red-600 rounded-full"
+        ></div>
+        <div class="text-gray-600 font-bold">Offline</div>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+      <!--      <div (click)="showBanner()" class="cursor-pointer">-->
+      <!--        <img class="h-14 w-14"-->
+      <!--             src="/assets/images/celebrate_two.gif"-->
+      <!--             alt="celebrate" />-->
+      <!--      </div>-->
+
+      <!-- <div *ngIf="loadingVideo" class="items-center flex pr-5 mt-2 pt-3">
+<div class="w-6 aspect-square relative bg-white rounded-full">
+  <div style="height: 50px;">
+    <mat-progress-spinner
+      style="color: red;"
+      [diameter]="30"
+      mode="indeterminate"
+    ></mat-progress-spinner>
+  </div>
+</div>
+</div>
+<div
+  *ngIf="!landing && !loadingVideo && videoIdCode"
+  (click)="onYoutubeClick()"
+  class="items-center flex pr-5"
+  >
+  <div class="w-6 aspect-square relative bg-red-500 rounded-full">
+    <div
+      class="w-6 z-10 aspect-square cursor-pointer absolute bg-red-500 animate-ping rounded-full"
+    ></div>
+    <div
+      class="w-6 z-30 aspect-square cursor-pointer bg-red-500 rounded-full grid place-content-center text-white"
+      >
+      <div class="flex items-center justify-center">
+        <mat-icon>play_arrow</mat-icon>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+      <!-- <div
+class="grid place-content-center cursor-pointer"
+(click)="reCelebrateLaunch()"
+title="Recelebrate NeST Launch"
+>
+<img
+  class="h-[60px] w-auto"
+  src="/assets/images/celebrate.gif"
+  alt="celebrate"
+  />
+</div> -->
+
+      @if (checkRole && landing) {
+      <div (click)="onYoutubeClick()" class="items-center flex pr-5">
+        <div class="w-8 aspect-square relative bg-red-500 rounded-full">
+          <div
+            class="w-8 z-10 aspect-square cursor-pointer absolute bg-red-500 animate-ping rounded-full"
+          ></div>
+          <div
+            class="w-8 z-30 aspect-square cursor-pointer bg-red-500 rounded-full grid place-content-center text-white"
+          >
+            <div class="flex items-center justify-center">
+              <mat-icon>play_arrow</mat-icon>
+            </div>
+          </div>
+        </div>
+      </div>
+      } @if (user$ | async; as user) {
+      <div [matMenuTriggerFor]="translateMenu" class="items-center cursor-pointer flex">
+        <mat-icon>language</mat-icon>
+        <div class="ml-1">
+          {{ currentLabel | translate }}
+        </div>
+        <mat-icon inline>arrow_drop_down</mat-icon>
+      </div>
+      }
+      <mat-menu #translateMenu="matMenu">
+        @for (language of languages; track language) {
+        <button (click)="changeLanguage(language.code)" mat-menu-item class="flex">
+          {{ language.key | translate }}
+        </button>
+        }
+      </mat-menu>
+
+      @if (showHome) {
+      <button
+        (click)="sideNav.open()"
+        mat-icon-button
+        aria-label="notifications"
+        class="rounded-full"
+      >
+        @if ( notifications.length + governmentServiceNotifications.length + countTenderUpdate +
+        countAuditTask + countTaskEsAppeal + countTaskEsf8 + countTaskEsf7 + countTaskDstf7 +
+        countTaskLOf7 + countTaskDstAppeal + countTaskLOAppeal + countTaskLOf8 + countTaskEsEOT +
+        countTaskDstEOT + countTaskDstf8 + countTaskLOEOT + countCuisReport +
+        countSubmissionResultWinnerChangeRequest + countTaskAudit +
+        contractVettingTasksService.myTasksCount() + contractSigningTasksService.myTasksCount() +
+        contractSigningTasksService.myTasksCount() +
+        tendererContractSigningTasksService.myTasksCount() + countMyAlert > 0 ) {
+        <mat-icon
+          matBadge="{{
+            notifications.length +
+              governmentServiceNotifications.length +
+              countMyAlert +
+              countTaskEsAppeal +
+              countTaskDstAppeal +
+              countTaskEsf8 +
+              countTaskEsf7 +
+              countTaskLOf8 +
+              countTaskLOf7 +
+              countTaskDstf7 +
+              countTaskLOAppeal +
+              countTaskEsEOT +
+              countTaskDstf8 +
+              countTaskDstEOT +
+              countTaskLOEOT +
+              countTenderUpdate +
+              countAuditTask +
+              countCuisReport +
+              countTaskAudit +
+              contractVettingTasksService.myTasksCount() +
+              contractSigningTasksService.myTasksCount() +
+              tendererContractSigningTasksService.myTasksCount() +
+              contractGenerationTasksService.myTasksCount() +
+              contractPreconditionsTasksService.myTasksCount() +
+              countSubmissionResultWinnerChangeRequest
+          }}"
+          class="gray"
+          matBadgeColor="warn"
+        >
+          notifications
+        </mat-icon>
+        } @if ( notifications.length + governmentServiceNotifications.length +
+        countSubmissionResultWinnerChangeRequest + countCuisReport + countTaskEsAppeal +
+        countTaskDstAppeal + countTaskEsf8 + countTaskEsf7 + countTaskLOf8 + countTaskLOf7 +
+        countTaskDstf7 + countTaskLOAppeal + countTaskEsEOT + countTaskDstEOT + countTaskDstf8 +
+        countTaskLOEOT + countTenderUpdate + countAuditTask + countTaskAudit +
+        contractVettingTasksService.myTasksCount() + contractSigningTasksService.myTasksCount() +
+        tendererContractSigningTasksService.myTasksCount() +
+        contractGenerationTasksService.myTasksCount() +
+        contractPreconditionsTasksService.myTasksCount() + countMyAlert == 0 ) {
+        <mat-icon class="gray">
+          notifications
+        </mat-icon>
+        }
+      </button>
+      }
+      <app-input-hint></app-input-hint>
+
+      <mat-sidenav-container (backdropClick)="closeBackDrop()" autosize>
+        <mat-sidenav
+          #sideNav
+          [disableClose]="false"
+          (keydown.escape)="closeBackDrop()"
+          position="end"
+          fixedInViewport="true"
+          mode="over"
+          role="dialog"
+          class="notification-side-nav"
+        >
+          <mat-toolbar>
+            <button (click)="sideNav.toggle()" mat-icon-button>
+              <mat-icon>close</mat-icon>
+            </button>
+            <div
+              class="help-text"
+              style="margin-top: 10px; margin-bottom: 20px; padding-left: 15px;"
+            >
+              <div class="flex items-center justify-between">
+                <p
+                  tabindex="0"
+                  class="focus:outline-none text-2xl font-semibold leading-6 text-gray-800 pt-4"
+                >
+                  Notifications
+                </p>
+              </div>
+            </div>
+          </mat-toolbar>
+          <div class="w-full flex-1 overflow-y-hidden h-full overflow-x-hidden">
+            <div class="row mx-0">
+              <h2
+                tabindex="0"
+                class="focus:outline-none text-sm leading-normal pt-8 border-b pb-2 border-gray-300 text-gray-600"
+              >
+                Tasks
+              </h2>
+              <div class="notification-area p-1">
+                @if ( notifications.length + governmentServiceNotifications.length +
+                countSubmissionResultWinnerChangeRequest + countCuisReport + countTaskEsAppeal +
+                countTaskDstAppeal + countTaskLOAppeal + countTaskEsEOT + countTaskDstEOT +
+                countTaskLOEOT + countTenderUpdate + countAuditTask + countTaskAudit +
+                contractVettingTasksService.myTasksCount() +
+                contractSigningTasksService.myTasksCount() +
+                tendererContractSigningTasksService.myTasksCount() +
+                contractGenerationTasksService.myTasksCount() +
+                contractPreconditionsTasksService.myTasksCount() + countMyAlert === 0 ) {
+                <p class="lead">
+                  No Notification
+                </p>
+                } @if ( notifications.length + governmentServiceNotifications.length > 0 ) { @for
+                (notification of notifications; track notification) {
+                <div
+                  (click)="goToTaskUi(notification.url, notification)"
+                  class="text-sm bg-slate-100 hover:bg-slate-300 p-1 rounded-lg mb-1 cursor-pointer"
+                >
+                  <div class="flex items-center">
+                    <div
+                      class="p-2 inline-block w-10 h-10 rounded-full bg-slate-200 justify-center items-center"
+                    >
+                      <mat-icon class="align-middle">event-tick-outline</mat-icon>
+                    </div>
+                    <div class="inline-block ml-2 justify-center items-center">
+                      <div class="font-medium">
+                        You have
+                        <span class="font-medium text-md text-center">
+                          {{ notification.count }}
+                        </span>
+                        {{ notification.model }} pending tasks
+                      </div>
+                      <div style="font-size: 0.55rem; line-height: 0.5rem;">
+                        @for (task of notification?.tasks; track task) {
+                        <div class="bg-white rounded-full py-1 inline-block px-2 mx-1">
+                          {{ task }}
+                        </div>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                } @for ( governmentServiceNotification of governmentServiceNotifications ; track
+                governmentServiceNotification) {
+                <div
+                  (click)="
+                      goToTaskUi(
+                        governmentServiceNotification.url,
+                        governmentServiceNotification
+                      )
+                    "
+                  class="text-sm bg-slate-100 hover:bg-slate-300 p-1 rounded-lg mb-1 cursor-pointer"
+                >
+                  <div class="flex items-center">
+                    <div
+                      class="p-2 inline-block w-10 h-10 rounded-full bg-slate-200 justify-center items-center"
+                    >
+                      <mat-icon class="align-middle">event-tick-outline</mat-icon>
+                    </div>
+                    <div class="inline-block ml-2 justify-center items-center">
+                      <div class="font-medium">
+                        You have
+                        <span class="font-medium text-md text-center">
+                          {{ governmentServiceNotification.count }}
+                        </span>
+                        {{ governmentServiceNotification.model }} pending tasks
+                      </div>
+                      <div style="font-size: 0.55rem; line-height: 0.5rem;">
+                        @for ( task of governmentServiceNotification?.tasks ; track task) {
+                        <div class="bg-white rounded-full py-1 inline-block px-2 mx-1">
+                          {{ task }}
+                        </div>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                } }
+                <ng-container
+                  *appHasPermission="[
+                    'ROLE_APP_MNGT_CDER_GPN_REQUEST_APPROVAL'
+                  ]"
+                >
+                  <div
+                    (click)="
+                      gotoUrl(
+                        '/modules/app-management/gpn-modification/tender-requested'
+                      )
+                    "
+                  >
+                    @if (countTenderUpdate > 0) {
+                    <app-custom-notification
+                      [countTenderUpdate]="
+                        'You have ' +
+                        countTenderUpdate +
+                        ' Tender requested for modification'
+                      "
+                    >
+                    </app-custom-notification>
+                    }
+                  </div>
+                </ng-container>
+
+                <ng-container *appHasPermission="['ROLE_COMPLAINT_ES_PPAA']">
+                  <div
+                    (click)="
+                      gotoUrl(
+                        '/modules/complaint-management/executive-secretary/ppaa-complaint'
+                      )
+                    "
+                  >
+                    @if (countTaskEsAppeal > 0) {
+                    <app-custom-notification
+                      [countTenderUpdate]="
+                        'You have ' +
+                        countTaskEsAppeal +
+                        ' appeals to review at the ES level'
+                      "
+                    >
+                    </app-custom-notification>
+                    }
+                  </div>
+                </ng-container>
+
+                <ng-container *appHasPermission="['ROLE_COMPLAINT_ES_PPAA']">
+                  <div
+                    (click)="
+                      gotoUrl(
+                        '/modules/complaint-management/executive-secretary/ppaa-execution'
+                      )
+                    "
+                  >
+                    @if (countTaskEsf8 > 0) {
+                    <app-custom-notification
+                      [countTenderUpdate]="
+                        'You have ' +
+                        countTaskEsf8 +
+                        ' execution application to review at the ES level'
+                      "
+                    >
+                    </app-custom-notification>
+                    }
+                  </div>
+                </ng-container>
+
+                <ng-container *appHasPermission="['ROLE_AUDIT_TASK']">
+                  <div
+                    (click)="
+                      gotoUrl('/modules/pe-auditors/audit/audit-plan-task')
+                    "
+                  >
+                    @if (countAuditTask > 0) {
+                    <app-custom-notification
+                      [countTenderUpdate]="
+                        'You have ' + countAuditTask + ' audit plan task'
+                      "
+                    >
+                    </app-custom-notification>
+                    }
+                  </div>
+                </ng-container>
+
+                <ng-container *appHasPermission="['ROLE_AUDIT_INITIATION']">
+                  <div
+                    (click)="
+                      gotoUrl('/modules/pe-auditors/execution/audit-execution')
+                    "
+                  >
+                    @if (countTaskAudit > 0) {
+                    <app-custom-notification
+                      [countTenderUpdate]="
+                        'You have ' +
+                        countTaskAudit +
+                        ' pe auditing task - AUDITOR'
+                      "
+                    >
+                    </app-custom-notification>
+                    }
+                  </div>
+                </ng-container>
+
+                <ng-container *appHasPermission="['ROLE_AO_AUDIT']">
+                  <div
+                    (click)="
+                      gotoUrl(
+                        '/modules/pe-auditors/dgaudit/ao-auditors-execution'
+                      )
+                    "
+                  >
+                    @if (countTaskAudit > 0) {
+                    <app-custom-notification
+                      [countTenderUpdate]="
+                        'You have ' + countTaskAudit + ' pe auditing task - DG'
+                      "
+                    >
+                    </app-custom-notification>
+                    }
+                  </div>
+                </ng-container>
+
+                <ng-container *appHasPermission="['ROLE_HOD_AUDIT']">
+                  <div
+                    (click)="
+                      gotoUrl(
+                        '/modules/pe-auditors/hodaudit/hod-auditors-execution'
+                      )
+                    "
+                  >
+                    @if (countTaskAudit > 0) {
+                    <app-custom-notification
+                      [countTenderUpdate]="
+                        'You have ' +
+                        countTaskAudit +
+                        ' pe auditing task - DIRECTOR'
+                      "
+                    >
+                    </app-custom-notification>
+                    }
+                  </div>
+                </ng-container>
+
+                <ng-container *appHasPermission="['ROLE_AUDIT_PLAN_ITEM']">
+                  <div
+                    (click)="
+                      gotoUrl(
+                        '/modules/pe-auditors/audit/auditors-execution-manage'
+                      )
+                    "
+                  >
+                    @if (countTaskAudit > 0) {
+                    <app-custom-notification
+                      [countTenderUpdate]="
+                        'You have ' +
+                        countTaskAudit +
+                        ' pe auditing task - MANAGER'
+                      "
+                    >
+                    </app-custom-notification>
+                    }
+                  </div>
+                </ng-container>
+
+                <ng-container *appHasPermission="['ROLE_AUDIT_PE_RESPOND']">
+                  <div
+                    (click)="
+                      gotoUrl('/modules/pe-auditors/perespond/audit-pe-respond')
+                    "
+                  >
+                    @if (countTaskAudit > 0) {
+                    <app-custom-notification
+                      [countTenderUpdate]="
+                        'You have ' + countTaskAudit + ' pe auditing task - AO'
+                      "
+                    >
+                    </app-custom-notification>
+                    }
+                  </div>
+                </ng-container>
+
+                <ng-container *appHasPermission="['ROLE_AUDIT_HPMU_RESPOND']">
+                  <div
+                    (click)="
+                      gotoUrl(
+                        '/modules/pe-auditors/perespond/audit-hpmu-respond'
+                      )
+                    "
+                  >
+                    @if (countTaskAudit > 0) {
+                    <app-custom-notification
+                      [countTenderUpdate]="
+                        'You have ' +
+                        countTaskAudit +
+                        ' pe auditing task - HPMU'
+                      "
+                    >
+                    </app-custom-notification>
+                    }
+                  </div>
+                </ng-container>
+
+                <ng-container *appHasPermission="['ROLE_COMPLAINT_ES_PPAA']">
+                  <div
+                    (click)="
+                      gotoUrl(
+                        '/modules/complaint-management/executive-secretary/ex-parte-decision'
+                      )
+                    "
+                  >
+                    @if (countTaskEsf7 > 0) {
+                    <app-custom-notification
+                      [countTenderUpdate]="
+                        'You have ' +
+                        countTaskEsf7 +
+                        ' ex parte decison application to review at the ES level'
+                      "
+                    >
+                    </app-custom-notification>
+                    }
+                  </div>
+                </ng-container>
+
+                <ng-container *appHasPermission="['ROLE_COMPLAINT_ES_PPAA']">
+                  <div
+                    (click)="
+                      gotoUrl(
+                        '/modules/complaint-management/executive-secretary/eot-applications'
+                      )
+                    "
+                  >
+                    @if (countTaskEsEOT > 0) {
+                    <app-custom-notification
+                      [countTenderUpdate]="
+                        'You have ' +
+                        countTaskEsEOT +
+                        ' eot application to review at the ES level'
+                      "
+                    >
+                    </app-custom-notification>
+                    }
+                  </div>
+                </ng-container>
+
+                <ng-container *appHasPermission="['ROLE_COMPLAINT_DST_PPAA']">
+                  <div
+                    (click)="
+                      gotoUrl(
+                        '/modules/complaint-management/deputy-executive-secretary/eot-applications'
+                      )
+                    "
+                  >
+                    @if (countTaskDstEOT > 0) {
+                    <app-custom-notification
+                      [countTenderUpdate]="
+                        'You have ' +
+                        countTaskDstEOT +
+                        ' eot application to review at the DST level'
+                      "
+                    >
+                    </app-custom-notification>
+                    }
+                  </div>
+                </ng-container>
+
+                <ng-container *appHasPermission="['ROLE_COMPLAINT_DST_PPAA']">
+                  <div
+                    (click)="
+                      gotoUrl(
+                        '/modules/complaint-management/deputy-executive-secretary/execution-application'
+                      )
+                    "
+                  >
+                    @if (countTaskDstf8 > 0) {
+                    <app-custom-notification
+                      [countTenderUpdate]="
+                        'You have ' +
+                        countTaskDstf8 +
+                        ' execution application to review at the DST level'
+                      "
+                    >
+                    </app-custom-notification>
+                    }
+                  </div>
+                </ng-container>
+
+                <ng-container *appHasPermission="['ROLE_COMPLAINT_DST_PPAA']">
+                  <div
+                    (click)="
+                      gotoUrl(
+                        '/modules/complaint-management/deputy-executive-secretary/ex-parte-decision'
+                      )
+                    "
+                  >
+                    @if (countTaskDstf7 > 0) {
+                    <app-custom-notification
+                      [countTenderUpdate]="
+                        'You have ' +
+                        countTaskDstf7 +
+                        ' ex parte decision application to review at the DST level'
+                      "
+                    >
+                    </app-custom-notification>
+                    }
+                  </div>
+                </ng-container>
+
+                <ng-container *appHasPermission="['ROLE_COMPLAINT_DST_PPAA']">
+                  <div
+                    (click)="
+                      gotoUrl(
+                        '/modules/complaint-management/deputy-executive-secretary/dst-ppaa-appeal'
+                      )
+                    "
+                  >
+                    @if (countTaskDstAppeal > 0) {
+                    <app-custom-notification
+                      [countTenderUpdate]="
+                        'You have ' +
+                        countTaskDstAppeal +
+                        ' appeals to review at the DST level'
+                      "
+                    >
+                    </app-custom-notification>
+                    }
+                  </div>
+                </ng-container>
+
+                <ng-container *appHasPermission="['ROLE_COMPLAINT_LO_PPAA']">
+                  <div
+                    (click)="
+                      gotoUrl(
+                        '/modules/complaint-management/legal-officer/lo-ppaa-appeal'
+                      )
+                    "
+                  >
+                    @if (countTaskLOAppeal > 0) {
+                    <app-custom-notification
+                      [countTenderUpdate]="
+                        'You have ' +
+                        countTaskLOAppeal +
+                        ' appeals to review at the LO level'
+                      "
+                    >
+                    </app-custom-notification>
+                    }
+                  </div>
+                </ng-container>
+
+                <ng-container *appHasPermission="['ROLE_COMPLAINT_LO_PPAA']">
+                  <div
+                    (click)="
+                      gotoUrl(
+                        '/modules/complaint-management/legal-officer/lo-execution'
+                      )
+                    "
+                  >
+                    @if (countTaskLOf8 > 0) {
+                    <app-custom-notification
+                      [countTenderUpdate]="
+                        'You have ' +
+                        countTaskLOf8 +
+                        ' execution application to review at the LO level'
+                      "
+                    >
+                    </app-custom-notification>
+                    }
+                  </div>
+                </ng-container>
+
+                <ng-container *appHasPermission="['ROLE_COMPLAINT_LO_PPAA']">
+                  <div
+                    (click)="
+                      gotoUrl(
+                        '/modules/complaint-management/legal-officer/lo-execution'
+                      )
+                    "
+                  >
+                    @if (countTaskLOf7 > 0) {
+                    <app-custom-notification
+                      [countTenderUpdate]="
+                        'You have ' +
+                        countTaskLOf7 +
+                        ' ex parte decision to review at the LO level'
+                      "
+                    >
+                    </app-custom-notification>
+                    }
+                  </div>
+                </ng-container>
+
+                <ng-container *appHasPermission="['ROLE_COMPLAINT_LO_PPAA']">
+                  <div
+                    (click)="
+                      gotoUrl(
+                        '/modules/complaint-management/legal-officer/eot-applications'
+                      )
+                    "
+                  >
+                    @if (countTaskLOEOT > 0) {
+                    <app-custom-notification
+                      [countTenderUpdate]="
+                        'You have ' +
+                        countTaskLOEOT +
+                        ' eot application to review at the DST level'
+                      "
+                    >
+                    </app-custom-notification>
+                    }
+                  </div>
+                </ng-container>
+
+                <ng-container
+                  *appHasPermission="[
+                    'ROLE_APP_MNGT_CDER_GPN_REQUEST_APPROVAL'
+                  ]"
+                >
+                  <div
+                    (click)="
+                      gotoUrl(
+                        '/modules/tender-evaluation/framework-evaluation/framework-evaluation-reports'
+                      )
+                    "
+                  >
+                    @if (countCuisReport > 0) {
+                    <app-custom-notification
+                      [countTenderUpdate]="
+                        'You have ' +
+                        countCuisReport +
+                        ' CUIS Evaluation Report for Approval'
+                      "
+                    >
+                    </app-custom-notification>
+                    }
+                  </div>
+                </ng-container>
+
+                <ng-container *appHasPermission="['ROLE_TNDR_EVL_WINNER_EVALUATION']">
+                  <div
+                    (click)="
+                      gotoUrl(
+                        '/modules/tender-evaluation/framework-evaluation/winner-request'
+                      )
+                    "
+                  >
+                    @if (countSubmissionResultWinnerChangeRequest > 0) {
+                    <app-custom-notification
+                      [countTenderUpdate]="
+                        'You have ' +
+                        countSubmissionResultWinnerChangeRequest +
+                        ' CUIS Evaluation requested for winner change request'
+                      "
+                    >
+                    </app-custom-notification>
+                    }
+                  </div>
+                </ng-container>
+
+                @if(contractVettingTasksService.myTasksCount()>0){
+                <ng-container *appHasPermission="contractVettingTasksService.permissions">
+                  <div
+                    (click)="
+                      gotoUrl('/modules/contracts-creation/my-vetting-tasks')
+                    "
+                  >
+                    @if (contractVettingTasksService.myTasksCount() > 0) {
+                    <app-custom-notification
+                      [countTenderUpdate]="
+                        'You have ' +
+                        contractVettingTasksService.myTasksCount() +
+                        ' Contract Vetting Task' +
+                        (contractVettingTasksService.myTasksCount() > 1
+                          ? 's'
+                          : '') +
+                        ''
+                      "
+                    >
+                    </app-custom-notification>
+                    }
+                  </div>
+                </ng-container>
+                } @if(contractSigningTasksService.myTasksCount()>0){
+                <ng-container *appHasPermission="contractSigningTasksService.permissions">
+                  <div
+                    (click)="
+                      gotoUrl('/modules/contracts-creation/signing-tasks')
+                    "
+                  >
+                    @if (contractSigningTasksService.myTasksCount() > 0) {
+                    <app-custom-notification
+                      [countTenderUpdate]="
+                        'You have ' +
+                        contractSigningTasksService.myTasksCount() +
+                        ' Contract Signing Task' +
+                        (contractSigningTasksService.myTasksCount() > 1
+                          ? 's'
+                          : '') +
+                        ''
+                      "
+                    >
+                    </app-custom-notification>
+                    }
+                  </div>
+                </ng-container>
+                }@if(tendererContractSigningTasksService.myTasksCount()>0){
+                <ng-container
+                  *appHasPermission="
+                    tendererContractSigningTasksService.permissions
+                  "
+                >
+                  <div
+                    (click)="
+                      gotoUrl(
+                        '/nest-tenderer/contracts/pending-contracts-tasks'
+                      )
+                    "
+                  >
+                    @if ( tendererContractSigningTasksService.myTasksCount() > 0 ) {
+                    <app-custom-notification
+                      [countTenderUpdate]="
+                        'You have ' +
+                        tendererContractSigningTasksService.myTasksCount() +
+                        ' Contract Signing Task' +
+                        (tendererContractSigningTasksService.myTasksCount() > 1
+                          ? 's'
+                          : '') +
+                        ''
+                      "
+                    >
+                    </app-custom-notification>
+                    }
+                  </div>
+                </ng-container>
+                } @if(contractGenerationTasksService.myTasksCount()>0){
+                <ng-container *appHasPermission="contractGenerationTasksService.permissions">
+                  <div (click)="gotoUrl('/modules/contracts-creation/my-tasks')">
+                    @if (contractGenerationTasksService.myTasksCount() > 0) {
+                    <app-custom-notification
+                      [countTenderUpdate]="
+                        'You have ' +
+                        contractGenerationTasksService.myTasksCount() +
+                        ' Contract Preparation Task' +
+                        (contractGenerationTasksService.myTasksCount() > 1
+                          ? 's'
+                          : '') +
+                        ''
+                      "
+                    >
+                    </app-custom-notification>
+                    }
+                  </div>
+                </ng-container>
+                } @if(contractPreconditionsTasksService.myTasksCount()>0){
+                <ng-container
+                  *appHasPermission="
+                    contractPreconditionsTasksService.permissions
+                  "
+                >
+                  <div
+                    (click)="
+                      gotoUrl(
+                        '/modules/contracts-creation/my-tenderer-contract-information-approval-tasks'
+                      )
+                    "
+                  >
+                    @if ( contractPreconditionsTasksService.myTasksCount() > 0 ) {
+                    <app-custom-notification
+                      [countTenderUpdate]="
+                        'You have ' +
+                        contractPreconditionsTasksService.myTasksCount() +
+                        ' Contract Preconditions Approval Task' +
+                        (contractPreconditionsTasksService.myTasksCount() > 1
+                          ? 's'
+                          : '') +
+                        ''
+                      "
+                    >
+                    </app-custom-notification>
+                    }
+                  </div>
+                </ng-container>
+                }
+
+                <!-- <ng-container
+                  *appHasPermission="[
+                    'ROLE_APP_MNGT_CDER_GPN_REQUEST_APPROVAL'
+                  ]"
+          >
+          <ng-container *ngIf="countTenderUpdate > 0">
+            <div
+                      [routerLink]="[
+                        '/modules/app-management/gpn-modification/tender-requested'
+                      ]"
+              (click)="sideNav.toggle()"
+              class="text-sm bg-slate-100 hover:bg-slate-300 p-1 rounded-lg mb-1 cursor-pointer"
+              >
+              <div class="flex items-center">
+                <div
+                  class="p-2 inline-block w-10 h-10 rounded-full bg-slate-200 justify-center items-center"
+                  >
+                  <mat-icon class="align-middle">event-tick-outline</mat-icon>
+                </div>
+                <div class="inline-block ml-2 justify-center items-center">
+                  <div class="font-medium">
+                    You have
+                    <span class="font-medium text-md text-center">
+                      {{ countTenderUpdate }}
+                    </span>
+                    Tender requested for modification
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container> -->
+              </div>
+
+              @if(serviceUserType !== 'TENDERER'){
+              <div class="flex justify-between items-center">
+                <div>
+                  <h2 tabindex="0" class="focus:outline-none text-sm text-gray-600">
+                    Clarifications
+                    <span
+                      class="inline-block leading-none text-center whitespace-nowrap align-middle font-bold bg-red-700 text-white rounded ml-2 py-1 px-2"
+                      >{{ countMyAlert }}</span
+                    >
+                  </h2>
+                </div>
+                @if(alertMyAlert.length != 0){
+                <button
+                  *appHasPermission="[
+                    'ROLE_TNDR_AWRD_REQUEST_INTC_AWARD',
+                  ]"
+                  mat-flat-button
+                  color="primary text-white"
+                  (click)="clearNotification()"
+                  class="!m-0 py-1 pb-1 pl-3 pr-3 cursor-pointer flex items-center justify-center gap-2"
+                >
+                  <div class="flex items-center justify-center">
+                    <div class="mt-2"><mat-icon svgIcon="clear_all"></mat-icon></div>
+                    <div class="ml-2">Clear All</div>
+                  </div>
+                </button>
+                }
+              </div>
+              <hr class="h-px m-2 bg-gray-200 border-0 dark:bg-gray-700" />
+              @if (loadinArets) {
+              <app-loader [message]="'Please wait...'"> </app-loader>
+              } @if (!loadinArets) {
+              <div class="max-h-[700px] overflow-y-auto">
+                @if (alertMyAlert.length == 0) {
+                <p class="lead">
+                  No Clarifications
+                </p>
+                } @for (alert of alertMyAlert; track alert) {
+                <div>
+                  <div
+                    [routerLink]="[
+                      '',
+                      'modules',
+                      'tender-initiation',
+                      'published-tenders',
+                      alert.tenderUuid,
+                      alert.procurementRequisitionUuid,
+                      alert.entityType,
+                      'tab2'
+                    ]"
+                    (click)="sideNav.toggle()"
+                    class="w-full cursor-pointer hover:bg-slate-300 radius-10 border-start border-0 border-3 border-primary my-2 overflow-hidden rounded shadow-sm"
+                  >
+                    <div class="flex items-center p-4 rounded-lg shadow-xl relative">
+                      <span
+                        class="text-xs font-bold uppercase px-2 mt-2 mr-2 text-green-900 bg-green-400 border rounded-full absolute top-0 right-0"
+                        >New</span
+                      >
+                      <span
+                        class="text-xs font-semibold uppercase m-1 py-1 mr-3 text-gray-500 absolute bottom-0 right-0"
+                      >
+                        {{ formatDate(alert.createdAt) }} | {{ formatDateMessage(alert.createdAt) }}
+                      </span>
+                      <div class="ml-1">
+                        <h4 class="text-lg font-semibold leading-tight text-gray-900">
+                          {{ subStringTitle(alert.title) }}
+                        </h4>
+                        <p
+                          [innerHTML]="subStringMessage(alert.question)"
+                          class="text-sm text-gray-600"
+                        ></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                }
+              </div>
+              } }@else{ }
+            </div>
+          </div>
+        </mat-sidenav>
+        <mat-sidenav-content></mat-sidenav-content>
+      </mat-sidenav-container>
+      <code id="userData" class="hidden">{{ user$ | async | json }}</code>
+
+      <mat-menu #notification="matMenu" class="menu-items">
+        <app-notifications [notifications]="notifications"></app-notifications>
+      </mat-menu>
+
+      <div [matMenuTriggerFor]="hideUserDiv ? profile : null" matRipple class="pointer py-2 px-2">
+        <div class="flex space-x-3 items-center pr-2">
+          <img src="/assets/images/avatar.svg" />
+          <div class="hidden md:block">
+            <div>
+              <b>
+                {{ (user$ | async)?.fullName }}
+              </b>
+            </div>
+            @if (users?.embassy != null) {
+            <small>
+              <span>
+                {{ users?.embassy?.name }}
+              </span>
+            </small>
+            }
+            <!-- users?.userProcuringEntities?.length -->
+            @if (user$ | async; as user) {
+            <small class="text-muted" style="font-size: 10px;">
+              @if (user.procuringEntity) {
+              <span>
+                {{ subStringSubjectTitle(user.procuringEntity?.name) }}
+              </span>
+              } @else {
+              <span *ngeIf="user.tenderer">
+                {{ user.tenderer?.name }}
+              </span>
+              }
+            </small>
+            }
+          </div>
+          @if (hideUserDiv) {
+          <mat-icon>expand_more</mat-icon>
+          }
+        </div>
+      </div>
+      <mat-menu
+        #profile="matMenu"
+        id="top-menu-user-profile-menu"
+        class="menu-user-profile w-[350px] mr-2 mt-2 rounded-[10px] bg-white shadow-sm border"
+        style="border-radius: 10px;"
+      >
+        <div class="flex">
+          <div class="card" style="border: none;">
+            @if (user$ | async; as user) {
+            <div class="top-container px-4">
+              <img src="/assets/images/avatar.svg" class="img-fluid profile-image" width="80" />
+              @if (user.procuringEntity) {
+              <div class="position py-2">
+                <div class="name">{{ user.firstName }} {{ user.lastName }}</div>
+                <div class="text-muted text-[10px]">{{ user.email }}</div>
+                <div class="text-muted text-[12px]">
+                  <!-- {{ user.email }} -->
+                  {{ user.displayRole }}
+                </div>
+                <div class="font-size-11">
+                  {{ user.department?.name }}
+                </div>
+              </div>
+              } @if (user.tenderer) {
+              <div class="ml-3">
+                <h5 class="name">
+                  {{ subStringSubjectT(user.tenderer?.name) }}
+                </h5>
+                <p class="mail">TENDERER</p>
+              </div>
+              } @if (users?.embassy != null) {
+              <div class="ml-3">
+                <h5 class="name">
+                  {{ subStringSubjectT(users?.embassy?.name) }}
+                </h5>
+                <p class="mail">EMBASSY USER</p>
+              </div>
+              }
+              <!-- </small> -->
+            </div>
+            }
+            <mat-divider></mat-divider>
+            @if (user$ | async; as user) { @if (this.users?.hasSignature) {
+            <button
+              [routerLink]="[
+                  user.procuringEntity
+                    ? '/modules/account/profile'
+                    : '/nest-tenderer/profile'
+                ]"
+              mat-menu-item
+            >
+              <mat-icon>account_circle</mat-icon>
+              <span>Profile</span>
+            </button>
+            } } @if (user$ | async; as user) {
+            <button (click)="verifyDocument()" mat-menu-item>
+              <mat-icon>check_circle</mat-icon>
+              <span>Verify Document</span>
+            </button>
+            @if (users?.userProcuringEntities?.length > 1) {
+            <button (click)="switchAccount(user)" mat-menu-item>
+              <mat-icon>compare_arrows</mat-icon>
+              <span>Switch Institution</span>
+            </button>
+            } @if (users?.hasSignature && checkRole && !users?.hasHandover) {
+            <button (click)="handOver(user)" mat-menu-item>
+              <mat-icon>work_off</mat-icon>
+              <span>Hand Over</span>
+            </button>
+            } @if (users?.hasSignature) {
+            <button (click)="changeKeyPhrase(user)" mat-menu-item>
+              <mat-icon>vpn_key</mat-icon>
+              <span>Change Key phrase</span>
+            </button>
+            } @if (!users?.hasSignature) {
+            <button (click)="revokeKeyPhrase(user)" mat-menu-item>
+              <mat-icon>sync</mat-icon>
+              <span>Revoke Keyphrase</span>
+            </button>
+            }
+            <button (click)="changePassword(user)" mat-menu-item>
+              <mat-icon>lock</mat-icon>
+              <span>Change Password</span>
+            </button>
+            <!-- <button [routerLink]="['']"
+          mat-menu-item>
+          <mat-icon>arrow_back</mat-icon>
+          <span>Go to Homepage</span>
+        </button> -->
+            }
+            <mat-divider></mat-divider>
+            @if (user?.procuringEntity && !users?.hasSignature) {
+            <button [routerLink]="['/pe-signature']" mat-menu-item>
+              <mat-icon>vpn_key</mat-icon>
+              <span>Request Signature</span>
+            </button>
+            } @if (user?.tenderer && !users?.hasSignature) {
+            <button [routerLink]="['/tenderer_registration/profile-completion']" mat-menu-item>
+              <mat-icon>vpn_key</mat-icon>
+              <span>Request Signature</span>
+            </button>
+            }
+            <button (click)="logOut()" class="pl-6" mat-menu-item>
+              <mat-icon>logout</mat-icon>
+              <span>Logout</span>
+            </button>
+          </div>
+        </div>
+      </mat-menu>
+      <!-- <div class="hidden">
+        <audio #sound muted>
+          <source src="assets/audio/logout.mp3" type="audio/mpeg" />
+        </audio>
+      </div> -->
+    </div>
+  </div>
+</div>

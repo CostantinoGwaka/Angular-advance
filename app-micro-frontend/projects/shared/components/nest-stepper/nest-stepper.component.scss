@@ -1,0 +1,49 @@
+.active{
+  @apply bg-primary text-white shadow-md fill-white stroke-white
+}
+
+.inactive{
+  @apply bg-slate-300 text-slate-400 fill-slate-400 stroke-slate-400
+}
+
+.stepper-button {
+  transition: background-color 0.3s;
+}
+
+.stepper-button{
+  @apply bg-gray-200 text-slate-700 hover:bg-slate-300
+}
+
+.stepper-button.active {
+  @apply bg-primary text-white
+}
+
+.stepper-line {
+  border-top: 2px solid gray;
+  margin: 0;
+}
+
+.confirm-div {
+  display: flex;
+  justify-content: center;
+  button {
+    //color: white;
+    border-radius: 20px!important;
+  }
+
+  .yes-button {
+    margin-right: 10px;
+    border: 2px solid green;
+    color: green;
+    border-radius: 20px;
+    font-weight: bolder;
+  }
+
+  .no-button {
+    margin-right: 10px;
+    border: 2px solid gray;
+    color: gray;
+    border-radius: 20px;
+    font-weight: bolder;
+  }
+}

@@ -1,0 +1,29 @@
+<div class="border-[1px] rounded-[16px] grid grid-cols-12 divide-x mb-2">
+  <div class="col-span-2 px-2 py-3">
+    <div class="flex items-center justify-center text-[14px] font-[900] ">{{calenderItem.calendarDay}}</div>
+    <div class="flex items-center justify-center text-[24px] font-[900] ">{{calenderItem.calendarDate}}</div>
+    <div class="flex items-center justify-center text-[10px] font-[700] ">{{calenderItem.calendarMonth}}
+    {{calenderItem.calendarYear}}</div>
+  </div>
+  <div  class="col-span-10 flex items-center justify-between px-[16px]">
+    <div class="font-[700] text-[14px] text-[#909498] ">
+      {{calenderItem.stageName}}
+      @if (isCurrentStage()) {
+        <div>
+          <span class="font-[700] text-[12px] text-[#0774a0]">{{calenderItem.daysToNextStage}} days to</span>&nbsp;<span
+        class="text-[#6ec3e4] text-[10px] font-[700]">{{calenderItem.nextState}}</span>
+      </div>
+    }
+  </div>
+  @if (isStagePassed() && !isCurrentStage()) {
+    <div
+      class=" bg-[#ececec]  px-[15px] py-[1px] text-[10px] font-[700] text-[#828282] flex items-center rounded-full">
+    Passed</div>
+  }
+  @if (isCurrentStage()) {
+    <div
+      class=" bg-[#b1eab2]  px-[15px] py-[1px] text-[10px] font-[700] text-[#059749] flex items-center rounded-full">
+    Current</div>
+  }
+</div>
+</div>

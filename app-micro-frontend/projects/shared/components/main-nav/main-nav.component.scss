@@ -1,0 +1,217 @@
+@import '/src/styles/colors.scss';
+@import '/src/styles/variables.scss';
+
+.sidenav-container {
+  height: 100%;
+}
+
+mat-nav-list {
+  padding-top: 1px;
+}
+
+.active-menu {
+  //@apply rounded-none bg-gray-400 text-black border-r-2 border-r-first;
+  border-radius: 0!important;
+  background-color: #f3fbff;
+  border-right: 4px solid $primary !important;
+
+
+}
+
+.fixed-widget {
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+
+ .mat-drawer-inner-container {
+   overflow-x: hidden!important;
+ }
+
+.sidenav {
+  width: 350px;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.14);
+  overflow-x: hidden;
+  //box-shadow: inset 2px 0 3px
+}
+
+// .sidenav .mat-toolbar {
+//   //@apply bg-first;
+// }
+
+.mat-toolbar .mat-primary {
+  position: absolute;
+  top: 0;
+  z-index: 1;
+}
+
+.example-fill-remaining-space {
+  /* This fills the remaining space, by using flexbox.
+     Every toolbar row uses a flexbox row layout. */
+  flex: 1 1 auto;
+}
+
+.mat-drawer-side {
+  border: 0 !important;
+}
+
+/*TODO(mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version.*/
+.mat-mdc-list-base .mat-mdc-list-item, .mat-mdc-list-base .mat-list-option {
+  display: block;
+  height: 60px!important;
+  width: 100%;
+  padding: 0;
+  transition: all 0.3s cubic-bezier(.25, .8, .25, 1) !important;
+}
+
+/*TODO(mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version.*/
+.mat-mdc-list-base .mat-mdc-list-item:hover, .mat-mdc-list-base .mat-list-option:hover {
+  transform: scale(1.03);
+  font-size: 16px!important;
+  font-weight: 500!important;
+  color: black!important;
+  border-right: 4px solid #0277bd!important;
+}
+
+.sidenav-container {
+  // height: 100%;
+  overflow: hidden !important;
+  margin-bottom: 10px;
+  height: calc(100vh - var(--top-nav-height));
+
+  .mat-expansion-panel:not([class*='mat-elevation-z']) {
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.2), 0 0 0 0 rgba(0, 0, 0, 0.14), 0 0 0 0 rgba(0, 0, 0, 0.12) !important;
+  }
+
+  .mat-expansion-panel-header {
+    padding: 20px 15px !important;
+  }
+
+  .mat-expansion-panel-body {
+    padding: 0 0 0!important;
+  }
+
+  mat-nav-list img {
+    height: 20px;
+    margin-right: 15px;
+    margin-bottom: 8px;
+  }
+
+  mat-nav-list {
+    padding-top: 1px;
+  }
+
+
+  .sidenav {
+    width: $side-bar-width;
+    box-shadow: 1px 0 1px rgba(0, 0, 0, 0.14);
+    height: 100%!important;
+
+  }
+
+  .helpmenu {
+    width: 360px;
+    box-shadow: 1px 0 1px rgba(0, 0, 0, 0.14);
+    height: 100%!important;
+  }
+
+  .sidenav {
+    .ks-icon {
+      color: #00405d;
+      font-size: 20px;
+      margin-right: 18px;
+    }
+
+    .big-menu-items{
+      display: block;
+      width: 100%;
+      padding: 0;
+      line-height: 18px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(.25, .8, .25, 1) !important;
+    }
+
+    // .big-menu-items:hover {
+    //   //transform: scale(1.03);
+    // }
+    /*TODO(mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version.*/
+    .mat-mdc-list-base .mat-mdc-list-item, .mat-mdc-list-base .mat-list-option {
+      display: block;
+      width: 100%;
+      padding: 0;
+      line-height: 10px;
+      font-size: 13px;
+      font-weight: 300;
+      transition: all 0.3s cubic-bezier(.25, .8, .25, 1) !important;
+    }
+    /*TODO(mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version.*/
+    .mat-mdc-list-base .mat-mdc-list-item:hover, .mat-mdc-list-base .mat-list-option:hover {
+      transform: scale(1.03);
+      font-size: 14px!important;
+      color: black!important;
+      border-right: 4px solid #0277bd!important;
+    }
+  }
+
+
+
+
+  .mat-drawer-inner-container {
+    overflow: hidden!important;
+  }
+
+  .mat-drawer-inner-container:hover {
+    overflow: auto!important;
+  }
+
+
+  .mat-drawer-inner-container::-webkit-scrollbar {
+    width: 15px !important;
+  }
+
+  .mat-drawer-inner-container::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3) !important;
+    border-radius: 10px !important;
+  }
+
+  .mat-drawer-inner-container .model-card::-webkit-scrollbar-thumb {
+    border-radius: 10px !important;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3) !important;
+  }
+
+}
+
+.active-main-link {
+  @apply border-r-primary cursor-pointer;
+  .icon-div {
+    background-color: $primary;
+  }
+  position: relative;
+  z-index: 1;
+  .icon-text {
+    color: $primary;
+    font-weight: bold;
+  }
+    .mat-icon {
+      color: #fff;
+    }
+}
+
+::-webkit-scrollbar { 
+  height: 6px !important;
+  margin-left: 1em !important; 
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  border-radius: 100vh;
+  background: transparent !important;
+}
+
+
+.main-content-container {
+  height: calc(100vh - var(--top-nav-height)) !important;
+}
+

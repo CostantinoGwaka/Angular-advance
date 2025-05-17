@@ -1,0 +1,13 @@
+<div class="relative w-full h-full">
+  <div #codeEditor id="codeEditor" class="w-full h-full bg-white">{{content}}</div>
+  @if (loadingEditor) {
+    <div class="absolute inset-0 grid place-content-center">
+      Loading HTML code editor...
+    </div>
+  }
+  @if (!loadingEditor && !editorLoaded) {
+    <div class="absolute inset-0 grid place-content-center">
+      Failed to load HTML code editor
+    </div>
+  }
+</div>

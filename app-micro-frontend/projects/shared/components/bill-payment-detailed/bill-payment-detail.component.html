@@ -1,0 +1,25 @@
+<div>
+  @if (fetchingItem) {
+    <app-loader></app-loader>
+  }
+  <div class="form-holder">
+    @if (!fetchingItem && htmlDocument) {
+      <div class="w-3/4 m-auto" @fadeIn>
+        <div [align]="'right'" class="pb-4">
+          <button mat-raised-button (click)="print()" color="primary" style="margin-right: 10px;">Print Receipt</button>
+        </div>
+        <div id="sectionToPrint" [innerHTML]="htmlDocument | doNotSanitize"></div>
+        <!--      <div class="row">-->
+        <!--        <div class="col-md-12">-->
+        <!--          <div class="text-right">-->
+        <!--            <app-loader @fadeIn *ngIf="generateLoading" [message]="'Saving  please wait...'"></app-loader>-->
+        <!--            <button mat-raised-button color="primary" [disabled]="generateLoading" (click)="onViewPdf()" class="">View-->
+        <!--              Receipt-->
+      <!--            </button>-->
+    <!--          </div>-->
+  <!--        </div>-->
+<!--      </div>-->
+</div>
+}
+</div>
+</div>

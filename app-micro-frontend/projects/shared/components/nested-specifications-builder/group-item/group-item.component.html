@@ -1,0 +1,173 @@
+<div
+  id="item-{{ item.uuid }}"
+  [class]="
+		'group relative rounded-md text-[#053E53] overflow-hidden ' +
+		(level == 0
+			? '!bg-primary '
+			: level == 1
+			? 'bg-[#7CCFFD] '
+			: level == 2
+			? 'bg-[#AAE1FF] '
+			: 'bg-[#E5F6FF]')
+	"
+  [@widthAnimation]="widthState"
+>
+  <div [class]="' w-full relative ' + (level == 0 ? 'font-bold' : '')">
+    @if (currentEditingItem?.rowId != item.rowId) {
+    <ng-container>
+      <div class="p-[10px] np flex">
+        <ng-container *ngTemplateOutlet="itemInfo"></ng-container>
+        <div (click)="stopPropagation($event)">
+          @if (showDeleteConfirmation) {
+          <ng-container *ngTemplateOutlet="deleteConfirmation"></ng-container>
+          } @if ( !showDeleteConfirmation && (initialMode == 'manage' || initialMode ==
+          'initiation') ) {
+          <ng-container *ngTemplateOutlet="buttons"></ng-container>
+          }
+        </div>
+      </div>
+    </ng-container>
+    }
+  </div>
+  @if (isLoading) {
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  }
+</div>
+
+<ng-template #itemInfo>
+  <div
+    class="flex w-full items-center justify-between {{
+			item.level == 0 ? ' text-white ' : ''
+		}} "
+  >
+    <div class="flex items-center">
+      <ng-container *ngTemplateOutlet="expandButton"></ng-container>
+      @if (mode == 'select') {
+      <mat-checkbox
+        [(ngModel)]="item.isSelected"
+        class="mr-4"
+        (change)="onSelectionChange($event)"
+      ></mat-checkbox>
+      } @if (item.code) {
+      <div>{{ item.code }}:&nbsp;</div>
+      }
+      <div>{{ item.description }}</div>
+    </div>
+    @if (initialMode != 'manage' && showUnitRateColumn) {
+    <div>
+      {{ item.total | number : '1.0-0' }}
+    </div>
+    }
+  </div>
+</ng-template>
+
+<ng-template #deleteConfirmation>
+  @if (mode == 'initiation' && showUnitRateColumn) {
+  <div>{{ item.total | number }}</div>
+  }
+  <div
+    [class]="
+			'absolute group-hover:flex hidden space-x-2 items-center text-white right-0 top-0 bottom-0 '
+		"
+  >
+    <div class="flex h-full my-2 px-4 bg-red-600 items-center text-white rounded-sm space-x-3">
+      <div class="font-light">
+        Are you sure you want to delete this item? This will also delete its sub items
+      </div>
+      <button mat-stroked-button color="white" (click)="delete(2)">Yes</button>
+      <button mat-flat-button class="bg-white" (click)="showDeleteConfirmation = false">
+        No
+      </button>
+    </div>
+  </div>
+</ng-template>
+<ng-template #buttons>
+  @if (initialMode != 'readOnly' && initialMode != 'tendererEditing') {
+  <div
+    [class]="
+			'absolute group-hover:flex hidden space-x-2 items-center text-white right-2 top-0 bottom-0 '
+		"
+  >
+    @if (initialMode == 'manage') {
+    <button
+      matTooltip="Edit Item"
+      (click)="editItem()"
+      mat-ripple
+      class="rounded-full pt-1 h-6 grid place-content-center text-sm !bg-primary aspect-square"
+    >
+      <mat-icon inline>edit</mat-icon>
+    </button>
+    <button
+      [matMenuTriggerFor]="sortChildrenMenu"
+      matTooltip="Sort Children"
+      mat-ripple
+      class="rounded-full pt-1 grid place-content-center h-6 text-sm !bg-primary aspect-square"
+    >
+      <mat-icon inline>sort</mat-icon>
+    </button>
+    <button
+      [matMenuTriggerFor]="addItem"
+      matTooltip="Add child"
+      mat-ripple
+      class="rounded-full pt-1 grid place-content-center h-6 text-sm !bg-primary aspect-square"
+    >
+      <mat-icon inline>add</mat-icon>
+    </button>
+    <mat-menu #sortChildrenMenu="matMenu">
+      @if (level < 6) {
+      <button mat-menu-item (click)="sortChildren('ItemDescription')">
+        Sort Sub Items
+      </button>
+      }
+      <button mat-menu-item (click)="sortChildren('NestedSpecificationItem')">
+        Sort Descriptions
+      </button>
+    </mat-menu>
+    <mat-menu #addItem="matMenu">
+      @if (level < 6) {
+      <button mat-menu-item (click)="menuAction('add_sub_item')">
+        Add Sub Item
+      </button>
+      }
+      <button mat-menu-item (click)="menuAction('add_specifications')">
+        {{ addSpecificationText }}
+      </button>
+      <button mat-menu-item (click)="menuAction('import_specifications')">
+        {{ addSpecificationText }} (Import)
+      </button>
+    </mat-menu>
+    } @if (level > 0 && canModifyChildItem) {
+    <button
+      matTooltip="Edit Item"
+      (click)="editItem()"
+      mat-ripple
+      class="rounded-full pt-1 h-6 grid place-content-center text-sm !bg-primary aspect-square"
+    >
+      <mat-icon inline>edit</mat-icon></button
+    >}
+    <button
+      (click)="delete(1)"
+      matTooltip="Delete Item"
+      mat-ripple
+      class="rounded-full pt-1 grid place-content-center h-6 text-sm !bg-gray-500 aspect-square"
+    >
+      <mat-icon inline>delete</mat-icon>
+    </button>
+  </div>
+  }
+</ng-template>
+
+<ng-template #expandButton>
+  @if (level == 0 && mode !== 'edit' && isExpandable) {
+  <div
+    id="expand"
+    mat-ripple
+    (click)="expandItem($event, expandedItemId != item.uuid ? item : null)"
+    class="mr-2 w-4 p-2 cursor-pointer aspect-square grid place-content-center rounded-full"
+  >
+    <mat-icon class="{{ isExpanded ? 'rotate-90' : 'rotate-0' }} transform "
+      >chevron_right</mat-icon
+    >
+  </div>
+  }
+</ng-template>

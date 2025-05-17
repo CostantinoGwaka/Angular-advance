@@ -1,0 +1,47 @@
+@if (viewType != 'view') {
+  <div ngProjectAs="table">
+    <div class="flex justify-between">
+      <span class="text-lg">Company Work Experience</span>
+    </div>
+    <app-paginated-data-table
+      [query]="query"
+      [apolloNamespace]="uaaApolloNamespace"
+      [tableList]="experiences$ | async"
+      [mapFunction]="mapFunction"
+      [tableConfigurations]="tableConfigurations"
+      [loading]="loading$ | async"
+      [title]="'Work Experience'"
+      (rowPreview)="viewItem($event)"
+      [customSearchFields]="['procuringEntity.name']"
+      [noSearchFields]="['institution', 'actionButtons']"
+    ></app-paginated-data-table>
+  </div>
+}
+
+@if (viewType == 'view') {
+  <div ngProjectAs="form">
+    @if (loading$ | async) {
+      <app-loader
+        @fadeIn
+        message="{{  'Please Wait...' }}"
+      ></app-loader>
+    }
+    @if (!(loading$ | async)) {
+      <mat-card  appearance="outlined" >
+        <div class="flex justify-between">
+          <span class="text-lg">{{ viewDetailsTitle }}</span>
+          <div class="">
+            <button mat-button class="!border-2 !border-gray-100 !border-solid" (click)="closeDetails()">
+              <mat-icon>close</mat-icon> Close
+            </button>
+          </div>
+        </div>
+        <view-work-experience
+          [selectedUuid]="selectedUuid"
+          [selectedWorkExperience]="selectedWorkExperience"
+          (closeForm)="closeDetails()">
+        </view-work-experience>
+      </mat-card>
+    }
+  </div>
+}

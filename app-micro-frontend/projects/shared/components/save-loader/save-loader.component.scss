@@ -1,0 +1,33 @@
+.wrapper{
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+.info-wrapper{
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 5%;
+}
+
+
+.value-wrapper{
+  font-size: 22px;
+  font-weight: bold;
+  text-align: center;
+}
+.value-text{
+  margin-top: 5px;
+  text-align: center;
+  color: darkgray;
+}
+.progress-ring__circle {
+  transition: stroke-dashoffset 0.35s;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+}

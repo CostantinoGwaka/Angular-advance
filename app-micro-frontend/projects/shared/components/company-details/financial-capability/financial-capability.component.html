@@ -1,0 +1,45 @@
+@if (viewType != 'view') {
+  <div ngProjectAs="table">
+    <div class="flex justify-between">
+      <span class="text-lg">Financial Statement</span>
+    </div>
+    <app-paginated-data-table
+      [query]="query"
+      [apolloNamespace]="uaaApolloNamespace"
+      [tableList]="tendererCashFlows$ | async"
+      [tableConfigurations]="tableConfigurations"
+      [loading]="loading$ | async"
+      [title]="'Financial Capability'"
+      (rowPreview)="viewItem($event)"
+    ></app-paginated-data-table>
+  </div>
+}
+
+@if (viewType == 'view') {
+  <div ngProjectAs="form">
+    @if (loading$ | async) {
+      <app-loader
+        @fadeIn
+        message="{{  'Please Wait...' }}"
+      ></app-loader>
+    }
+    @if (!(loading$ | async)) {
+      <mat-card  appearance="outlined" >
+        <div class="flex justify-between mb-4">
+          <span class="text-lg">{{ viewDetailsTitle }}</span>
+          <div class="">
+            <button mat-button class="!border-2 !border-gray-100 !border-solid" (click)="closeDetails()">
+              <mat-icon>close</mat-icon> Close
+            </button>
+          </div>
+        </div>
+        <app-view-cash-flows
+          [selectedUuid]="selectedUuid"
+          [selectedCashFlow]="selectedCashFLow"
+          (closeForm)="closeDetails($event)"
+          >
+        </app-view-cash-flows>
+      </mat-card>
+    }
+  </div>
+}

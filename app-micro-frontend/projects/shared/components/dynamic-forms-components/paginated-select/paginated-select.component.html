@@ -1,0 +1,110 @@
+@if (loadingData) {
+  <mat-form-field @fadeIn appearance="outline">
+    @if (field?.label) {
+      <mat-label>{{ field?.label | translate }} {{ selectedCountLabel }} ...</mat-label>
+    }
+    <input matInput disabled />
+    <mat-spinner matSuffix [diameter]="18" style="float: right; margin-left: 8px"></mat-spinner>
+  </mat-form-field>
+}
+@if (!loadingData) {
+  <mat-form-field @fadeIn class="demo-full-width margin-top" [ngClass]="{'mb-2':field.hint }"
+    [hideRequiredMarker]="field?.hideRequiredMarker" [formGroup]="group" appearance="outline">
+    @if (field?.label) {
+      <mat-label>{{ field?.label | translate }} {{ selectedCountLabel }}</mat-label>
+    }
+    <mat-select #paginatedSelector (openedChange)="openedChange($event)" gInfiniteScroll
+      (infiniteScroll)="getNextPage($event)" [complete]="complete" [required]="required" [selectOptions]="options"
+    [placeholder]="field?.placeholder || ''" [formControlName]="field.key || ''" [disabled]="
+      showHelp || disabled || field?.disabled || loading || field?.readonly
+    " (selectionChange)="fieldChange($event)" [multiple]="field.multiple">
+      @if (!showTable) {
+        <mat-option class="multiline-mat-option mb-1">
+          @if (!field.multiple) {
+            <!--disableScrollToActiveOnOptionsChanged should be set to true-->
+            <app-select-search [formControl]="paginatedSelectService.searchCtrl"
+              [disableScrollToActiveOnOptionsChanged]="true" [noEntriesFoundLabel]="noEntriesFoundLabel"
+            [searching]="searching" [hideClearSearchButton]="true"></app-select-search>
+          }
+          @if (field.multiple) {
+            <app-select-search [formControl]="paginatedSelectService.searchCtrl"
+              [noEntriesFoundLabel]="noEntriesFoundLabel" [showToggleAllCheckbox]="true"
+            [disableScrollToActiveOnOptionsChanged]="true" [toggleAllCheckboxIndeterminate]="
+              field.key != null &&
+              (group.controls[field.key]?.value || selected || []).length > 0 &&
+              (group.controls[field.key]?.value || selected || []).length <
+                options.length
+            " [toggleAllCheckboxChecked]="
+              field.key != null &&
+              (group.controls[field.key]?.value || selected || []).length ===
+                (options || []).length
+            " (toggleAll)="toggleSelectAll($event)" [searching]="searching"
+            [hideClearSearchButton]="true"></app-select-search>
+          }
+        </mat-option>
+        @if (!field?.multiple) {
+          <mat-option>{{field?.selectorOptionLabel}}</mat-option>
+        }
+        @if (!field.removeUnderscore) {
+          @for (
+            item of options
+            | disableDuplicate : field.duplicateCheckKey
+            | search : field.filterKey || '' : filterVal
+            ; track
+            item) {
+            <mat-option [value]="item.optionValue" [disabled]="item.disabled"
+              [ngClass]="{ 'multiline-mat-option': true, danger: item.danger }">
+              @if (field.useTranslation) {
+                <span>{{
+                  item.name | translate | dynamicPipes : field?.dynamicPipes || []
+                }}</span>
+              }
+              @if (!field.useTranslation) {
+                <span>{{
+                  item.name | dynamicPipes : field?.dynamicPipes || []
+                }}</span>
+              }
+            </mat-option>
+          }
+          @if (field?.showOtherOption) {
+            <mat-option [value]="'Other'">Other</mat-option>
+          }
+        }
+      }
+      <ng-container>
+        <div class="pr-3 pt-3" style="float: right">
+          <div class="flex space-x-3">
+            @if (field.onAddNew) {
+              <button mat-flat-button class="flatButtonColor" (click)="addNew()">
+                ADD NEW
+              </button>
+            }
+            <button mat-flat-button class="flatButtonColor" (click)="paginatedSelector.close()">
+              DONE
+            </button>
+          </div>
+        </div>
+      </ng-container>
+    </mat-select>
+    <mat-hint class="pb-2"><strong>{{ field.hint | translate }}</strong></mat-hint>
+    <mat-icon matSuffix class="pointer text-gray-400 hover:!text-primary" (click)="openHelpPage()">help_outline</mat-icon>
+    @if (field?.icon) {
+      <mat-icon matPrefix>{{ field?.icon }}</mat-icon>
+    }
+    @for (validation of field.validations; track validation) {
+      <ng-container ngProjectAs="mat-error">
+        @if (field.key && group.controls[field.key]?.hasError(validation.name)) {
+          <mat-error>{{ validation.message |
+          translate }}</mat-error>
+        }
+      </ng-container>
+    }
+    @if (field.tableColumns) {
+      <mat-icon matSuffix class="pointer text-gray-400 hover:!text-primary" (click)="showTableFn()">visibility</mat-icon>
+    }
+    <!-- <button [ngClass]="{ inactive: showTable, active: !showTable }" *ngIf="field.tableColumns" mat-button matSuffix
+    mat-icon-button type="button" (click)="showTableFn()">
+    <mat-icon>visibility</mat-icon>
+  </button> -->
+</mat-form-field>
+}

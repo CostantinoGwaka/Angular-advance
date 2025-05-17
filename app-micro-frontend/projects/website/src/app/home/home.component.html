@@ -1,0 +1,165 @@
+<app-web-internet-status-bar></app-web-internet-status-bar>
+<div class="relative w-full">
+  <div class="web-container !p-0">
+    <div>
+      <web-nav-bar></web-nav-bar>
+    </div>
+    <common-realtime-clock></common-realtime-clock>
+  </div>
+  <div
+    class="flex-1 relative flex py-24 !bg-gradient-to-t from-[#E4EBE5] to-[#DCF0FB] justify-between"
+  >
+    <div class="absolute justify-end inset-0 text-right hidden lg:flex">
+      <div class="w-[35%] h-full opacity-70">
+        <app-connected-dots></app-connected-dots>
+      </div>
+    </div>
+    <div class="web-container relative !p-0">
+      <div class="">
+        <div class="text-center lg:!text-left col-span-7 lg:col-span-2">
+          <h1 class="!text-4xl md:!text-5xl !font-bold text-[#393636] leading-5">
+            National
+            <span class="!text-primary whitespace-nowrap">e-Procurement</span>
+            <br />
+            System of Tanzania
+          </h1>
+          <div class="w-full lg:w-1/3">
+            <p class="text-[#514C4C] !text-lg !md:text-xl">
+              {{ "APP_SUBTITLE" | translate }}
+            </p>
+          </div>
+          <div class="flex gap-3 sm:gap-4 mt-4 justify-center lg:justify-start">
+            <a
+              [routerLink]="['/register']"
+              class="flex p-3 sm:px-4 sm:py-3 gap-2 bg-[#393636] !border !border-[#393636] !text-white rounded items-center"
+            >
+              <div>
+                <!-- Become a Tenderer -->
+                {{ "BECOME_A_TENDERER" | translate }}
+              </div>
+              <mat-icon inline>east</mat-icon>
+            </a>
+            <button
+              (click)="scrollToTenders()"
+              class="relative p-3 sm:px-4 sm:py-3 gap-2 !bg-primary !border !border-primary !text-white rounded items-center"
+            >
+              <div>
+                {{ "VIEW_CURRENT_TENDERS" | translate }}
+              </div>
+              @if (totalTendersLoading || totalTenders > 0) {
+              <div
+                class="absolute grid place-content-center min-w-[30px] h-[30px] px-[5px] -top-4 -right-4 rounded-full bg-red-600 text-white text-sm sm:text-lg shadow-red-500"
+              >
+                @if (!totalTendersLoading) {
+                <div>
+                  {{ totalTenders }}
+                </div>
+                } @if (totalTendersLoading) {
+                <div class="total-tenders-loader">
+                  <mat-spinner [diameter]="20"></mat-spinner>
+                </div>
+                }
+              </div>
+              }
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="mt-10 shadow-md rounded-md bg-white">
+        <div>
+          <app-search-bar></app-search-bar>
+        </div>
+        <div class="relative rounded-b-md overflow-hidden">
+          <app-stats-bar
+            [totalTenders]="totalTenders"
+            [onStatsClick]="onStatsClick"
+            (onStatLoadingChange)="onStatLoadingChange($event)"
+          ></app-stats-bar>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bg-white">
+    <div class="web-container pt-16">
+      <app-summaries-view></app-summaries-view>
+    </div>
+    <div #currentTenders class="mt-16 mb-20">
+      <web-section-header>Current Tenders</web-section-header>
+      <div class="web-container">
+        <web-tender-category-filter
+          [tenderCategoriesStats]="tenderCategoriesStats"
+          (onCategorySelect)="onCategorySelect($event)"
+        ></web-tender-category-filter>
+      </div>
+
+      <div class="web-container mt-5 border overflow-hidden rounded-xl">
+        <div class="bg-white">
+          <div class="relative" #currentTendersWrapper>
+            @if (!loadingTenders) {
+            <web-tenders-list
+              [requisitionItems]="tendersResults?.rows"
+              [showViewMore]="true"
+              [categoryName]="selectedCategoryName"
+              [categoryAcronym]="selectedCategoryAcronym"
+            >
+            </web-tenders-list>
+            } @if (loadingTenders) {
+            <div class="inset-0 p-10 grid place-content-center">
+              <div>
+                <mat-spinner [diameter]="40" class="m-auto"></mat-spinner>
+                <div class="mt-5">Loading tenders...</div>
+              </div>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="web-container mt-20 !mb-10 hidden lg:block">
+      <app-mobile-app-ad></app-mobile-app-ad>
+    </div>
+    <div class="web-container mt-20 pt-10">
+      <app-features-and-services></app-features-and-services>
+    </div>
+  </div>
+</div>
+<!-- <div class="fixed top-1/4 right-0 flex flex-col space-y-2 p-2">
+  <div class="transform transition-transform duration-300 hover:translate-x-[-30px]">
+    <a
+      href="http://www.facebook.com/PPRA_Tanzania-2588600117819083"
+      target="_blank"
+      class="w-12 h-12 bg-white border-1 border-green-500 rounded-full flex items-center justify-center"
+    >
+      <mat-icon [svgIcon]="'facebook'" class="w-6 h-6"></mat-icon>
+    </a>
+  </div>
+  <div class="transform transition-transform duration-300 hover:translate-x-[-30px]">
+    <a
+      href="http://www.twitter.com/PpraTanzania"
+      target="_blank"
+      class="w-12 h-12 bg-white border-1 border-blue-400 rounded-full flex items-center justify-center"
+    >
+      <mat-icon [svgIcon]="'twitter'" class="w-6 h-6"></mat-icon>
+    </a>
+  </div>
+  <div class="transform transition-transform duration-300 hover:translate-x-[-30px]">
+    <a
+      href="http://www.instagram.com/ppra_tanzania"
+      target="_blank"
+      class="w-12 h-12 bg-white border-1 border-blue-600 rounded-full flex items-center justify-center"
+    >
+      <mat-icon [svgIcon]="'instagram'" class="w-6 h-6"></mat-icon>
+    </a>
+  </div>
+  <div class="transform transition-transform duration-300 hover:translate-x-[-30px]">
+    <a
+      href="http://www.ppra.go.tz"
+      target="_blank"
+      class="w-12 h-12 bg-white border-1 border-blue-500 rounded-full flex items-center justify-center"
+    >
+      <mat-icon [svgIcon]="'webicon'" class="w-6 h-6"></mat-icon>
+    </a>
+  </div>
+</div> -->
+
+<web-footer></web-footer>

@@ -1,0 +1,119 @@
+<div class="lg:flex lg:h-[100vh]">
+  <div
+    class="{{page_sub_title ? 'bg-gray' : 'custom-gradient h-screen'}} md:h-auto lg:h-full lg:w-2/3 overflow-hidden place-content-center relative"
+  >
+    @if (page_sub_title) {
+    <img alt="NeST" id="bg-image" [src]="bodyBackgroundImage" loading="lazy" />
+    }
+
+    <div
+      [ngClass]="page_sub_title ? 'bg-black/20' : ''"
+      class="absolute inset-0 z-20 flex flex-col justify-between"
+    >
+      <div class="p-5 sm:p-10 md:p-15 lg:p-20">
+        <a mat-button href="" class="!text-white !-ml-[20px] mb-3">
+          <mat-icon matPrefix class="mr-3">keyboard_backspace</mat-icon>
+          {{ "HOME" | translate }}</a
+        >
+        @if (!page_sub_title) {
+        <h1 class="text-white text-[20px] lg:!text-4xl font-bold">
+          {{ page_name | translate }}
+        </h1>
+        } @if (page_sub_title) {
+        <div class="rounded bg-black/30 m-1 p-4">
+          <h1 class="text-white text-[20px] lg:!text-4xl font-bold">
+            {{ page_name | translate }}
+          </h1>
+          <div style="font-size: 13px;" class="text-white">
+            <p>{{ "PASSWORD_RESET_DESCRIPTION" | translate }}</p>
+            <ul style="list-style-type: decimal;">
+              @for(description of passwordResetDescriptions; track description){
+              <li class="mb-1">
+                {{ description | translate }}
+              </li>
+              } @for(example of passwordResetExamples; track example){
+              <li class="mb-1">
+                {{ example.description | translate }}, {{ "PASSWORD_RESET_EG" | translate }}: {{
+                example.example }}
+              </li>
+              }
+            </ul>
+          </div>
+        </div>
+        }
+      </div>
+      @if (!page_sub_title) {
+      <div class="w-full z-[10000]">
+         <app-advertisement-area></app-advertisement-area>
+      </div>
+      }
+
+      <div class="lg:flex gap-1 hidden items-center justify-center mb-3">
+        <a
+          href="https://tsms.ppra.go.tz/"
+          target="_blank"
+          mat-button
+          class="!text-[12px] text-white"
+          >{{ "TRAINING_PORTAL" | translate }}</a
+        >
+        <a [routerLink]="['/tenders/published-tenders']" mat-button class="!text-[12px] text-white"
+          >{{ "CURRENT_TENDERS" | translate }}</a
+        >
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white lg:w-1/3">
+    <div class="text-right">
+      <div class="flex flex-row justify-end">
+        <div (click)="onYoutubeClick()" class="m-2 flex cursor-pointer items-center">
+          <img
+            ngSrc="assets/images/youtube-icon.png"
+            width=""
+            height=""
+            class="md:rounded-full 3xl:rounded-full h-6"
+            alt=""
+          />
+          <span class="pl-2">Guide Video</span>
+        </div>
+        <div class="items-center cursor-pointer flex m-2" [matMenuTriggerFor]="translateMenu">
+          <mat-icon>language</mat-icon>
+          <div class="ml-1">
+            {{ currentLabel | translate }}
+          </div>
+          <mat-icon inline>arrow_drop_down</mat-icon>
+        </div>
+        <mat-menu #translateMenu="matMenu">
+          @for (language of languages; track language) {
+          <button mat-menu-item class="flex" (click)="changeLanguage(language.code)">
+            {{ language.key | translate }}
+          </button>
+          }
+        </mat-menu>
+      </div>
+    </div>
+    <div class="px-[20px] 3xl:px-20 py-10 flex flex-col h-full">
+      <div class="flex justify-between items-center"></div>
+      <div class="flex-col flex flex-1 justify-center">
+        <div class="align-center flex justify-center mb-8" [ngClass]="routeAnimationsElements">
+          <img
+            ngSrc="/assets/images/logo.png"
+            class="w-[50px] sm:w-20 xl:w-40"
+            (click)="setLoading()"
+            loading="lazy"
+            alt=""
+            height="1880"
+            width="2587"
+          />
+        </div>
+        <ng-content></ng-content>
+      </div>
+      <div class="lg:!hidden mt-20 gap-1 flex justify-center mb-3">
+        <a mat-button href="" class="!text-[10px] !text-gray-400">Help</a>
+        <a mat-button href="" class="!text-[10px] !text-gray-400">About</a>
+        <a mat-button href="" class="!text-[10px] !text-gray-400">Current Tenders</a>
+        <a mat-button href="" class="!text-[10px] !text-gray-400">Contacts</a>
+      </div>
+    </div>
+  </div>
+</div>

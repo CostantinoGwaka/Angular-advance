@@ -1,0 +1,8 @@
+.active-item{
+  @apply bg-blue-400 hover:bg-blue-300 active:bg-blue-400 cursor-pointer
+}
+
+
+.inactive-item{
+  @apply bg-slate-200 text-slate-400 cursor-not-allowed
+}

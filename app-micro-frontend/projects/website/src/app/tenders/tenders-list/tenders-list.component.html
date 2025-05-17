@@ -1,0 +1,30 @@
+@if (requisitionItems?.length > 0) {
+<div id="web-tenders-list">
+  @for (requisitionItem of requisitionItems; track requisitionItem) {
+
+  <div>
+    <app-advanced-tender-search-tender-item [requisitionItem]="requisitionItem">
+    </app-advanced-tender-search-tender-item>
+  </div>
+  } @if (showViewMore) {
+  <div class="text-center mt-5 mb-5 block">
+    <a
+      (click)="viewMoreTenders()"
+      class="py-2 inline-block m-auto px-3 items-center !border !border-accent rounded-md !text-accent !cursor-pointer"
+    >
+      <div class="flex">
+        <span>{{ "VIEW_ALL_TENDERS" | translate }}</span>
+        <mat-icon inline>arrow_forward</mat-icon>
+      </div>
+    </a>
+  </div>
+  }
+</div>
+} @if ( requisitionItems?.length == 0 || requisitionItems == undefined || requisitionItems == null )
+{
+<div class="p-20 text-gray-400 text-xl text-center">
+  No tenders available @if (categoryName.toLowerCase() != 'all') {
+  <span> for {{ categoryName }} category</span>
+  }
+</div>
+}

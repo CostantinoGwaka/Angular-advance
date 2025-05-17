@@ -1,0 +1,13 @@
+<div class="bg-white p-2 rounded mt-2">
+  <main-dynamic-form
+    class="py-5"
+    [fields]="fields"
+    [form]="supportForm"
+    [confirmFirst]="true"
+    [loading]="loading"
+    [saveText]="'Close Task'"
+    [loadingMessage]="'Closing subtask,... please wait...'"
+    [confirmMessage]="'You\'re about to close this subtask, continue?'"
+    (submit)="submitForm($event)">
+  </main-dynamic-form>
+</div>

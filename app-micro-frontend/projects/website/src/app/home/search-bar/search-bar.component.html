@@ -1,0 +1,28 @@
+<div class="p-3 gap-3 grid grid-cols-8">
+  <div class="col-span-6 md:col-span-3 lg:col-span-5 relative">
+    <div class="absolute top-0 bottom-0 pl-2 grid place-content-center">
+      <mat-icon>search</mat-icon>
+    </div>
+    <input
+      [(ngModel)]="searchText"
+      class="py-3 pr-3 pl-10 w-full bg-[#F5F5F5] !border border-[#EEEEEE] rounded focus:outline-primary"
+      placeholder="Search tender by keyword"
+    />
+  </div>
+  <div class="hidden md:block col-span-2 md:col-span-3 lg:col-span-2">
+    <app-categories-selector
+      (setSelectedCategory)="setSelectedCategory($event)"
+    ></app-categories-selector>
+  </div>
+  <button
+    id="home-serach-button"
+    (click)="searchByInputFilters()"
+    class="col-span-2 relative md:col-span-2 lg:col-span-1 p-3 bg-accent border-accent rounded text-white"
+  >
+    <div class="sm:hidden absolute inset-0 grid place-content-center">
+      <mat-icon>search</mat-icon>
+    </div>
+    <span class="hidden sm:block">Search</span>
+    <span class="sm:hidden">&nbsp;</span>
+  </button>
+</div>

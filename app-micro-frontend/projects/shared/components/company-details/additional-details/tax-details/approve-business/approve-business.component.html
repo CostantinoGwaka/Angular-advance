@@ -1,0 +1,27 @@
+<mat-card appearance="outlined" style="overflow-y: auto; height: 90%;" #closeModal>
+    <div @fadeIn>
+       <p class="lead">Verification Comment To PPRA</p>
+
+      <div>
+          <mat-form-field appearance="outline">
+            <mat-label>Comments</mat-label>
+            <textarea matInput [(ngModel)]="comments" rows="3" placeholder="Comments"></textarea>
+          </mat-form-field>
+      </div>
+
+      <div>
+        <app-save-area
+          [confirmFirst]="true"
+          [saveDisabled]="!comments"
+          [cancelDisabled]="!comments"
+          confirmText="You are about to verify tenderer, do you want to continue?"
+          [savingData]="loading"
+          (save)="verify()"
+          saveText="verify"
+          cancelText="Un-verify"
+          (cancel)="unVerify()"
+          loadingMessage="Saving data please wait...">
+        </app-save-area>
+      </div>
+    </div>
+  </mat-card>

@@ -1,0 +1,83 @@
+<div
+  class="space-y-5 md:space-y-0 md:grid md:grid-cols-2 xl:grid-cols-4 gap-10"
+>
+  <div class="text-center space-y-5 px-10 pb-10">
+    <div
+      class="aspect-square text-4xl w-20 rounded-full m-auto !bg-primary/10 grid place-content-center !text-primary"
+    >
+      <mat-icon inline>shopping_cart</mat-icon>
+    </div>
+    <h3 class="!font-bold">{{ "CURRENT_TENDERS" | translate }}</h3>
+    <p>
+      {{ "CURRENT_TENDERS_DESCRIPTION" | translate }}
+    </p>
+    <div class="mt-4">
+      <a
+        [routerLink]="['/tenders/published-tenders']"
+        class="px-4 py-2 !border rounded-lg !border-primary !text-primary"
+      >
+        {{ "VIEW" | translate }}
+      </a>
+    </div>
+  </div>
+  <div class="text-center space-y-5 px-10 pb-10">
+    <div
+      class="aspect-square text-4xl w-20 rounded-full m-auto !bg-gray-700/10 grid place-content-center !text-gray-700"
+    >
+      <mat-icon inline>event</mat-icon>
+    </div>
+    <h3 class="!font-bold">{{ "ANNUAL_PROCUREMENT_PLANS" | translate }}</h3>
+    <p>
+      {{ "ANNUAL_PROCUREMENT_PLANS_DESCRIPTION" | translate }}
+    </p>
+    <div class="mt-4">
+      <a
+        [routerLink]="['/annual-procurement-plans']"
+        class="px-4 py-2 !border rounded-lg !border-primary !text-primary"
+      >
+        {{ "VIEW" | translate }}
+      </a>
+    </div>
+  </div>
+  <div class="text-center space-y-5 px-10 pb-10">
+    <div
+      class="aspect-square text-4xl w-20 rounded-full m-auto !bg-accent/10 grid place-content-center !text-accent"
+    >
+      <mat-icon inline>campaign</mat-icon>
+    </div>
+    <h3 class="!font-bold">{{ "CURRENT_OPENING" | translate }}</h3>
+    <p>{{ "CURRENT_OPENING_DESCRIPTION" | translate }}</p>
+    <div class="mt-4">
+      <a
+        [routerLink]="['/tenders/opened-tenders']"
+        class="px-4 py-2 !border rounded-lg !border-primary !text-primary"
+      >
+        {{ "VIEW" | translate }}
+      </a>
+    </div>
+  </div>
+  <div class="text-center space-y-5 px-10 pb-10">
+    <div
+      class="aspect-square text-4xl w-20 rounded-full m-auto !bg-secondary/10 grid place-content-center !text-secondary"
+    >
+      <mat-icon inline>thumb_up</mat-icon>
+    </div>
+    <h3 class="!font-bold">{{ "AWARDED_TENDERS" | translate }}</h3>
+    <p>
+      {{ "AWARDED_TENDERS_DESCRIPTION" | translate }}
+    </p>
+    <div class="mt-4">
+      <!-- <div 
+        class="px-4 py-2 !border rounded-lg !border-primary !text-primary"
+      >
+        {{ "VIEW" | translate }}
+    </div> --> 
+      <a
+        [routerLink]="['/tenders/awarded-tenders']"
+        class="px-4 py-2 !border rounded-lg !border-primary !text-primary"
+      >
+        {{ "VIEW" | translate }}
+      </a>
+    </div>
+  </div>
+</div>

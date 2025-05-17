@@ -1,0 +1,12 @@
+<h1 mat-dialog-title>{{ title }}</h1>
+<div mat-dialog-content>
+  <div class="flex items-center space-x-4">
+    <mat-spinner [diameter]="30" [strokeWidth]="3"></mat-spinner>
+    <div>{{ message }}</div>
+  </div>
+</div>
+@if (allowCancel) {
+  <div mat-dialog-actions class="flex justify-end w-full">
+    <button mat-button mat-dialog-close cdkFocusInitial>Cancel</button>
+  </div>
+}

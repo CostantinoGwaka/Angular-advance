@@ -1,0 +1,57 @@
+<!--
+Copyright (c) 2018 Bithost GmbH All Rights Reserved.
+
+Use of this source code is governed by an MIT-style license that can be
+found in the LICENSE file at https://angular.io/license
+-->
+<!-- Placeholder to adjust vertical offset of the mat-option elements -->
+<input matInput class="mat-select-search-input mat-select-search-hidden" />
+
+<!-- Note: the  mat-datepicker-content mat-tab-header are needed to inherit the material theme colors, see PR #22 -->
+<div #innerSelectSearch class="mat-select-search-inner mat-typography mat-datepicker-content mat-tab-header"
+  [ngClass]="{'mat-select-search-inner-multiple': matSelect.multiple, 'mat-select-search-inner-toggle-all': _isToggleAllCheckboxVisible() }">
+
+  <div class="mat-select-search-inner-row">
+    @if (_isToggleAllCheckboxVisible()) {
+      <mat-checkbox [color]="matFormField?.color"
+        class="mat-select-search-toggle-all-checkbox" [checked]="toggleAllCheckboxChecked"
+        [indeterminate]="toggleAllCheckboxIndeterminate" [matTooltip]="toggleAllCheckboxTooltipMessage"
+        matTooltipClass="ngx-mat-select-search-toggle-all-tooltip" [matTooltipPosition]="toggleAllCheckboxTooltipPosition"
+      (change)="_emitSelectAllBooleanToParent($event.checked)"></mat-checkbox>
+    }
+
+    <input class="mat-select-search-input" autocomplete="off" [type]="type" [formControl]="_formControl"
+      #searchSelectInput (keydown)="_handleKeydown($event)" (keyup)="_handleKeyup($event)" (blur)="onBlur()"
+      [placeholder]="placeholderLabel" [attr.aria-label]="ariaLabel" />
+    @if (searching) {
+      <mat-spinner class="mat-select-search-spinner" diameter="16"></mat-spinner>
+    }
+
+    @if (!hideClearSearchButton && value && !searching) {
+      <button mat-icon-button aria-label="Clear"
+        (click)="_reset(true)" class="mat-select-search-clear">
+        @if (clearIcon) {
+          <ng-content select="[ngxMatSelectSearchClear]"></ng-content>
+        } @else {
+          <mat-icon [svgIcon]="closeSvgIcon">
+            {{!closeSvgIcon ? closeIcon : null}}
+          </mat-icon>
+        }
+      </button>
+    }
+
+    <ng-content select=".mat-select-search-custom-header-content"></ng-content>
+  </div>
+
+  <mat-divider></mat-divider>
+</div>
+
+@if (_showNoEntriesFound$ | async) {
+  <div class="mat-select-search-no-entries-found">
+    @if (noEntriesFound) {
+      <ng-content select="[ngxMatSelectNoEntriesFound]"></ng-content>
+    } @else {
+      {{noEntriesFoundLabel}}
+    }
+  </div>
+}

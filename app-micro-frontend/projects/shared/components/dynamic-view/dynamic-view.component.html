@@ -1,0 +1,86 @@
+<div class="grid grid-cols-{{cols}} gap-4 bg-white rounded-sm p-4" >
+  @for (key of keys; track key) {
+    <div class="flex flex-col space-y-2">
+      <div class="text-black font-medium"  [ngClass]="{'bg-slate-50 rounded-sm p-2':getType(dataObject[key]) == 'object'}">{{ key | dynamicPipes:[{pipe:'camelToTitle'}] }}</div>
+      @switch (getType(dataObject[key])) {
+        @case ('string') {
+          <div class="text-gray-900" [innerHtml]="dataObject[key]"></div>
+        }
+        @case ('number') {
+          <div class="text-gray-900" [innerHtml]="dataObject[key]"></div>
+        }
+        @case ('boolean') {
+          <div class="text-gray-900" [innerHtml]="dataObject[key]"></div>
+        }
+        @case ('date') {
+          <div class="text-gray-900">{{ dataObject[key] | date }}</div>
+        }
+        @case ('object') {
+          <hr>
+            <div class="flex flex-col space-y-2">
+              <app-dynamic-view [cols]="1" [data]="dataObject[key]"></app-dynamic-view>
+            </div>
+          }
+        }
+      </div>
+    }
+  </div>
+
+
+
+  @for (obj of dataList; track obj) {
+    <div>
+      <ul>
+        <ng-container *ngTemplateOutlet="displayObject; context: { $implicit: obj }"></ng-container>
+      </ul>
+    </div>
+  }
+
+  <ng-template #displayObject let-obj>
+
+    <li class="border-solid border-2 bg-white  rounded-sm m-2 p-2" >
+      @for (key of objectKeys(obj); track key) {
+        <div class="flex flex-col space-y-2">
+          <div class="text-gray-600 font-semibold">{{ key | dynamicPipes:[{pipe:'camelToTitle'}] }}</div>
+          @if (getType(obj[key])=='object') {
+            <ul>
+              <ng-container *ngTemplateOutlet="displayObject; context: { $implicit: obj[key] }"></ng-container>
+            </ul>
+          } @else {
+            @switch (getType(obj[key])) {
+              @case ('string') {
+                <div class="text-gray-900" [innerHtml]="obj[key]"></div>
+              }
+              @case ('number') {
+                <div class="text-gray-900" [innerHtml]="obj[key]"></div>
+              }
+              @case ('boolean') {
+                <div class="text-gray-900" [innerHtml]="obj[key]"></div>
+              }
+              @case ('date') {
+                <div class="text-gray-900">{{ obj[key] | date }}</div>
+              }
+              @case ('array') {
+                <ul>
+                  @for (item of obj[key]; track item) {
+                    <li>
+                      @if (getType(item)=='object';) {
+                        <ng-container *ngTemplateOutlet="displayObject; context: { $implicit: item }"></ng-container>
+                      }
+                      @if (getType(item)!='object') {
+                        <div class="text-gray-900" [innerHtml]="item"></div>
+                      }
+                    </li>
+                  }
+                </ul>
+              }
+            }
+          }
+        </div>
+      }
+    </li>
+
+
+
+
+  </ng-template>

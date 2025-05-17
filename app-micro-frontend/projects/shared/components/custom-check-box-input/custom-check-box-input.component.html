@@ -1,0 +1,35 @@
+<div class="flex items-center justify-between gap-[20px]">
+  @for (checkBox of checkOptions; track checkBox) {
+    <div
+      class="flex items-center text-[12px] cursor-pointer"
+    [ngClass]="{
+            'flex-col justify-center space-y-4': isVertical == true,
+            'justify-start gap-[16px] ': isVertical == false,
+            'hover:text-[#D9D9D9]':checkBox.selected,
+            'hover:text-[#93a0a8]':checkBox.selected == false,
+            'cursor-pointer':!isEvaluating,
+            }"
+      (click)="!!isEvaluating == true ? null : checkItem(checkBox)">
+      <div class="flex items-center justify-center h-[25px] w-[25px] border-[2px] rounded-[5px]"
+         [ngClass]="{
+         'border-[#229D3D]':checkBox.selected,
+         'hover:bg-[#9BEFAE]':checkBox.selected && !isEvaluating,
+         'bg-[#C6EDCF]':checkBox.selected,
+         'border-[#D9D9D9]':!checkBox.selected,
+         'hover:bg-[#EFEFEF]':!checkBox.selected && !isEvaluating}">
+        @if (checkBox.selected) {
+          <span >
+            <svg  width="17" height="12" viewBox="0 0 17 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 6.55555L5.61539 11L16 1" stroke="#229D3D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        }
+      </div>
+    <span [ngClass]="{
+    'text-[#818181]':!checkBox.selected,
+    'text-[#229D3D]':checkBox.selected}">
+        {{checkBox.label}}
+      </span>
+    </div>
+  }
+</div>

@@ -1,0 +1,52 @@
+@if (categories?.length > 1) {
+  <div class="mt-4 text-sm">
+    <div class="space-x-3 space-y-3 text-center">
+      @for (tenderCategory of categories; track tenderCategory; let i = $index) {
+        <div
+      class="inline-block rounded-full {{
+        selectedIndex == i ? '!bg-primary ' : '!bg-[#e9ecef]'
+      }}  p-1 items-center cursor-pointer"
+          (click)="selectCategory1(tenderCategory, i)"
+          >
+          <div class="flex items-center">
+            <div
+          class="{{
+            selectedIndex == i ? ' !text-white' : ' !text-gray-500'
+          }} mx-2 !font-light"
+              >
+              {{ tenderCategory.tenderCategoryName }}
+            </div>
+            <div
+          class="rounded-full {{
+            selectedIndex == i
+              ? ' bg-white !text-gray-500'
+              : '!bg-[#424242] !text-white'
+          }} !font-light p-1 grid min-w-[25px] !text-xs h-[25px] place-content-center"
+              >
+              {{ tenderCategory.count }}
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+}
+
+@if (sortedTenderCategoriesStats?.length < 2) {
+  <div class="mt-4 text-sm">
+    <div class="space-x-3 space-y-3 text-center">
+      @for (item of [1, 2, 3, 4]; track item; let i = $index) {
+        <div
+          class="inline-block animate-pulse rounded-full bg-gray-200 p-1 items-center cursor-not-allowed"
+          >
+          <div class="flex items-center">
+            <div class="text-gray-200 mx-2 font-light">Loading</div>
+            <div
+              class="rounded-full bg-gray-300 text-gray-200 font-light p-1 grid min-w-[25px] text-xs h-[25px] place-content-center"
+            ></div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+}

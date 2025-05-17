@@ -1,0 +1,200 @@
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 divide-x">
+  <div
+    (click)="_onStatsClick(statsKeys.tenderersCount)"
+    class="px-2 py-4 hover:bg-slate-50 cursor-pointer text-center grid place-content-center border-top !border-top-[#EFEEEE]"
+    >
+    @if (
+      !statsLoadingStatusObject[statsKeys.tenderersCount].loading &&
+      !statsLoadingStatusObject[statsKeys.tenderersCount].failedToLoad
+      ) {
+      <div
+        class="!text-xl font-medium"
+        >
+        <animated-digit
+          [duration]="1000"
+          [digit]="statsLoadingStatusObject[statsKeys.tenderersCount].data"
+        ></animated-digit>
+      </div>
+    }
+    @if (
+      statsLoadingStatusObject[statsKeys.tenderersCount].loading ||
+      statsLoadingStatusObject[statsKeys.tenderersCount].failedToLoad
+      ) {
+      <home-stats-loader
+      [hasError]="
+        statsLoadingStatusObject[statsKeys.tenderersCount].failedToLoad
+      "
+        (onLoadingRetry)="getTenderersCount()"
+      ></home-stats-loader>
+    }
+    <div class="text-xs mt-1">{{ "TENDERERS" | translate }}</div>
+  </div>
+  <div
+    (click)="_onStatsClick(statsKeys.pesCount)"
+    class="px-2 py-4 hover:bg-slate-50 cursor-pointer text-center grid place-content-center border-top !border-top-[#EFEEEE]"
+    >
+    @if (
+      !statsLoadingStatusObject[statsKeys.pesCount].loading &&
+      !statsLoadingStatusObject[statsKeys.pesCount].failedToLoad
+      ) {
+      <div
+        class="!text-xl font-medium"
+        >
+        <animated-digit
+          [digit]="statsLoadingStatusObject[statsKeys.pesCount].data"
+          [duration]="1000"
+        ></animated-digit>
+      </div>
+    }
+    @if (
+      statsLoadingStatusObject[statsKeys.pesCount].loading ||
+      statsLoadingStatusObject[statsKeys.pesCount].failedToLoad
+      ) {
+      <home-stats-loader
+        [hasError]="statsLoadingStatusObject[statsKeys.pesCount].failedToLoad"
+        (onLoadingRetry)="getPEsCount()"
+      ></home-stats-loader>
+    }
+    <div class="text-xs mt-1">
+      {{ "PROCURING_ENTITIES" | translate }}
+    </div>
+  </div>
+  <div
+    (click)="_onStatsClick(statsKeys.tendersToBeOpenedCount)"
+    class="px-2 py-4 hover:bg-slate-50 cursor-pointer text-center backdrop: grid place-content-center border-top !border-top-[#EFEEEE]"
+    >
+    @if (
+      !statsLoadingStatusObject[statsKeys.tendersToBeOpenedCount].loading &&
+      !statsLoadingStatusObject[statsKeys.tendersToBeOpenedCount].failedToLoad
+      ) {
+      <div
+        class="!text-xl font-medium !text-warning"
+        >
+        <animated-digit
+        [digit]="
+          statsLoadingStatusObject[statsKeys.tendersToBeOpenedCount].data
+        "
+          [duration]="1000"
+        ></animated-digit>
+      </div>
+    }
+    @if (
+      statsLoadingStatusObject[statsKeys.tendersToBeOpenedCount].loading ||
+      statsLoadingStatusObject[statsKeys.tendersToBeOpenedCount].failedToLoad
+      ) {
+      <home-stats-loader
+      [hasError]="
+        statsLoadingStatusObject[statsKeys.tendersToBeOpenedCount].failedToLoad
+      "
+        (onLoadingRetry)="getCountOfTenderToBeOpened()"
+      ></home-stats-loader>
+    }
+    <div class="text-xs mt-1">{{ "CLOSING_TODAY" | translate }}</div>
+  </div>
+  <div
+    (click)="_onStatsClick(statsKeys.tenderCategoriesCount)"
+    class="px-2 py-4 hover:bg-slate-50 cursor-pointer text-center grid place-content-center border-top !border-top-[#EFEEEE]"
+    >
+    @if (
+      !statsLoadingStatusObject[statsKeys.tenderCategoriesCount].loading &&
+      !statsLoadingStatusObject[statsKeys.tenderCategoriesCount].failedToLoad
+      ) {
+      <div
+        class="!text-xl font-medium"
+        >
+        <animated-digit
+          [digit]="statsLoadingStatusObject[statsKeys.tenderCategoriesCount].data"
+          [duration]="1000"
+        ></animated-digit>
+      </div>
+    }
+    @if (
+      statsLoadingStatusObject[statsKeys.tenderCategoriesCount].loading ||
+      statsLoadingStatusObject[statsKeys.tenderCategoriesCount].failedToLoad
+      ) {
+      <home-stats-loader
+      [hasError]="
+        statsLoadingStatusObject[statsKeys.tenderCategoriesCount].failedToLoad
+      "
+        (onLoadingRetry)="getTenderCategoriesStat()"
+      ></home-stats-loader>
+    }
+    <div class="text-xs mt-1">{{ "ACTIVE_TENDERS" | translate }}</div>
+  </div>
+  <div
+    (click)="_onStatsClick(statsKeys.awardedContractsCount)"
+    class="px-2 py-4 hover:bg-slate-50 cursor-pointer text-center grid place-content-center border-top !border-top-[#EFEEEE]"
+    >
+    @if (
+      !statsLoadingStatusObject[statsKeys.awardedContractsCount].loading &&
+      !statsLoadingStatusObject[statsKeys.awardedContractsCount].failedToLoad
+      ) {
+      <div
+        class="!text-xl font-medium"
+        >
+        <animated-digit
+          [duration]="1000"
+        [digit]="
+          statsLoadingStatusObject[statsKeys.awardedContractsCount].data
+            .awardContract
+        "
+        ></animated-digit>
+      </div>
+    }
+    @if (
+      statsLoadingStatusObject[statsKeys.awardedContractsCount].loading ||
+      statsLoadingStatusObject[statsKeys.awardedContractsCount].failedToLoad
+      ) {
+      <home-stats-loader
+      [hasError]="
+        statsLoadingStatusObject[statsKeys.awardedContractsCount].failedToLoad
+      "
+        (onLoadingRetry)="getCountOfAwardedContract()"
+      ></home-stats-loader>
+    }
+    <div class="text-xs mt-1">
+      {{ "AWARDED_CONTRACTS" | translate }}
+      <!-- <span
+      class="cursor-pointer"
+      matTooltip=" {{ 'LAST_365_DAYS' | translate }}"
+      ><mat-icon inline>info</mat-icon></span
+      > -->
+    </div>
+  </div>
+  <div
+    (click)="_onStatsClick(statsKeys.awardedContractsCount)"
+    class="px-2 py-4 hover:bg-slate-50 cursor-pointer text-center border-top !border-top-[#EFEEEE]"
+    >
+    @if (
+      !statsLoadingStatusObject[statsKeys.awardedContractsCount].loading &&
+      !statsLoadingStatusObject[statsKeys.awardedContractsCount].failedToLoad
+      ) {
+      <div
+        class="!text-xl font-medium"
+        >
+        TSh
+        <span>{{ awardContractValueWithSuffix.value }}</span>
+        {{ awardContractValueWithSuffix.suffix }}
+      </div>
+    }
+    @if (
+      statsLoadingStatusObject[statsKeys.awardedContractsCount].loading ||
+      statsLoadingStatusObject[statsKeys.awardedContractsCount].failedToLoad
+      ) {
+      <home-stats-loader
+      [hasError]="
+        statsLoadingStatusObject[statsKeys.awardedContractsCount].failedToLoad
+      "
+        (onLoadingRetry)="getCountOfAwardedContract()"
+      ></home-stats-loader>
+    }
+    <div class="text-xs mt-1">
+      {{ "CONTRACT_AMOUNT" | translate }}
+      <!-- <span
+      class="cursor-pointer"
+      matTooltip=" {{ 'LAST_365_DAYS' | translate }}"
+      ><mat-icon inline>info</mat-icon></span
+      > -->
+    </div>
+  </div>
+</div>

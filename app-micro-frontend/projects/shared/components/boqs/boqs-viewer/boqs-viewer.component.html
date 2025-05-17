@@ -1,0 +1,28 @@
+@if (showBOQFetcher) {
+<div class="grid place-content-center">
+  <app-boq-fetcher
+    [forPPRAAdmin]="forPPRAAdmin"
+    [fetchingConfiguration]="fetchingConfiguration"
+    [onBOQFinishedLoading]="onBOQFinishedLoading"
+  >
+  </app-boq-fetcher>
+</div>
+} @if (flatNestedSpecificationItemsView.length > 0 && !showBOQFetcher) {
+<app-flat-nested-specifications
+  #flatNestedSpecificationsComponent
+  [viewMode]="'readOnly'"
+  [requisitionDate]="requisitionDate()"
+  [flatNestedSpecificationItemsView]="flatNestedSpecificationItemsView"
+  [showValueColumn]="true"
+  [showUnitRateColumn]="showUnitRateColumn"
+  [showTotalColumn]="showTotalColumn"
+  [canAddSpecs]="false"
+  [showCodeOrSNColumn]="true"
+  [showBoqSummary]="true"
+  [provisionSumPhysicalContingencyPercent]="
+		provisionSumPhysicalContingencyPercent
+	"
+  [vatRequired]="vatRequired"
+  [provisionSumVariationOfPricesPercent]="provisionSumVariationOfPricesPercent"
+></app-flat-nested-specifications>
+}

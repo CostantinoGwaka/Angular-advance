@@ -1,0 +1,12 @@
+<div class="p-1 text-[12px] step-item" (click)="onStepClickEvent()">
+  <div class="flex items-center justify-start gap-2 ">
+    <div class="w-[50px]">
+      <div class="flex h-[44px] w-[44px] rounded-full items-center justify-center circle cursor-pointer" [ngClass]="{'active-circle':active, 'normal-circle':!active}">{{index+1}}</div>
+    </div>
+    <div class="font-semibold w-full">
+      <div class="rounded-pill bg-[#FBFBFB] py-[12px] px-[15px]  step-label cursor-pointer" [ngClass]="{'active-label':active}">
+        {{ title }}
+      </div>
+    </div>
+  </div>
+</div>

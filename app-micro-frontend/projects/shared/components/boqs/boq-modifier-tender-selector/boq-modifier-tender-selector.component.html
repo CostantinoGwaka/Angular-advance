@@ -1,0 +1,41 @@
+<app-shared-layout
+  [Analysis]="'BOQ Modification'"
+  [hideAdd]="true"
+  [viewDetails]="viewDetails"
+  [addPermission]="[]"
+  [smallForm]="false"
+  animationSize="full"
+  (closeDetails)="closeDetails()"
+  >
+  @if (viewType == 'table') {
+    <div ngProjectAs="table">
+      <div class="flex space-x-2">
+        <div class="col-sm-6" @fadeIn>
+          <mat-form-field appearance="outline">
+            <mat-label>Tender Number</mat-label>
+            <input matInput [(ngModel)]="tenderNumber" />
+          </mat-form-field>
+        </div>
+        <button
+          class="h-14 px-5 font-bold rounded text-white !bg-primary"
+          (click)="search()"
+          >
+          Search
+        </button>
+      </div>
+      @if(showResults){
+        <app-paginated-data-table
+          [query]="query"
+          [apolloNamespace]="apolloNamespace"
+          [resetTable]="refreshDataTable"
+          [tableConfigurations]="tableConfigurations"
+          (rowCustomPrimary)="modifyBOQ($event)"
+          [actionButtons]="[]"
+          [customMainFilters]="tableFilter"
+          [title]="'Tenders'"
+          >
+        </app-paginated-data-table>
+      }
+    </div>
+  }
+</app-shared-layout>

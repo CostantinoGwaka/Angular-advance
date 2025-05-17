@@ -1,0 +1,157 @@
+tr:nth-child(even) {
+  background-color: #f4f6fb!important;
+}
+.card-1 {
+  border-radius: 2px;
+  background-color: rgba(255, 255, 255, 0.75) !important;
+  transition: all 0.3s cubic-bezier(.25, .8, .25, 1) !important;
+}
+
+.card-1:hover {
+  border-top: 1px solid rgba(0, 0, 0, 0.4) !important;
+  box-shadow: 0 14px 28px rgba(3, 31, 35, 0.12), 0 10px 10px rgba(3, 31, 35, 0.22) !important;
+  transform: scale(1.01) !important;
+  background-color: rgba(255, 255, 255, 0.85) !important;
+}
+
+table.checkbox-table {
+  width: 100%;
+
+  thead {
+    tr {
+      background-color: rgba(0, 0, 0, 0.1);
+      opacity: 0.8;
+    }
+  }
+
+  td {
+    //padding-left: 10px!important;
+    //word-break: break-word;
+  }
+
+  ;
+
+  th:last-child {
+    text-align: right !important;
+  }
+}
+
+table.default-table {
+  width: 100%;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+
+  td {
+    padding-left: 10px !important;
+    word-break: break-word;
+  }
+
+  ;
+
+  th {
+    padding-left: 10px !important;
+    color: black !important;
+    font-weight: bolder !important;
+    background-color: rgba(0, 0, 0, 0.1) !important;
+    opacity: 0.8 !important;
+  }
+}
+
+.mat-mdc-paginator {
+  display: block;
+  margin-bottom: 20px;
+}
+
+th.mat-sort-header-sorted {
+  color: black;
+}
+
+.hidden {
+  display: none;
+}
+
+.table-cover {
+  margin: 0px;
+}
+
+.top-area {
+  display: grid;
+  grid-template-columns: 10fr 0fr;
+
+  .search-area {
+    align-self: end;
+  }
+
+  .excel-button {
+    justify-self: end;
+    align-self: center;
+    margin-bottom: 12px;
+  }
+}
+
+.action-button {
+  height: 28px;
+  border-radius: 50%;
+  padding: 2px 5px 5px 5px;
+  cursor: pointer !important;
+}
+
+.active {
+  background-color: rgba(0, 0, 0, 0.2) !important;
+}
+
+.error {
+  background-color: rgba(255, 0, 6, 0.18) !important;
+  color: black !important;
+}
+.success {
+  background-color:  rgba(3, 251, 185, 0.18) !important;
+  color: black !important;
+}
+
+
+a {
+  border-radius: 10% !important;
+
+  mat-icon {
+    font-size: 12px;
+    height: 30px;
+    width: 30px;
+  }
+}
+
+.mat-mdc-button {
+  line-height: 28px;
+  min-width: 56px;
+}
+
+.mat-mdc-cell,
+.mat-mdc-footer-cell {
+  font-size: 12px;
+}
+
+.alias {
+  cursor: alias;
+}
+mat-icon {
+  padding: 5px;
+  color: #333;
+  // border: 2px solid rgba(#1394db, .6);
+  border-radius: 50%;
+  width: var(--size);
+  height: var(--size);
+  transition: border-color 400ms ease-out;
+  cursor: pointer;
+
+  &:hover {
+    border-color: #1394db;
+  }
+}
+
+::ng-deep .flat-card {
+  box-shadow: none !important;
+  border: none !important;
+}
+
+::ng-deep .th-align-right div {
+  flex-direction: row-reverse;
+}

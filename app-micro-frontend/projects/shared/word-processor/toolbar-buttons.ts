@@ -1,0 +1,108 @@
+export const toolbarButtons = {
+  h1: {
+    action: 'formatBlock',
+    tag: 'h1',
+    icon: '',
+    iconText: 'H1',
+    title: 'Heading 1',
+  },
+  h2: {
+    action: 'formatBlock',
+    tag: 'h2',
+    icon: '',
+    iconText: 'H2',
+    title: 'Heading 2',
+  },
+  h3: {
+    action: 'formatBlock',
+    tag: 'h3',
+    icon: '',
+    iconText: 'H3',
+    title: 'Heading 3',
+  },
+  bold: {
+    action: 'bold',
+    tag: 'b',
+    icon: 'format_bold',
+    title: 'Bold',
+  },
+  italic: {
+    action: 'italic',
+    tag: 'i',
+    icon: 'format_italic',
+    title: 'Italic',
+  },
+  underline: {
+    action: 'underline',
+    tag: 'u',
+    icon: 'format_underline',
+    title: 'Underline',
+  },
+  strike: {
+    action: 'strikeThrough',
+    tag: 'strike',
+    icon: 'format_strikethrough',
+    title: 'Strike Through',
+  },
+  justifyLeft: {
+    action: 'justifyLeft',
+    style: 'textAlign:left',
+    icon: 'format_align_left',
+    title: 'Justify Left',
+  },
+  justifyCenter: {
+    action: 'justifyCenter',
+    style: 'textAlign:center',
+    icon: 'format_align_center',
+    title: 'Justify Center',
+  },
+  justifyRight: {
+    action: 'justifyRight',
+    style: 'textAlign:right',
+    icon: 'format_align_right',
+    title: 'Justify Right',
+  },
+  formatBlock: {
+    action: 'formatBlock',
+    style: 'textAlign:justify',
+    icon: 'format_align_justify',
+    title: 'Justify Block',
+  },
+  orderedList: {
+    action: 'insertOrderedList',
+    tag: 'ol',
+    icon: 'format_list_numbered',
+    title: 'Insert Ordered List',
+  },
+  unOrderedList: {
+    action: 'insertUnorderedList',
+    tag: 'ul',
+    icon: 'format_list_bulleted',
+    title: 'Insert Unordered List',
+  },
+  insertTable: {
+    action: 'insertTable',
+    icon: 'view_module_outlined',
+    title: 'Insert Tabble',
+  },
+  removeFormat: {
+    action: 'removeFormat',
+    icon: 'format_clear',
+    title: 'Remove Format',
+  },
+  link: {
+    action: 'createLink',
+    icon: 'add_link',
+    title: 'Add Link',
+  },
+  unlink: {
+    action: 'unlink',
+    icon: 'link_off',
+    title: 'Unlink',
+  },
+  cleanPlaceholders: {
+    action: 'cleanPlaceholders',
+    icon: 'fact_check',
+    title: 'Clean Placeholders',
+  },
+};

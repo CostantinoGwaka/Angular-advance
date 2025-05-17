@@ -1,0 +1,42 @@
+<div class="pl-2">
+  <div class="grid grid-cols-12 flex space-x-8 md:space-x-8 content-center">
+    <div class="col-span-1 pl-3 pt-2"><span class="font-bold text-base">To : </span></div>
+    <div class="col-span-9 pl">
+      <div class="email-area" class="w-[85%]">
+        <mat-form-field appearance="outline">
+          <mat-label> Email Address</mat-label>
+          <input matInput type="email" placeholder="Email Address" (focusout)="selectedEmail($event)"
+            [(ngModel)]="email" />
+          <mat-icon matSuffix>mail_outline</mat-icon>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="col-span-1 p-1 pl-2">
+      <div class="flex">
+        <div class="send-menu relative">
+          <button
+            class="text-base text-gray-900 font-normal rounded-lg bg-[#D9D9D9] flex items-center p-2 group space-x-36">
+            <mat-icon [svgIcon]="'more_menu'" class="align-items-center font-bold text-white">
+            </mat-icon>
+          </button>
+          <!-- <div class="w-[100px] h-[500px] bg-white shadow rounded absolute right-0 top-10"></div> -->
+
+          <!-- <mat-menu #beforeMenu="matMenu" xPosition="before">
+                <button mat-menu-item>
+                  <mat-icon>supervised_user_circle</mat-icon>
+                  PE Users
+                </button>
+                <button mat-menu-item>
+                  <mat-icon>share</mat-icon>
+                  Broadcast
+                </button>
+              </mat-menu> -->
+        </div>
+        <div class="pl-6 pt-1">
+          <mat-icon (click)="closeButtonBtnToArea()"
+            class="align-items-center font-bold text-black pt-1 cursor-pointer">close</mat-icon>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

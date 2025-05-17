@@ -1,0 +1,47 @@
+.custom-dialog {
+    background-color: #fff;
+    max-width: 500px;
+    position: relative;
+    text-align: center;
+  }
+  .custom-dialog::before {
+    background-color: #1394db;
+    content: "";
+    display: block;
+    height: 50px;
+    left: 0;
+    position: absolute;
+    top: -50px;
+    width: 100%;
+    z-index: 0;
+  }
+  .custom-dialog-title {
+    color: #000;
+    font-size: 24px;
+    margin: 0;
+    padding: 20px 0;
+    position: relative;
+    z-index: 1;
+  }
+  .custom-dialog-message {
+    color: #666;
+    font-size: 16px;
+    margin: 20px 0;
+  }
+  .custom-dialog-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  .custom-dialog-cancel {
+    margin-right: 10px;
+  }
+  .custom-dialog-confirm {
+    margin-left: 10px;
+  }
+
+  .mat-mdc-dialog-container {
+    padding: 0px !important;
+  }
+
+

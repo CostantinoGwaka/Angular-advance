@@ -1,0 +1,64 @@
+<div class="grid grid-cols-4 !mt-4">
+  <vertical-tabs [tabItems]="tabItems"
+    [tabTitle]="'Additional Details'"
+    [defaultStep]="currentTab"
+    (onStepSelection)="onStepSelection($event)">
+  </vertical-tabs>
+  @if (!isIndividualRegistration) {
+    <div
+      class="col-span-3 pl-8">
+      @if (currentTab == 'business-registration') {
+        <app-business-registration-details
+          [tendererUuid]="tendererUuid"
+          [embassy]="embassy"
+          [ppra]="ppra">
+        </app-business-registration-details>
+      }
+      @if (currentTab == 'associate-details') {
+        <app-associates-details
+          [tendererUuid]="tendererUuid">
+        </app-associates-details>
+      }
+      @if (currentTab == 'business-owners') {
+        <app-business-owners-details
+          [tendererSide]="tendererSide"
+          [tendererUuid]="tendererUuid">
+        </app-business-owners-details>
+      }
+      @if (currentTab == 'tax-details') {
+        <app-tax-details
+          [tendererUuid]="tendererUuid"
+          [embassy]="embassy"
+          [ppra]="ppra">
+        </app-tax-details>
+      }
+    </div>
+  }
+
+
+  @if (isIndividualRegistration) {
+    <div
+      class="col-span-3 pl-8">
+      @if (currentTab == 'business-registration') {
+        <app-business-registration-details
+          [tendererUuid]="tendererUuid"
+          [embassy]="embassy"
+          [ppra]="ppra">
+        </app-business-registration-details>
+      }
+      @if (currentTab == 'curriculum-vitae') {
+        <app-curriculum-vitae
+          [tendererUuid]="tendererUuid"
+          [tendererDetails]="tenderer">
+        </app-curriculum-vitae>
+      }
+      @if (currentTab == 'tax-details') {
+        <app-tax-details
+          [tendererUuid]="tendererUuid"
+          [embassy]="embassy"
+          [ppra]="ppra">
+        </app-tax-details>
+      }
+    </div>
+  }
+</div>

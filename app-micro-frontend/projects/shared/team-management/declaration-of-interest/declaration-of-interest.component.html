@@ -1,0 +1,310 @@
+<div class="bg-white p-4 rounded-[10px]">
+  @if (!htmlContent && !showPassPhrase) {
+    <div class="grid grid-cols-12 gap-4">
+      <div [ngClass]="{'col-span-6':true}">
+        <div class="rounded-[10px] border font-bold p-2 text-[13px] min-h-[102px]"
+          [ngClass]="{'animate-pulse':loadingTenderInfo,'bg-slate-200':loadingTenderInfo}">
+          <div class="text-[#ADADAD] py-1">#:{{tender?.tenderNumber}}</div>
+          <div class="text-[#000000] py-1">{{tender?.descriptionOfTheProcurement}}</div>
+          <div class="text-[#8AB9EF] py-1">{{pe?.name}}</div>
+        </div>
+      </div>
+      <div class="col-span-6" @fadeIn>
+        <div class="grid grid-cols-12 rounded-[10px] border  font-inter  font-bold py-4 pl-2 min-h-[102px]"
+          [ngClass]="{'animate-pulse':loadingConflicts,'bg-slate-200':loadingConflicts}">
+          @if (!loadingConflicts) {
+            <div class="col-span-2 lg:col-span-2 xl:col-span-1 text-[74px] text-[#5AABF5] font-bold  py-3 pr-1">
+              {{ tenderWithConflict}}
+            </div>
+          }
+          @if (!loadingConflicts) {
+            <div class="col-span-10 lg:col-span-10 xl:col-span-11 text-[#787777] text-[16px]">
+              <p>Conflicted Tenderers</p>
+            </div>
+          }
+        </div>
+      </div>
+      <div class="col-span-12">
+        @if (!loadingConflicts  || saving) {
+          <mat-form-field appearance="outline">
+            <mat-label>Search</mat-label>
+            <input matInput [(ngModel)]="searchString" (ngModelChange)="changes()">
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+        }
+        @if (loadingConflicts) {
+          <app-loader  [message]="'Loading details, please wait...'"></app-loader>
+        }
+        @if (loadingTemplate) {
+          <app-loader class="my-4" [message]="loadingMessage"></app-loader>
+        }
+      </div>
+      @if (!loadingConflicts || saving) {
+        <div class="col-span-12">
+          @for (tenderer of tenderPages[currentPage]; track tenderer; let i = $index) {
+            <div class="rounded-[10px] border border-[#CCCCCC] mb-1 min-h-[127px] hover:shadow-md"
+              @fadeIn>
+              <div class="p-3 rounded-t {{ (declaredSomething[tenderer.uuid] != null) ?  (declaredSomething[tenderer.uuid] == true)? 'bg-[#ff000029]' : 'bg-[#4caf501c]' : '' }}">
+                <div class="flex flex-row justify-between">
+                  <span>{{tenderer.name}}</span>
+                  <span>{{ (declaredSomething[tenderer.uuid] != null) ?  (declaredSomething[tenderer.uuid] == true)? 'Has Conflict' : 'No Conflict' : 'Pending' }}</span>
+                </div>
+              </div>
+              <mat-divider></mat-divider>
+              <div class="p-3 grid grid-cols-12">
+                <div class="col-span-4">
+                  <div class=" px-2">
+                    @if (tenderer.executiveLeaderTitle && tenderer.executiveLeaderName) {
+                      <p><span class="text-slate-6 font-medium text-[13px]">{{tenderer.executiveLeaderTitle}}:{{tenderer.executiveLeaderName}}</span></p>
+                    }
+                    <p>
+                      <mat-icon [inline]="true" class="vertical-align-middle">phone</mat-icon>&nbsp;{{tenderer.phone}}
+                    </p>
+                    <p>
+                      <mat-icon [inline]="true" class="vertical-align-middle">mail</mat-icon>&nbsp;<span>{{tenderer.email}}</span>
+                    </p>
+                  </div>
+                </div>
+                <div class="col-span-8 flex items-center justify-between">
+                  @if (declaredSomething[tenderer.uuid] != null) {
+                    <ng-container @fadeIn>
+                      <div></div>
+                      <div class="px-3">
+                        <button
+                          mat-button
+                          (click)="updateTendererDeclaration(tenderer.uuid)"
+                          class="!bg-primary text-white mb-1">
+                          <mat-icon>edit</mat-icon> Update declaration
+                        </button>
+                      </div>
+                    </ng-container>
+                  }
+                  @if (declaredSomething[tenderer.uuid] == null) {
+                    <ng-container @fadeIn>
+                      @if (availableConflict[tenderer.uuid].selection) {
+                        <div class="w-100 flex flex-row justify-end" @fadeInOut>
+                          <div class="w-[75%]">
+                            <mat-form-field appearance="outline" >
+                              <mat-label>Conflict Reason</mat-label>
+                              <mat-select
+                                @fadeIn
+                                [(ngModel)]="availableConflict[tenderer.uuid].reason"
+                                (change)="changedConflictForm(tenderer.uuid)"
+                                [multiple]="true"
+                                placeholder="select conflict reason"
+                                (selectionChange)="onChange(tenderer.uuid)">
+                                <!--  <mat-option>&#45;&#45;select conflict reason&#45;&#45;</mat-option>-->
+                                @for (conflict of conflictReasonSettings; track conflict) {
+                                  <mat-option value="{{conflict.uuid}}">{{conflict.reason}}</mat-option>
+                                }
+                              </mat-select>
+                              <mat-hint>Select conflict reason from the selector above</mat-hint>
+                            </mat-form-field>
+                          </div>
+                          @if (availableConflict[tenderer.uuid]?.reason && availableConflict[tenderer.uuid]?.reason.length !== 0) {
+                            <div
+                              (click)="saveSingleConflictOfInterest(tenderer.uuid)"
+                              @fadeIn
+                     class="inline-block h-10 m-2
+                       cursor-pointer hover:bg-blue-500
+                       !bg-primary text-white
+                       px-3 py-2 font-medium rounded-[5px]
+                       shadow-sm text-center">
+                              Save
+                            </div>
+                          }
+                          @if (hasConflict) {
+                            <div (click)="clearSelection(tenderer.uuid)"
+                   class="inline-block h-10 m-2
+                    cursor-pointer hover:bg-red-500
+                    !border !border-red-500
+                    hover:text-white text-red-500
+                    px-3 py-2 font-medium rounded-[5px]
+                    shadow-sm text-center">
+                              Cancel
+                            </div>
+                          }
+                        </div>
+                      }
+                      @if (!availableConflict[tenderer.uuid].selection) {
+                        <div class="w-100 flex flex-row justify-end">
+                          <!-- conflict options selector -->
+                          <div class="w-[50%]" @fadeInOut>
+                            <mat-form-field appearance="outline" >
+                              <mat-label>Do you have conflict with this tenderer?</mat-label>
+                              <mat-select
+                                [(ngModel)]="selectedOption[tenderer.uuid]"
+                                placeholder="select declaring options"
+                                (selectionChange)="onChange(tenderer.uuid)">
+                                <mat-option>--- select declaring options</mat-option>
+                                <mat-option [value]="false" class="!text-accent">I have no conflict</mat-option>
+                                <mat-option [value]="true" class="!text-warning">I have conflict</mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                          </div>
+                          @if (oldAvailableConflict[tenderer.uuid]) {
+                            <div (click)="clearSelection(tenderer.uuid)"
+                       class="inline-block h-10 m-2
+                    cursor-pointer hover:bg-red-500
+                    !border !border-red-500
+                    hover:text-white text-red-500
+                    px-3 py-2 font-medium rounded-[5px]
+                    shadow-sm text-center">
+                              Cancel
+                            </div>
+                          }
+                          <!-- end of conflict options selector -->
+                        </div>
+                      }
+                    </ng-container>
+                  }
+                </div>
+              </div>
+              @if (declaringNoConflicts[tenderer?.uuid]) {
+                <app-loader [message]="'Please wait...'"></app-loader>
+              }
+              <div class="p-3 grid grid-cols-12">
+                <div class="col-span-12">
+                  @if (otherPersonnelList[tenderer.uuid]) {
+                    <div @fadeInOut class="border-t border-gray-300 px-2 pt-3"></div>
+                  }
+                  <!-- <br/> -->
+                  <div clas="mt-2">
+                    @if (otherPersonnelList[tenderer.uuid]) {
+                      <div class="col-span-12" @fadeIn>
+                        <ul class="text-sm -ml-4">
+                          @for (personnel of tenderer.personnelInformationList; track personnel; let i = $index) {
+                            <li>
+                              <span class="font-medium">{{i+1}}. {{personnel.jobTitle}}</span>: {{personnel.firstName}}
+                              {{personnel.middleName}} {{personnel.lastName}}
+                            </li>
+                          }
+                        </ul>
+                      </div>
+                    }
+                  </div>
+                  <div (click)="otherPersonnel(tenderer.uuid)" class="ml-2">
+                    @if (!otherPersonnelList[tenderer.uuid]) {
+                      <button mat-stroked-button color="primary">More Personnel<mat-icon>chevron_right</mat-icon></button>
+                    }
+                    @if (otherPersonnelList[tenderer.uuid]) {
+                      <button mat-stroked-button color="primary">Less<mat-icon>chevron_left</mat-icon></button>
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+        @if (tenderers.length > 10) {
+          <div class="col-span-12" @fadeIn>
+            <mat-paginator [length]="tenderers.length" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"
+              (page)="onPageChange($event)" aria-label="Select page">
+            </mat-paginator>
+          </div>
+        }
+        <div class="col-span-12">
+          @if (loadingConflicts) {
+            <app-loader  [message]="'Loading details, please wait...'"></app-loader>
+          }
+          @if (loadingTemplate) {
+            <app-loader class="my-4" [message]="loadingMessage"></app-loader>
+          }
+          @if (saving) {
+            <div class="w-full" @fadeIn>
+              <app-loader [message]="'Saving conflict of interest...'"></app-loader>
+            </div>
+          }
+          <ng-container *appHasPermission="['ROLE_GENERIC']">
+            @if (showConfirm) {
+              <app-confirm-area
+                @fadeIn
+                [useYesNo]="true"
+                [useConfirmCancel]="true"
+                [title]="'You are about to complete conflict of interest declaration. Do you want to continue?'"
+                (confirm)="getCreatedTemplate()"
+                (cancel)="showConfirm = false"
+                >
+              </app-confirm-area>
+            }
+            @if (!showConfirm) {
+              <div class="w-full">
+                @if (triggerTemplate && attachmentUid) {
+                  <div (click)="getSignedHtmlDocument() " @fadeIn
+                   class="inline-block
+                   cursor-pointer
+                    hover:bg-blue-500 !bg-primary text-white px-3 py-2 mr-1
+                     font-medium rounded-[5px] shadow-sm text-center">
+                    View Signed Personal Covenant Form
+                  </div>
+                }
+                @if (hasConflict) {
+                  <div (click)="showConfirm = true"
+                   class="inline-block cursor-pointer hover:bg-blue-500
+                    !bg-primary text-white px-3 py-2 mr-1
+                    font-medium rounded-[5px] shadow-sm text-center">
+                    Save
+                  </div>
+                }
+                @if (hasConflict) {
+                  <div (click)="close()"
+                    class="inline-block cursor-pointer hover:bg-red-500 border border-red-500  hover:text-white text-red-500 px-3 py-2 font-medium rounded-[5px] shadow-sm text-center">
+                    Close
+                  </div>
+                }
+              </div>
+            }
+          </ng-container>
+        </div>
+      }
+    </div>
+  }
+
+
+  <!--    HTML TEMPLATE PREVIEW-->
+  @if (htmlContent) {
+    <div @fadeIn class="container">
+      <div [align]="'right'">
+        <button class="mx-3" (click)="getSign()" mat-raised-button>Sign Covenant Form</button>
+        <button (click)="templateClose()" mat-raised-button>Close</button>
+      </div>
+      <br>
+        <div #container [innerHTML]="htmlContent| doNotSanitize" id="sectionToPrint">
+        </div>
+      </div>
+    }
+
+    @if (!htmlContent && showPassPhrase) {
+      <div @fadeIn class="container">
+        <div [align]="'right'">
+          <button mat-raised-button (click)="showPassPhrase=false">Exit</button>
+        </div>
+        <br>
+          <form autocomplete="off">
+            <div class="ml-6 p-4  w-1/2 mx-auto  text-center">
+              <mat-label class="font-size-18"><b>Enter Key phrase to sign Personal Covenant Form</b></mat-label>
+              <br>
+                <mat-form-field  class="my-3" appearance="outline">
+                  <mat-label>Key phrase</mat-label>
+                  <input matInput placeholder="Enter Key phrase" [type]="hide ? 'password' : 'text'" [(ngModel)]="passphrase">
+                  <mat-icon class="mx-2 cursor-pointer" matSuffix (click)="hide = !hide">{{
+                    hide ? "visibility_off" : "visibility"
+                  }}</mat-icon>
+                </mat-form-field>
+                <div [align]="'center'" class="">
+                  @if (passphrase) {
+                    <button @fadeIn mat-raised-button color="primary"
+                      (click)="getSignedHtmlDocument();showPassPhrase=false;" type="submit">
+                      <mat-icon>edit</mat-icon>
+                      Continue
+                    </button>
+                  }
+                  @if (loadingTemplate) {
+                    <app-loader [message]="loadingMessage"></app-loader>
+                  }
+                </div>
+              </div>
+            </form>
+          </div>
+        }
+      </div>

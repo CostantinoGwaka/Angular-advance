@@ -1,0 +1,132 @@
+<h3>Process Payment</h3>
+<hr/>
+@if (bill?.controlNumber != null) {
+  <div class="grid grid-cols-4 gap-4 mt-4">
+    @if (bill?.serviceName) {
+      <app-view-details-item
+        key="Service Name"
+        [value]="bill?.serviceName"
+      ></app-view-details-item>
+    }
+    @if (bill?.payerName) {
+      <app-view-details-item
+        key="Payer Name"
+        [value]="bill?.payerName"
+      ></app-view-details-item>
+    }
+    <!--  <app-view-details-item-->
+    <!--    key="Control Number"-->
+    <!--    [value]="bill?.controlNumber"-->
+  <!--  ></app-view-details-item>-->
+  <app-view-details-item
+    key="Account Balance"
+    [value]="bill?.userAccountBalance | number"
+  ></app-view-details-item>
+  <app-view-details-item
+    key="Billed Amount"
+    [value]="bill?.billedAmount | number"
+  ></app-view-details-item>
+  <app-view-details-item
+    key="Currency"
+    [value]="bill?.currency"
+  ></app-view-details-item>
+</div>
+}
+
+@if (previousBill > 0 && bill?.hasBeenWaived) {
+  <div
+    class="w-full p-4 border-4 border-dotted border-spacing-3 rounded-md text-lg border-white bg-green-200 text-black cursor-pointer mb-2 pb-2">
+    <div>
+      <span>
+        NeST detects that you have pending bills of TZS <span class="text-black font-bold">{{ previousBill | number}}</span>
+      </span> &nbsp;&nbsp;
+      <button (click)="goToBills()"
+        type="button"
+					class="text-white
+					focus:outline-none !bg-[#2494D2] font-medium rounded-lg
+					text-xs px-3 py-1.5 text-center inline-flex items-center">
+        View Pending Bills
+      </button>
+    </div>
+    <div class="text-black font-bold pt-2 mt-2">
+      Note: All pending bills should be cleared on or before 30/10/2023 so that you can continue using NeST services.
+    </div>
+  </div>
+}
+
+@if (bill?.controlNumber != null) {
+  <div class="row pl-3 pr-3">
+    <!-- <p class="text-red-600" *ngIf="!bill?.isBalanceSufficient && !bill?.hasBeenWaived">
+    Your account does not have enough money to cover the payment. Please deposit funds using the control number:
+    <strong>{{bill?.controlNumber}}</strong>
+  </p> -->
+  @if (!bill?.isBalanceSufficient && !bill?.hasBeenWaived) {
+    <div
+      class="w-full p-4 border-4 border-dotted border-spacing-3 rounded-md text-lg border-white bg-green-200 text-black cursor-pointer mb-2 pb-2">
+      <div>
+        <span class="text-red-600 font-bold pt-2 mt-2">
+          Your account does not have enough balance to cover the payment.
+          <!--        <span>-->
+          <!--          Please deposit funds using the control number: <span class="text-black font-bold">{{bill?.controlNumber}}</span>-->
+        <!--        </span>-->
+      </span> &nbsp;&nbsp;
+      <button (click)="goToWallet()"
+        type="button"
+            class="text-white
+            focus:outline-none !bg-[#2494D2] font-medium rounded-lg
+            text-xs px-3 py-1.5 text-center inline-flex items-center">
+        Go to Billing
+      </button>
+    </div>
+    <!-- <div class="text-black font-bold pt-2 mt-2">
+    Note: Please clear them before the end of the three month period so that you can continue using the NeST services.
+  </div> -->
+</div>
+}
+@if (bill?.hasBeenWaived) {
+  <p class="text-green-600">
+    The bill for this service amounted to {{bill?.billedAmount | number}} has been waived, please click continue.
+  </p>
+}
+@if (loading) {
+  <app-loader message="Processing payment. Please wait..."></app-loader>
+}
+@if (!loading) {
+  <div class="my-4 col-span-4">
+    <div class="button-container">
+      @if (bill?.isBalanceSufficient || bill?.hasBeenWaived) {
+        <button
+          (click)="onPayNow()"
+          type="button"
+          class="btn-primary"
+          >
+          {{ bill?.hasBeenWaived ? 'Continue' : 'Confirm Payment' }}
+        </button>
+      }
+      <button
+        type="button"
+        class="btn-secondary text-black font-semibold"
+        (click)="close(false)"
+        >
+        <!-- <mat-icon>close</mat-icon>  -->
+        Close
+      </button>
+    </div>
+  </div>
+}
+</div>
+}
+@if (bill?.controlNumber == null) {
+  <div>
+    <p class="text-red-600 text-center text-lg">
+      The billing information could not be processed for some reason. Please contact the NeST help desk team for assistance.
+    </p>
+    <button
+      type="button"
+      class="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 mr-2 mb-2"
+      (click)="close(false)"
+      >
+      <mat-icon>close</mat-icon>Close
+    </button>
+  </div>
+}

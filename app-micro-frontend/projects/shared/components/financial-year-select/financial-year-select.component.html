@@ -1,0 +1,29 @@
+<div>
+  <p>Financial Year</p>
+  <div #selectorPane (click)="!readOnly ? toggleOptionPane() : null" class="flex items-center justify-between border-[1px] border-slate-300 cursor-pointer active:border-slate-400 px-[10px] py-[10px] rounded-[5px] w-full text-[12px] h-[40px]">
+    <div class="text-[12px] text-gray-600">{{selectedCurrentFinancialYear}}</div>
+    <div>
+      <svg width="10" height="10" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path stroke="2" d="M0.480011 16.1363C0.480011 15.6319 0.678761 15.1163 1.06689 14.73C1.83939 13.9575 3.10501 13.9575 3.87939 14.73L30.3525 41.2031L56.4394 15.1181C57.2138 14.3456 58.4775 14.3456 59.2519 15.1181C60.0263 15.8906 60.0263 17.1581 59.2519 17.9306L31.7588 45.435C30.9844 46.2094 29.7188 46.2094 28.9463 45.435L1.06689 17.5556C0.667511 17.1563 0.480011 16.6538 0.480011 16.1381V16.1363Z" fill="black"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Option Pane -->
+<!--  @if(){-->
+    <div [ngClass]="{
+    'hidden':!(showOptionPane && !readOnly)
+    }"  #listPane @fadeIn class="shadow bg-white absolute mt-[2px] w-full z-50 divide-y rounded-[5px] overflow-clip">
+      <div>
+        <input [(ngModel)]="searchString" type="text" class="w-full px-3 py-2 outline-none" placeholder="Search Financial Year">
+      </div>
+      <div class="h-[200px] overflow-auto">
+        @for(year of financialYears | stringSearch:searchString; track year){
+          <div @fadeIn @fadeOut (click)="selectFinancialYear(year)" class="px-[10px] cursor-pointer hover:bg-slate-50 py-[4px] text-[12px]" [ngClass]="{'bg-slate-100': year == currentFinancialYear}">
+            {{year}}
+          </div>
+        }
+      </div>
+    </div>
+<!--  }-->
+</div>

@@ -1,0 +1,103 @@
+@if (!networkStatus) {
+<div class="bg-red-800 items-center justify-center fade-in-text h-6">
+  <p class="text-center text-white font-semibold">
+    You're offline. Check your connection.
+  </p>
+</div>
+}
+<guest-layout
+  [bodyBackgroundImage]="'/assets/images/login-bg-4.jpg'"
+  [page_name]="'SIGNIN' | translate"
+  [page_title]="'Sign in'"
+>
+  @if (!isExternalLogin) {
+  <div [ngClass]="routeAnimationsElements">
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>{{ "EMAIL" | translate }}</mat-label>
+      <mat-icon matPrefix>email</mat-icon>
+      <input
+        (input)="onInputValueChangedUsername($event)"
+        (keyup)="validateEmail()"
+        (keyup.enter)="submitLogin({username, password})"
+        [(ngModel)]="username"
+        matInput
+        placeholder="{{ 'EMAIL' | translate }}"
+        type="email"
+      />
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>{{ "PASSWORD" | translate }}</mat-label>
+      <mat-icon matPrefix>lock</mat-icon>
+      <input
+        (input)="onInputValueChangedPassword($event)"
+        (keyup.enter)="submitLogin({username, password})"
+        [(ngModel)]="password"
+        [type]="hide ? 'password' : 'text'"
+        matInput
+        placeholder="{{ 'ENTER_YOUR_PASSWORD' | translate }}"
+        type="password"
+      />
+      <mat-icon (click)="hide = !hide" matSuffix
+        >{{ hide ? "visibility_off" : "visibility" }}</mat-icon
+      >
+    </mat-form-field>
+  </div>
+  } @if ( authResponse && authResponse.status == 'fail' && authResponse.message ) {
+  <div @fadeIn class="col-sm-12">
+    <p class="text-danger bg-white">
+      {{ authResponse.message.includes('could not execute') ? 'Please enter valid email address' :
+      authResponse.message.includes('exception') || authResponse.message.includes('redis') ?
+      'Something went wrong' : authResponse.message }}
+    </p>
+  </div>
+  }
+  <div>
+    @if (loading) {
+    <div @fadeIn class="col-sm-12">
+      <app-loader message="Logging in..."></app-loader>
+    </div>
+    }
+  </div>
+  @if (showBot) {
+  <div
+    class="place-self-center"
+    style="display: flex; align-items: center; justify-content: center;"
+  >
+    @if (showBot) {
+    <re-captcha (resolved)="resolved($event)" siteKey="6LeLb5siAAAAAP4BEIURi24SFg6xhftWAa9FLtlk">
+    </re-captcha>
+    }
+  </div>
+  }
+  <button color="primary" mat-flat-button class="hidden"></button>
+  @if (!showBot) {
+  <div [ngClass]="routeAnimationsElements">
+    @if (!loading) {
+    <div class="flex justify-between items-center !mb-[40px]">
+      <a [routerLink]="['', 'forgot-password']" class="!text-primary"
+        >{{ "FORGOT_PASSWORD" | translate }}</a
+      >
+      <button
+        (click)="submitLogin({username, password})"
+        [disabled]="username === 'EXTERNAL_LOGIN' || (!username || !password) || (username && !isValidEmail)"
+        class="!m-0 py-3 items-center flex flex-wrap"
+        color="primary"
+        mat-flat-button
+        style="padding-bottom: 39px !important;"
+      >
+        {{ "SIGNIN" | translate }}
+        <mat-icon id="login-arrow">arrow_forward</mat-icon>
+      </button>
+    </div>
+    }
+  </div>
+  }
+  <div [ngClass]="routeAnimationsElements">
+    <div [ngClass]="routeAnimationsElements" class="text-center center mt-10">
+      {{ "DONT_HAVE_ACCOUNT" | translate }}
+      <a [routerLink]="['/register']" class="font-medium !text-primary" href=""
+        >{{ "CREATE_NEW_ACCOUNT" | translate }}</a
+      >
+    </div>
+  </div>
+</guest-layout>

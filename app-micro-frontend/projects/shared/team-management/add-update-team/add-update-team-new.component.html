@@ -1,0 +1,565 @@
+<div>
+  @if (teamType != 'NEGOTIATION_TEAM') {
+  <!--- planned dates inputs -->
+  <div @fadeInOut class="border border-gray-300 my-2 p-2 rounded-md">
+    <p class="font-bold" @fadeIn>1. Planned {{ entityName }} Dates:</p>
+    <mat-divider class="py-2"></mat-divider>
+    <div>
+      @for (dateType of ['Start', 'End']; track dateType; let i = $index) {
+      <ng-container>
+        <app-nego-date-picker
+          [dateType]="dateType"
+          [minDate]="yesterday"
+          [label]="'Planned '+ entityName +' '+ dateType"
+          (onDateUpdate)="updatePlannedDate($event)"
+        ></app-nego-date-picker>
+      </ng-container>
+      }
+    </div>
+  </div>
+  <mat-divider class="my-4"></mat-divider>
+  } @if (shouldShowContent()) {
+  <div @fadeInOut class="border border-gray-300 my-2 p-2 rounded-md">
+    <ng-container
+      @fadeIn
+      [ngTemplateOutletContext]="{ data : {title: teamTypeName, index: teamType == 'NEGOTIATION_TEAM' ? 1 : 2}}"
+      [ngTemplateOutlet]="listHeader"
+    >
+    </ng-container>
+
+    <mat-divider class="py-2"></mat-divider>
+
+    <!-- Loader for tenders -->
+    @if (loadingTenders) {
+    <app-loader @fadeIn [message]="'Loading tenders, please wait'"></app-loader>
+    }
+
+    <!-- Tender details -->
+    @if (currentTender && !loadingTenders) {
+    <div class="p-2 font-bold">#:{{ currentTender.entityNumber }}</div>
+    <div class="p-2 font-bold !text-primary text-lg">
+      {{ currentTender.name }}
+    </div>
+    }
+
+    <!-- Form for selecting tender (non-negotiation team) -->
+    @if (!currentTender && teamType != 'NEGOTIATION_TEAM') {
+    <mat-form-field appearance="outline">
+      <mat-label>{{ teamTypeName }}</mat-label>
+      <mat-select (selectionChange)="onSelectedTender($event)" [(ngModel)]="entityUuid">
+        @for (option of tendersList; track option.uuid) {
+        <mat-option [value]="option.uuid">
+          {{ option.identificationNumber }} - {{ option.name }}
+        </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    }
+    <!-- For Negotiation Team -->
+    @if (teamType == 'NEGOTIATION_TEAM') { @if (loadingTenders) {
+    <app-loader @fadeIn [message]="'Loading tenders, please wait..'"></app-loader>
+    } @if (team) {
+    <div>
+      <div>
+        <strong>Tender Number:</strong>&nbsp;&nbsp;{{ team?.awardSubmission?.entityNumber }}
+      </div>
+      <div>
+        <strong>Tender Description:</strong>&nbsp;&nbsp;{{
+        team?.awardSubmission?.descriptionOfTheProcurement }}
+      </div>
+      <div>
+        <strong>Procurement Method:</strong>&nbsp;&nbsp;{{ team?.awardSubmission?.procurementMethod
+        }}
+      </div>
+    </div>
+    } @else {
+    <mat-form-field appearance="outline">
+      <mat-label>Tender Type</mat-label>
+      <mat-select (selectionChange)="onSelectedEntityType($event.value)">
+        @for (option of entityTypeList; track option) {
+        <mat-option [value]="option">
+          {{option.name}}
+        </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    @if(selectedTeamEntityType){
+    <app-paginated-select
+      [(ngModel)]="entityUuid"
+      (fieldValue)="onSelectedNegotiationTender($event)"
+      [field]="tenderField"
+    ></app-paginated-select>
+    } } @if (teamDto.entityUuid && !loadSubmissions) {
+    <p class="font-semibold mt-4">Winner</p>
+    <mat-divider class="py-2"></mat-divider>
+    <div class="font-medium">{{ winner?.tendererName }}</div>
+    <br />
+    <div>
+      <div>
+        <strong>Bid Amount:</strong
+        >&nbsp;&nbsp;{{team?.awardSubmission?.financialCurrency??winner?.financialCurrency}} {{
+        (team?.awardSubmission?.bidAmount??winner?.bidAmount)|currency:"":"" }}
+      </div>
+      <div>
+        <strong>Email:</strong>&nbsp;&nbsp;{{ team?.awardSubmission?.email??winner?.email }}
+      </div>
+      <div>
+        <strong>Phone Number:</strong>&nbsp;&nbsp;{{
+        team?.awardSubmission?.tendererPhone??winner?.phoneNumber }}
+      </div>
+    </div>
+    } }
+  </div>
+  } @if (winner != null && teamDto?.entityUuid?.length > 0 && teamType === 'NEGOTIATION_TEAM') { @if
+  (submissionUuid) {
+  <mat-divider @fadeIn class="my-4"></mat-divider>
+  }
+  <!-- Chairperson Selection -->
+  @if (!commiteeChairman && teamDto.entityUuid) {
+  <div @fadeInOut class="border border-gray-300 my-2 p-2 rounded-md">
+    <ng-container
+      @fadeIn
+      [ngTemplateOutletContext]="{ data : {title: 'Select Chairperson', index: teamType == 'NEGOTIATION_TEAM' ? 2 : 3}}"
+      [ngTemplateOutlet]="listHeader"
+    >
+    </ng-container>
+    <mat-divider class="py-2"></mat-divider>
+    <app-paginated-select
+      [field]="chairmanInstitutionField"
+      (fieldValue)="getInstitutionMembers($event, 'chairMan')"
+      [(ngModel)]="institutionUuid"
+    ></app-paginated-select>
+
+    @if (loadingChairmanUsers) {
+    <app-loader [message]="'Loading users please wait...'"></app-loader>
+    } @if (!loadingChairmanUsers) {
+    <app-select
+      [field]="usersField"
+      (fieldValue)="onSelectedChairman($event)"
+      [(ngModel)]="commiteeChairmanUuid"
+    ></app-select>
+    }
+  </div>
+  }
+
+  <!-- Display Selected Chairperson -->
+  @if (commiteeChairman) {
+  <div @fadeIn class="py-2 border border-green-700 rounded-md p-2">
+    <p class="font-bold">3. Team Chairperson:</p>
+    <mat-divider class="py-2"></mat-divider>
+    <div class="text-lg font-medium">
+      <span
+        >{{ commiteeChairman?.fullName || commiteeChairman?.fullName + ' ' +
+        commiteeChairman?.middleName + ' ' + commiteeChairman?.lastName }}</span
+      >
+    </div>
+    <div>
+      <span class="font-medium mr-1">Institution:</span>
+      <span
+        >{{ commiteeChairman?.procuringEntityName || commiteeChairman?.memberInstitution }}</span
+      >
+    </div>
+    <p><span class="font-medium mr-1">Department:</span>{{ commiteeChairman?.departmentName }}</p>
+    <p><span class="font-medium mr-1">Title:</span>{{ commiteeChairman?.designation }}</p>
+    <p><span class="font-medium mr-1">Email:</span>{{ commiteeChairman?.email }}</p>
+    <div
+      (click)="changeChairperson()"
+      class="inline-block p-2 border-2 !border-primary bg-blue-200 rounded-md hover:!bg-primary hover:text-white cursor-pointer"
+    >
+      Change Chairperson
+    </div>
+  </div>
+  }
+
+  <!-- Divider if Chairperson is Selected -->
+  @if (commiteeChairman) {
+  <mat-divider @fadeInOut class="my-4"></mat-divider>
+  }
+
+  <!-- Secretary Selection -->
+  @if ((defaultInstitutionUuid && defaultInstitutionUuid != institutionUuid) || teamType ===
+  'NEGOTIATION_TEAM') { @if (!committeeSecretary && commiteeChairman) {
+  <div @fadeInOut class="border border-gray-300 my-2 p-2 rounded-md">
+    <p class="font-bold">
+      4. Select {{ teamType === 'NEGOTIATION_TEAM' ? 'Secretary' : 'PE Representative' }}
+    </p>
+    <mat-divider class="py-2"></mat-divider>
+    <app-paginated-select
+      [field]="secretaryInstitutionField"
+      (fieldValue)="getInstitutionMembers($event, 'secretary')"
+      [(ngModel)]="institutionUuid"
+    ></app-paginated-select>
+
+    @if (loadingSecretaryUsers) {
+    <app-loader [message]="'Loading users please wait...'"></app-loader>
+    } @if (!loadingSecretaryUsers) {
+    <app-select
+      [field]="secretaryUserField"
+      (fieldValue)="onSelectedSecretary($event)"
+      [(ngModel)]="committeeSecretaryUuid"
+    ></app-select>
+    }
+  </div>
+  }
+
+  <!-- Display Selected Secretary -->
+  @if (committeeSecretary) {
+  <div @fadeIn class="py-2 border border-green-700 rounded-md p-2">
+    <p class="font-bold">
+      4. {{ teamType === 'NEGOTIATION_TEAM' ? 'Team Secretary' : 'PE Representative' }}:
+    </p>
+    <mat-divider class="py-2"></mat-divider>
+    <div class="text-lg font-medium">
+      <span
+        >{{ committeeSecretary?.fullName || committeeSecretary?.fullName + ' ' +
+        committeeSecretary?.middleName + ' ' + committeeSecretary?.lastName }}</span
+      >
+    </div>
+    <div>
+      <span class="font-medium mr-1">Institution:</span>
+      <span
+        >{{ committeeSecretary?.procuringEntityName || committeeSecretary?.memberInstitution
+        }}</span
+      >
+    </div>
+    <p><span class="font-medium mr-1">Department:</span>{{ committeeSecretary?.departmentName }}</p>
+    <p><span class="font-medium mr-1">Title:</span>{{ committeeSecretary?.designation }}</p>
+    <p><span class="font-medium mr-1">Email:</span>{{ committeeSecretary?.email }}</p>
+    <div
+      (click)="changeSecretary()"
+      class="inline-block p-2 border-2 !border-primary bg-blue-200 rounded-md hover:!bg-primary hover:text-white cursor-pointer"
+    >
+      Change Secretary
+    </div>
+  </div>
+  }
+
+  <!-- Divider if Secretary is Selected -->
+  @if (committeeSecretary) {
+  <mat-divider @fadeInOut class="my-4"></mat-divider>
+  } }
+
+  <!-- Team Members Selector -->
+  @if (hasChairman && ((teamType === 'NEGOTIATION_TEAM' && committeeSecretary) || (teamType !==
+  'NEGOTIATION_TEAM' && commiteeChairman))) {
+  <div @fadeInOut class="py-2 border border-green-700 rounded-md p-2">
+    <p class="font-bold">
+      {{ teamType === 'NEGOTIATION_TEAM' ? '5' : '4' }}. Select Team Members
+    </p>
+    <mat-divider class="py-2"></mat-divider>
+    <app-paginated-select
+      [field]="institutionField"
+      (fieldValue)="getInstitutionMembers($event, 'members')"
+      [(ngModel)]="institutionUuid"
+    ></app-paginated-select>
+    <div class="mt-2 mb-2">
+      <app-nest-multi-select
+        [loading]="loading"
+        [hasChairman]="hasChairman"
+        (onPositionChanged)="positionChanged($event)"
+        [available]="users"
+        [selected]="members"
+        (onSelectionChange)="selectionOfItem($event)"
+      ></app-nest-multi-select>
+    </div>
+  </div>
+  }
+
+  <!-- Save Area -->
+  <div class="mt-3">
+    @if (isSaving) {
+    <app-loader @fadeIn [message]="'Saving please wait...'"></app-loader>
+    }
+    <app-save-area
+      [saveDisabled]="!isValidSelection || !teamDto.entityUuid"
+      [isSubmit]="isSaving"
+      [confirmFirst]="true"
+      (cancel)="onCancelForm()"
+      [confirmText]="teamType !== 'NEGOTIATION_TEAM' ? 'You are about to create evaluation team. Do you want to continue?' : 'You are about to create negotiation team. Do you want to continue?'"
+      (save)="save()"
+    ></app-save-area>
+  </div>
+  } @if (teamDto.entityUuid?.length > 0 && teamType != 'NEGOTIATION_TEAM') { @if (submissionUuid) {
+  <mat-divider @fadeIn class="my-4"></mat-divider>
+  } @if (!commiteeChairman && teamDto!.entityUuid) { @if ((teamType != 'NEGOTIATION_TEAM' &&
+  teamDto.entityUuid) || teamType == 'NEGOTIATION_TEAM') {
+  <div @fadeInOut class="border border-gray-300 my-2 p-2 rounded-md">
+    <p class="font-bold">
+      @if (teamType == 'NEGOTIATION_TEAM') {
+      <span>2.</span>
+      } @if (teamType != 'NEGOTIATION_TEAM') {
+      <span>3.</span>
+      } Select Chairperson
+    </p>
+    <mat-divider class="py-2"></mat-divider>
+    <app-paginated-select
+      [field]="chairmanInstitutionField"
+      (fieldValue)="getInstitutionMembers($event, 'chairMan')"
+      [(ngModel)]="institutionUuid"
+    >
+    </app-paginated-select>
+    @if (loadingChairmanUsers) {
+    <app-loader [message]="'Loading users please wait...'"></app-loader>
+    } @if (!loadingChairmanUsers) {
+    <app-select
+      [field]="usersField"
+      (fieldValue)="onSelectedChairman($event)"
+      [(ngModel)]="commiteeChairmanUuid"
+    ></app-select>
+    }
+  </div>
+  } }
+  <!-- end of selected chairperson --->
+
+  <!-- selector chairperson --->
+  @if (commiteeChairman) {
+  <div @fadeIn class="py-2 border border-green-700 rounded-md p-2">
+    <p class="font-bold">
+      3. Team Chairperson:
+    </p>
+    <mat-divider class="py-2"></mat-divider>
+    <div class="text-lg font-medium">
+      @if (!!commiteeChairman?.fullName) {
+      <span>{{ commiteeChairman?.fullName }}</span>
+      } @if (!!!commiteeChairman?.fullName) {
+      <span>
+        {{ commiteeChairman.fullName }} {{ commiteeChairman.middleName }} {{
+        commiteeChairman.lastName }}
+      </span>
+      }
+    </div>
+    <div>
+      <span class="font-medium mr-1">Institution:</span>
+      @if (commiteeChairman?.procuringEntityName) {
+      <span>{{ commiteeChairman?.procuringEntityName }} </span>
+      } @if (!commiteeChairman?.fullName) {
+      <span>{{ commiteeChairman.memberInstitution }} </span>
+      }
+    </div>
+    <p><span class="font-medium mr-1">Department:</span>{{ commiteeChairman?.departmentName }}</p>
+    <p><span class="font-medium mr-1">Title: </span>{{ commiteeChairman?.designationName }}</p>
+    <p><span class="font-medium mr-1">Email: </span>{{ commiteeChairman?.email }}</p>
+    <div
+      (click)="changeChairperson()"
+      class="inline-block p-2 border-2 !border-primary bg-blue-200 rounded-md hover:!bg-primary hover:text-white cursor-pointer active:bg-blue-200 active:!border-primary active:shadow-md"
+    >
+      Change Chairperson
+    </div>
+  </div>
+  }
+  <!-- end of selector chairperson --->
+
+  @if (commiteeChairman) {
+  <mat-divider @fadeInOut class="my-4"></mat-divider>
+  }
+
+  <!--if negotiation select secretary-->
+  @if ((defaultInstitutionUuid && defaultInstitutionUuid != institutionUuid)) {
+  <!-- selected secretary --->
+  @if (!committeeSecretary) { @if (commiteeChairman) {
+  <div @fadeInOut class="border border-gray-300 my-2 p-2 rounded-md">
+    <p class="font-bold">4. Select PE Representative</p>
+    <mat-divider class="py-2"></mat-divider>
+    <app-paginated-select
+      [field]="secretaryInstitutionField"
+      (fieldValue)="getInstitutionMembers($event, 'secretary')"
+      [(ngModel)]="institutionUuid"
+    >
+    </app-paginated-select>
+    @if (loadingSecretaryUsers) {
+    <app-loader [message]="'Loading users please wait...'"></app-loader>
+    } @if (!loadingSecretaryUsers) {
+    <app-select
+      [field]="secretaryUserField"
+      (fieldValue)="onSelectedSecretary($event)"
+      [(ngModel)]="committeeSecretaryUuid"
+    ></app-select>
+    }
+  </div>
+  } }
+  <!-- end of selected secretary --->
+  <!-- selector secretary --->
+  @if (committeeSecretary) {
+  <div @fadeIn class="py-2 border border-green-700 rounded-md p-2">
+    <p class="font-bold">4. PE Representative:</p>
+    <mat-divider class="py-2"></mat-divider>
+    <div class="text-lg font-medium">
+      @if (!!committeeSecretary?.fullName) {
+      <span>{{ committeeSecretary?.fullName }}</span>
+      } @if (!!!committeeSecretary?.fullName) {
+      <span>
+        {{ committeeSecretary.fullName }} {{ committeeSecretary.middleName }} {{
+        committeeSecretary.lastName }}
+      </span>
+      }
+    </div>
+    <div>
+      <span class="font-medium mr-1">Institution:</span>
+      @if (committeeSecretary?.procuringEntityName) {
+      <span>{{ committeeSecretary?.procuringEntityName }} </span>
+      } @if (!committeeSecretary?.fullName) {
+      <span>{{ committeeSecretary.memberInstitution }} </span>
+      }
+    </div>
+    <p><span class="font-medium mr-1">Department:</span>{{ committeeSecretary?.departmentName }}</p>
+    <p><span class="font-medium mr-1">Title: </span>{{ committeeSecretary?.designationName }}</p>
+    <p><span class="font-medium mr-1">Email: </span>{{ committeeSecretary?.email }}</p>
+    <div
+      (click)="changeSecretary()"
+      class="inline-block p-2 border-2 !border-primary bg-blue-200 rounded-md hover:!bg-primary hover:text-white cursor-pointer active:bg-blue-200 active:!border-primary active:shadow-md"
+    >
+      Change PE Representative
+    </div>
+  </div>
+  }
+  <!-- end of selector secretary --->
+  @if (committeeSecretary) {
+  <mat-divider @fadeInOut class="my-4"></mat-divider>
+  } }
+
+  <!--if negotiation select secretary-->
+  @if (teamType == 'NEGOTIATION_TEAM') {
+  <!-- selected secretary --->
+  @if (!committeeSecretary) { @if (commiteeChairman) {
+  <div @fadeInOut class="border border-gray-300 my-2 p-2 rounded-md">
+    <p class="font-bold">4. Select Secretary</p>
+    <mat-divider class="py-2"></mat-divider>
+    <app-paginated-select
+      [field]="secretaryInstitutionField"
+      (fieldValue)="getInstitutionMembers($event, 'secretary')"
+      [(ngModel)]="institutionUuid"
+    >
+    </app-paginated-select>
+    @if (loadingSecretaryUsers) {
+    <app-loader [message]="'Loading users please wait...'"></app-loader>
+    } @if(!loadingSecretaryUsers) {
+    <app-select
+      [field]="secretaryUserField"
+      (fieldValue)="onSelectedSecretary($event)"
+      [(ngModel)]="committeeSecretaryUuid"
+    ></app-select>
+    }
+  </div>
+  } }
+  <!-- end of selected secretary --->
+  <!-- selector secretary --->
+  @if (committeeSecretary) {
+  <div @fadeIn class="py-2 border border-green-700 rounded-md p-2">
+    <p class="font-bold">4. Team Secretary:</p>
+    <mat-divider class="py-2"></mat-divider>
+    <div class="text-lg font-medium">
+      @if (!!committeeSecretary?.fullName) {
+      <span>{{ committeeSecretary?.fullName }}</span>
+      } @if (!!!committeeSecretary?.fullName) {
+      <span>
+        {{ committeeSecretary.fullName }} {{ committeeSecretary.middleName }} {{
+        committeeSecretary.lastName }}
+      </span>
+      }
+    </div>
+    <div>
+      <span class="font-medium mr-1">Institution:</span>
+      @if (committeeSecretary?.procuringEntityName) {
+      <span>{{ committeeSecretary?.procuringEntityName }} </span>
+      } @if (!committeeSecretary?.fullName) {
+      <span>{{ committeeSecretary.memberInstitution }} </span>
+      }
+    </div>
+    <p><span class="font-medium mr-1">Department:</span>{{ committeeSecretary?.departmentName }}</p>
+    <p><span class="font-medium mr-1">Title: </span>{{ committeeSecretary?.designationName }}</p>
+    <p><span class="font-medium mr-1">Email: </span>{{ committeeSecretary?.email }}</p>
+    <div
+      (click)="changeSecretary()"
+      class="inline-block p-2 border-2 !border-primary bg-blue-200 rounded-md hover:!bg-primary hover:text-white cursor-pointer active:bg-blue-200 active:!border-primary active:shadow-md"
+    >
+      Change Secretary
+    </div>
+  </div>
+  }
+  <!-- end of selector secretary --->
+  @if (committeeSecretary) {
+  <mat-divider @fadeInOut class="my-4"></mat-divider>
+  } }
+
+  <!-- selector team members selector --->
+  @if (hasChairman) {
+  <ng-container @fadeInOut>
+    @if ((teamType == 'NEGOTIATION_TEAM' && committeeSecretary) || (teamType != 'NEGOTIATION_TEAM'
+    && commiteeChairman)) {
+    <div @fadeInOut class="py-2 border border-green-700 rounded-md p-2">
+      <div>
+        @if (teamType == 'NEGOTIATION_TEAM') {
+        <p class="font-bold">
+          5. Select Team Members
+        </p>
+        } @if ((teamType != 'NEGOTIATION_TEAM')) {
+        <p class="font-bold">
+          4. Select Team Members
+        </p>
+        }
+      </div>
+      <mat-divider class="py-2"></mat-divider>
+      <app-paginated-select
+        [field]="institutionField"
+        (fieldValue)="getInstitutionMembers($event, 'members')"
+        [(ngModel)]="institutionUuid"
+      >
+      </app-paginated-select>
+      <div class="mt-2 mb-2">
+        <app-nest-multi-select
+          [loading]="loading"
+          [hasChairman]="hasChairman"
+          (onPositionChanged)="positionChanged($event)"
+          [available]="users"
+          [selected]="members"
+          (onSelectionChange)="selectionOfItem($event)"
+        >
+        </app-nest-multi-select>
+      </div>
+    </div>
+    }
+    <div class="mt-3">
+      @if (isSaving) {
+      <app-loader @fadeIn [message]="'Saving please wait...'"></app-loader>
+      }
+      <app-save-area
+        [saveDisabled]="!isValidSelection || !teamDto.entityUuid"
+        [isSubmit]="isSaving"
+        [confirmFirst]="true"
+        (cancel)="onCancelForm()"
+        [confirmText]="
+          teamType != 'NEGOTIATION_TEAM'
+            ? 'You are about to create evaluation team. Do you want to continue?'
+            : 'You are about to create negotiation team. Do you want to continue?'
+        "
+        (save)="save()"
+      >
+      </app-save-area>
+    </div>
+  </ng-container>
+  }
+  <!-- end of team members selector --->
+  } @if (winner == null && teamDto.entityUuid?.length > 0 && teamType == 'NEGOTIATION_TEAM' &&
+  !loadSubmissions) {
+  <div class="px-3 py-2 bg-amber-200 text-amber-800 rounded-1">
+    Tender has no winner , team cannot be created
+  </div>
+  } @if (loadSubmissions && teamType == 'NEGOTIATION_TEAM') {
+  <app-loader [message]="'Loading tender winner please wait'"></app-loader>
+  }
+</div>
+
+<ng-template #listHeader let-data="data">
+  <div class="flex flex-row items-center mb-2 gap-2">
+    <div class="h-6 aspect-square flex justify-center">
+      <div
+        class="rounded-full h-6 w-6 bg-[#1394db] flex justify-center items-center text-white text-xs font-bold"
+      >
+        <span>{{data.index}}</span>
+      </div>
+    </div>
+
+    <span class="font-bold">{{data.title}}</span>
+  </div>
+</ng-template>

@@ -1,0 +1,68 @@
+@if (!paginatorInput.loading) {
+<div class="space-x-4 sm:flex items-center justify-between py-8 px-1 space-y-4 md:space-y-0">
+  <div class="text-gray-500 text-center">
+    {{ generatePaginatorLabel() }}
+  </div>
+  <div class="text-center flex">
+    <div class="flex m-auto">
+      <button
+        [disabled]="paginatorInput.currentPage === 1"
+        (click)="goToPage(paginatorInput.currentPage - 1)"
+        class="rounded-l border border-gray-300 bg-white items-center flex px-3 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+      >
+        <mat-icon inline>chevron_left</mat-icon> Prev
+      </button>
+      @if (loading) {
+      <div
+        class="border-y border-gray-300 bg-white px-3 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+      >
+        <mat-spinner [diameter]="18"></mat-spinner>
+      </div>
+      } @if (!loading) {
+      <select
+        [(ngModel)]="paginatorInput.currentPage"
+        (ngModelChange)="onPageChange()"
+        class="border-y border-gray-300 bg-white px-3 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+      >
+        <!-- @for (
+              item of getRange(this.paginatorInput.totalPages); track
+              item; let i = $index) {
+              <option [value]="i + 1">
+                Page {{ i + 1 }} of {{ this.paginatorInput.totalPages }}
+              </option>
+            } -->
+        <option
+          *ngFor="let page of getRangeSubset(paginatorInput.currentPage, paginatorInput.totalPages); trackBy: trackByIndex"
+          [value]="page"
+        >
+          Page {{ page }} of {{ paginatorInput?.totalPages }}
+        </option>
+      </select>
+      }
+      <button
+        [disabled]="paginatorInput.currentPage === paginatorInput.totalPages"
+        (click)="goToPage(paginatorInput.currentPage + 1)"
+        class="rounded-r border border-gray-300 bg-white px-3 py-2 items-center flex text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+      >
+        Next <mat-icon inline>chevron_right</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div class="flex">
+    <div class="sm:flex text-center items-center space-x-2 text-gray-500 m-auto">
+      <div>Items per page</div>
+      <select
+        [(ngModel)]="paginatorInput.pageSize"
+        (ngModelChange)="onItemsPerPageChange()"
+        class="rounded border border-gray-300 bg-white px-3 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+      >
+        @for (option of pageSizeOptions; track option) {
+        <option [value]="option">
+          {{ option }}
+        </option>
+        }
+      </select>
+    </div>
+  </div>
+</div>
+}

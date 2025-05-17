@@ -1,0 +1,339 @@
+<web-layout>
+  <parallax-container
+    [title]="entity?.description"
+    [description]="entity?.procuringEntityName"
+    [seo_description]="
+      entity?.description + ' published by ' + entity?.procuringEntityName
+    "
+  >
+    <div class="p-10">
+      @if (loading) {
+      <app-loader message="Please wait... while fetching tender data"></app-loader>
+      } @if (loadingPeDetails) {
+      <app-loader message="Please wait... while getting producring entity data"></app-loader>
+      } @if (!loading) {
+
+      <div style="border: 2px solid #dbeafe; border-radius: 8px; width: 100%;" class="p-3">
+        <div class="mt-3">
+          <app-info-wrapper
+            [title]="'Procuring Entity'"
+            [subTitle]="'Click to view Procuring Entity details'"
+          >
+            <div class="border-1 rounded-b-md rounded-tr-md border-slate-400 p-2 bg-white">
+              @if(!loadingPeDetails && entity?.procuringEntity != null) {
+              <div class="row" style="overflow-y: auto;">
+                <span class="font-bold text-lg">Institution Details</span>
+                <div class="col-sm-4">
+                  <app-view-details-item
+                    [value]="entity?.procuringEntityName"
+                    key="Name of Procuring Entity"
+                  >
+                  </app-view-details-item>
+                </div>
+                <div class="col-sm-4">
+                  <app-view-details-item [value]="entity?.procuringEntity?.acronym" key="Acronym">
+                  </app-view-details-item>
+                </div>
+                @if(entity?.procuringEntity.region) {
+                <div class="col-sm-4">
+                  <app-view-details-item
+                    [value]="entity?.procuringEntity.region.areaName"
+                    key="Region"
+                  >
+                  </app-view-details-item>
+                </div>
+                } @if(entity?.procuringEntity.district) {
+                <div class="col-sm-4">
+                  <app-view-details-item
+                    [value]="entity?.procuringEntity.district.areaName"
+                    key="District"
+                  >
+                  </app-view-details-item>
+                </div>
+                } @if(entity?.procuringEntity.council) {
+                <div class="col-sm-4">
+                  <app-view-details-item
+                    [value]="entity?.procuringEntity.council.areaName"
+                    key="Council"
+                  >
+                  </app-view-details-item>
+                </div>
+                } @if (entity?.procuringEntity.ward) {
+                <div class="col-sm-4">
+                  <app-view-details-item [value]="entity?.procuringEntity.ward.areaName" key="Ward">
+                  </app-view-details-item>
+                </div>
+                } @if(entity?.procuringEntity.phone) {
+                <div class="col-sm-4">
+                  <app-view-details-item [value]="entity?.procuringEntity.phone" key="Contact">
+                  </app-view-details-item>
+                </div>
+                } @if(entity?.procuringEntity.physicalAddress) {
+                <div class="col-sm-4">
+                  <app-view-details-item
+                    [value]="entity?.procuringEntity.physicalAddress"
+                    key="Physical Address"
+                  >
+                  </app-view-details-item>
+                </div>
+                } @if(entity?.procuringEntity.postalAddress) {
+                <div class="col-sm-4">
+                  <app-view-details-item
+                    [value]="entity?.procuringEntity.postalAddress"
+                    key="Postal Address"
+                  >
+                  </app-view-details-item>
+                </div>
+                }
+              </div>
+              }
+            </div>
+          </app-info-wrapper>
+        </div>
+
+        <div class="mt-3">
+          <app-info-wrapper [title]="'Tender Details'" [subTitle]="'Click to view Tender Details'">
+            <div class="border-1 rounded-b-md rounded-tr-md border-slate-400 p-2 bg-white">
+              @if(!loadingPeDetails && entity != null) {
+              <span class="font-bold text-lg">Tender Details</span>
+              <div class="row" style="overflow-y: auto;">
+                <div class="col-sm-12">
+                  <app-view-details-item [value]="entity?.description" key="Description">
+                  </app-view-details-item>
+                </div>
+                <div class="col-sm-4">
+                  <app-view-details-item [value]="entity?.entityNumber" [key]="'Tender No'">
+                  </app-view-details-item>
+                </div>
+                <div class="col-sm-4">
+                  <app-view-details-item [value]="entity?.entityCategory" key="Tender Category">
+                  </app-view-details-item>
+                </div>
+                <div class="col-sm-4">
+                  <app-view-details-item
+                    [value]="entity?.entitySubCategory"
+                    key="Tender Sub Category"
+                  >
+                  </app-view-details-item>
+                </div>
+                <div class="col-sm-4">
+                  <app-view-details-item key="Type" [value]="entity?.entityType | replace:'_':' '">
+                  </app-view-details-item>
+                </div>
+                @if (entity?.unispcCode) {
+                <div class="col-sm-4">
+                  <app-view-details-item [value]="entity?.unispcCode" key="UNSPSC Codes">
+                  </app-view-details-item>
+                </div>
+                }
+                <div class="col-sm-4">
+                  <app-view-details-item
+                    [value]="formatDate(entity?.dateOfInvitation)"
+                    key="Date of Publication/Invitation"
+                  >
+                  </app-view-details-item>
+                </div>
+                <div class="col-sm-4">
+                  <app-view-details-item
+                    [value]="formatDate(entity?.submissionDeadLine, true)"
+                    key="Bid submission deadline date"
+                  >
+                  </app-view-details-item>
+                </div>
+              </div>
+              } @if (!loading) {
+              <div class="flex flex-rows w-full items-right my-4" style="overflow-y: auto;">
+                @if (entityType) {
+                <div class="mx-2">
+                  <button
+                    (click)="previewTenderDocument(reqUuid, entityType)"
+                    mat-raised-button
+                    color="primary"
+                  >
+                    <mat-icon>picture_as_pdf</mat-icon>
+                    View {{entityType | replace :'_':' ' | titlecase}} Document
+                  </button>
+                </div>
+                }
+              </div>
+              }
+            </div>
+          </app-info-wrapper>
+        </div>
+
+        @if(tenderDetails.entityType === 'TENDER'){
+        <!-- <div class="mt-3">
+          <app-info-wrapper
+            [title]="'Tender Itemization'"
+            [subTitle]="'Click to view Tender Item(s)'"
+          >
+            <div class="border-1 rounded-b-md rounded-tr-md border-slate-400 p-2 bg-white">
+              @if(!loadingPeDetails && mergedMainProcurementRequisition != null) {
+              <span class="font-bold text-lg mb-2 pb-2">Tender Item(s)</span>
+              @if ( mergedMainProcurementRequisition?.tender?.procurementCategoryAcronym === 'G' &&
+              !mergedMainProcurementRequisition?.useBOQProcess ) {
+              <app-merged-goods-requisition-viewer
+                [showEstimatedBudget]="false"
+                [mergedMainProcurementRequisitionUuid]="selectedUuid"
+              >
+              </app-merged-goods-requisition-viewer>
+              } @if ( mergedMainProcurementRequisition?.tender?.procurementCategoryAcronym === 'NC'
+              ) {
+              <app-merged-nc-requisition-viewer
+                [showMergedRequisitionDetails]="false"
+                [showEstimatedBudget]="false"
+                [mergedMainProcurementRequisitionUuid]="selectedUuid"
+              >
+              </app-merged-nc-requisition-viewer>
+              } @if ( mergedMainProcurementRequisition?.tender?.procurementCategoryAcronym === 'C' )
+              {
+              <app-merged-consultancy-requisition-viewer
+                [showMergedRequisitionDetails]="false"
+                [showEstimatedBudget]="false"
+                [mergedMainProcurementRequisitionUuid]="selectedUuid"
+              >
+              </app-merged-consultancy-requisition-viewer>
+              } 
+              
+              @if(mergedMainProcurementRequisition?.tender?.procurementCategoryAcronym === 'W' ||
+              mergedMainProcurementRequisition?.useBOQProcess ){ @if(accessToken){ @for ( mainTender
+              of mergedMainProcurementRequisition.mergedProcurementRequisitions ; track mainTender)
+              {
+              <div
+                class="mb-2 flex items-center justify-start gap-4 p-4 border-1 border-blue-400 bg-blue-50 text-blue-500 rounded-[5px]"
+              >
+                <div>
+                  <svg
+                    width="30px"
+                    height="30px"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M12 17.75C12.4142 17.75 12.75 17.4142 12.75 17V11C12.75 10.5858 12.4142 10.25 12 10.25C11.5858 10.25 11.25 10.5858 11.25 11V17C11.25 17.4142 11.5858 17.75 12 17.75Z"
+                      fill="currentColor"
+                    />
+                    <path
+                      d="M12 7C12.5523 7 13 7.44772 13 8C13 8.55228 12.5523 9 12 9C11.4477 9 11 8.55228 11 8C11 7.44772 11.4477 7 12 7Z"
+                      fill="currentColor"
+                    />
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M1.25 12C1.25 6.06294 6.06294 1.25 12 1.25C17.9371 1.25 22.75 6.06294 22.75 12C22.75 17.9371 17.9371 22.75 12 22.75C6.06294 22.75 1.25 17.9371 1.25 12ZM12 2.75C6.89137 2.75 2.75 6.89137 2.75 12C2.75 17.1086 6.89137 21.25 12 21.25C17.1086 21.25 21.25 17.1086 21.25 12C21.25 6.89137 17.1086 2.75 12 2.75Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  {{ mainTender.lotNumber }} | {{ mainTender.lotDescription }}
+                </div>
+              </div>
+              @for ( lotTender of mainTender?.mergedProcurementRequisitionItems ; track lotTender) {
+              <app-tenderer-boq-view-only
+                #bodComponent
+                [requisitionUuid]="tenderDetails.uuid"
+                [itemUuid]="lotTender.uuid"
+                [requisitionDate]="requisitionDateForBOQViewer"
+                [viewMode]="'view'"
+                [forPPRAAdmin]="true"
+                [currencyCode]="'TZS'"
+                [exchangeRate]="1"
+              >
+              </app-tenderer-boq-view-only>
+              } } 
+              
+              } } } @if(accessToken == null &&
+              mergedMainProcurementRequisition?.tender?.procurementCategoryAcronym != 'NC' &&
+              mergedMainProcurementRequisition?.tender?.procurementCategoryAcronym != 'C'){
+              <div
+                class="mt-2 flex items-center justify-start gap-4 p-4 border-1 border-blue-400 bg-blue-50 text-blue-500 rounded-[5px]"
+              >
+                <div>
+                  <svg
+                    width="30px"
+                    height="30px"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M12 17.75C12.4142 17.75 12.75 17.4142 12.75 17V11C12.75 10.5858 12.4142 10.25 12 10.25C11.5858 10.25 11.25 10.5858 11.25 11V17C11.25 17.4142 11.5858 17.75 12 17.75Z"
+                      fill="currentColor"
+                    />
+                    <path
+                      d="M12 7C12.5523 7 13 7.44772 13 8C13 8.55228 12.5523 9 12 9C11.4477 9 11 8.55228 11 8C11 7.44772 11.4477 7 12 7Z"
+                      fill="currentColor"
+                    />
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M1.25 12C1.25 6.06294 6.06294 1.25 12 1.25C17.9371 1.25 22.75 6.06294 22.75 12C22.75 17.9371 17.9371 22.75 12 22.75C6.06294 22.75 1.25 17.9371 1.25 12ZM12 2.75C6.89137 2.75 2.75 6.89137 2.75 12C2.75 17.1086 6.89137 21.25 12 21.25C17.1086 21.25 21.25 17.1086 21.25 12C21.25 6.89137 17.1086 2.75 12 2.75Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  Upon logging in, you will be able to see itemizations of tender items
+                </div>
+              </div>
+              }
+            </div>
+          </app-info-wrapper>
+        </div> -->
+
+        <div class="mt-3 mb-3">
+          <app-info-wrapper
+            [title]="'Additional Details'"
+            [subTitle]="'Click to view Additional Details'"
+          >
+            <div class="border-1 rounded-b-md rounded-tr-md border-slate-400 p-2 bg-white">
+              <span class="font-bold text-lg mb-2 pb-2">Additional Details</span>
+              @if(accessToken){ @if(loadingAdditionalDetails){
+              <app-loader [message]="'Loading Additional Details, Please wait...'"></app-loader>
+              }@else { @if(additionalDetails){
+              <app-dynamic-view [data]="additionalDetails" [cols]="2"></app-dynamic-view>
+              }@else {
+              <p
+                class="text-center text-3xl text-red-800 font-medium bg-slate-50 p-8 rounded-lg m-5"
+              >
+                Additional Details Not Set
+              </p>
+              } } }@else{
+
+              <div class="flex items-center justify-center">
+                <div>
+                  <div
+                    style="
+                      box-shadow: 2px 3px 10px white;
+                      max-width: 700px;
+                      margin: 10px auto;
+                      background-color: #ffffff;
+                      color: #000000;
+                      font-family: 'Open Sans', Arial, sans-serif;
+                      border-radius: 15px;
+                    "
+                  >
+                    <div class="p-6 flex items-center">
+                      <img src="/assets/images/action.png" title="Lock" class="w-36" />
+                      <div class="ml-6">
+                        <h1 class="text-center text-lg font-medium">
+                          If you would like to see additional information about this tender, please
+                          log in
+                        </h1>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              }
+            </div>
+          </app-info-wrapper>
+        </div>
+        }
+      </div>
+      }
+    </div>
+  </parallax-container>
+</web-layout>

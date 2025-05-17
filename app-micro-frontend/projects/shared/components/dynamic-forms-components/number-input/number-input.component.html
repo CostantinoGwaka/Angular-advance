@@ -1,0 +1,51 @@
+@if (field) {
+  @if (field.inputType == 'hidden') {
+    <input #inputValue type="{{ field.inputType }}" />
+  }
+  @if (field.inputType != 'hidden') {
+    <mat-form-field class="demo-full-width" [formGroup]="group" appearance="outline">
+      <mat-label>
+        {{ field.label }}
+        @if (field.inputType == 'formattedNumber' && !!group?.get(field?.key)?.value) {
+          <span>
+            <b>({{ group?.get(field?.key)?.value | number }})</b>
+          </span>
+        }
+      </mat-label>
+      <!-- <input
+      matInput
+      #inputValue
+      [formControlName]="field.key || null"
+      [placeholder]="field.placeholder || field.label || ''"
+      [type]="field.inputType || 'text'"
+      [readonly]="field.readonly"
+      (change)="fieldChange($event,'change')"
+      [min]="field.minInput"
+      [max]="field.maxInput"
+      (keyup)="fieldChange($event,'keyup')"
+      [required]="field.key && group?.get(field.key)?.errors !== null"
+      /> -->
+      <input matInput type="text" id="inputField" inputmode="numeric" appClickOutside [ngModel]="value | numberPipe"
+        [readonly]="field.readonly" [formControlName]="field.key || null" (input)="fieldChange($event, 'change')"
+        [required]="field.key && group?.get(field.key)?.errors !== null" name="inputField" />
+      <mat-hint align="start" [ngClass]="{ danger: field.hintDanger }">{{
+        field.hint
+      }}</mat-hint>
+      @if (field.showCounter && field.key) {
+        <mat-hint align="end">{{ group?.get(field.key)?.value?.length }} /
+        {{ field.allowedLength }}</mat-hint>
+      }
+      @if (field?.icon) {
+        <mat-icon matPrefix>{{ field?.icon }}</mat-icon>
+      }
+      @for (validation of field.validations; track validation) {
+        <ng-container ngProjectAs="mat-error">
+          @if (field.key && group?.get(field.key)?.hasError(validation.name)) {
+            <mat-error>{{ validation.message
+            }}</mat-error>
+          }
+        </ng-container>
+      }
+    </mat-form-field>
+  }
+}

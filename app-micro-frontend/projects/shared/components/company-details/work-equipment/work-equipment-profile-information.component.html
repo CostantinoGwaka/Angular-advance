@@ -1,0 +1,31 @@
+@if (viewType == 'table') {
+  <div ngProjectAs="table">
+    <div class="flex">
+      <span class="text-lg">Work Equipment</span>
+    </div>
+    <app-full-data-table
+      [tableList]="workEquipments$ | async"
+      [tableConfigurations]="tableConfigurations"
+      [loading]="loading$ | async"
+      (rowPreview)="viewMoreDetails($event)"
+      [title]="'Work Equipment'">
+    </app-full-data-table>
+  </div>
+}
+
+@if (viewType == 'view') {
+  <mat-card  appearance="outlined" >
+    <div class="flex justify-between">
+      <span class="text-lg">{{ viewDetailsTitle }}</span>
+      <div class="">
+        <button mat-button class="!border-2 !border-gray-100 !border-solid" (click)="closeDetails()">
+          <mat-icon>close</mat-icon> Close
+        </button>
+      </div>
+    </div>
+    <app-view-work-equipment
+      [workEquipment] = "selectedWorkEquipment"
+      [selectedUuid]="selectedUuid">
+    </app-view-work-equipment>
+  </mat-card>
+}

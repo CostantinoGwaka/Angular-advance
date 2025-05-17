@@ -1,0 +1,93 @@
+@if(!loading && showRequiredTitle && form?.invalid){
+  <h6 style="color: red">* Required</h6>}
+  @if (showGeneralErrorMessage) {
+    <div class="text-red-700 py-2 pl-4">
+      {{ generalErrorMessage }}
+    </div>
+  }
+  @if (previousDocuments.length) {
+    <p class="font-size-16 py-1">Previous Attachment</p>
+    <hr class="py-1" />
+    @if (fetchingAttachment) {
+      <mat-progress-bar mode="buffer"></mat-progress-bar>
+    }
+    @for (document of (previousDocuments || []); track document.attachmentUuid) {
+      <button (click)="attachmentView.emit(document)"
+        class="mt-2 py-3 whitespace-nowrap px-6 !border !border-primary rounded hover:!bg-gray-100 hover:!text-gray-800">
+        <div class="flex flex-row gap-1 items-center justify-center">
+          <img src="assets/images/pdf-icon.png" style="height: 20px">
+          <span class="text-grey text-bold text-[#1394db]">
+            {{document?.title ? document.title : 'View Attached File'}}
+          </span>
+        </div>
+      </button>
+    }
+    <!--  -->
+    <!--  <div class="row">-->
+    <!--    <ng-container *ngFor="let document of previousDocuments || []">-->
+    <!--      <div class="col-span-12 md:col-span-6">-->
+    <!--        <div class="attachment">-->
+    <!--          <div class="attach-button">-->
+    <!--            <button-->
+    <!--              color="default"-->
+    <!--              title="{{document?.title ? document.title : 'View Attached File'}}"-->
+    <!--              type="button"-->
+    <!--              class="mat-focus-indicator attach-button mat-raised-button mat-button-base mat-default"-->
+    <!--              style="width: 100%; height: 45px; margin-top: 5px;"-->
+    <!--              (click)="attachmentView.emit(document)">-->
+    <!--                <span class="mat-button-wrapper">-->
+    <!--                  <mat-icon role="img"-->
+    <!--                    class="mat-icon material-icons mat-ligature-font mat-icon-no-color"-->
+  <!--                    data-mat-icon-type="font">attach_file</mat-icon>-->
+  <!--                  {{document?.title ? document.title : 'View Attached File'}}-->
+<!--                </span>-->
+<!--              <span matripple="" class="mat-ripple mat-button-ripple"></span>-->
+<!--              <span class="mat-button-focus-overlay"></span>-->
+<!--            </button>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </ng-container>-->
+<!--  </div>-->
+}
+@if (form && !hideTopLine) {
+  <hr class="py-1" />
+}
+
+@if (!form) {
+  <div role="status"
+    class="w-full hidden lg:block p-4 border border-gray-200 rounded shadow animate-pulse md:p-6 dark:border-gray-700 col-span-2">
+    <div class="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4 mx-auto max-w-[540px]"></div>
+    <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5"></div>
+  </div>
+}
+
+
+
+@if (form) {
+  <form class="dynamic-form w-[99%]" [formGroup]="form" (submit)="onSubmit($event)" autocomplete="off">
+    <div class="row" [@listAnimation]="(sortedFields || []).length">
+      @for (field of (sortedFields || []); track field) {
+        @if (field?.headingTitle) {
+          <div [class]="field.rowClass || 'col-span-12'">
+            <p class="font-semibold my-3">{{field?.headingTitle | translate}}</p>
+          </div>
+        } @else {
+          @if (isVisible(field)) {
+            <div [class]="field.rowClass || 'col-span-12 md:col-span-6'" [ngClass]="{ spaced: spaced }"
+              >
+              <ng-container appDynamicField [field]="field" [group]="form" [loading]="loading" [showCancel]="showCancel"
+                [cancelText]="cancelText" [hideSubmitButton]="hideSubmitButton" [hideSave]="hideSave" [saveText]="saveText"
+                [saveIcon]="saveIcon" [confirmFirst]="confirmFirst" [loadingMessage]="loadingMessage"
+          [confirmMessage]="confirmMessage" [optionData]="
+                (field.options
+                  ? (field.options | optionsObservable | async)
+                  : { loading: false, value: [] }) || undefined
+              " (cancelForm)="cancelForm()" (fieldValue)="fieldValue($event)"></ng-container>
+            </div>
+          }
+        }
+      }
+    </div>
+  </form>
+}

@@ -1,0 +1,35 @@
+<div
+  [style]="'width:' + cardWidth + 'px'"
+  [class]="
+    '  text-gray-600 cursor-pointer flex-col justify-between h-[130px] transition-all flex rounded-lg p-3 ' +
+    (isActive ? 'opacity-100 !border-4 shadow !border-[#16ff93]'
+      : 'opacity-40 hover:opacity-100  hover:shadow !border !border-gray-400')
+  "
+>
+  <div class="font-bold">{{ item?.name }}</div>
+  <div class="flex justify-between">
+    <div>
+      <div class="text-xs text-gray-400">{{ item?.leftInfo?.title }}</div>
+      <div
+        [class]="
+          'flont-bold transition-all text-lg ' + (isActive ? 'font-bold' : '')
+        "
+      >
+        {{ item?.leftInfo?.description }}
+      </div>
+    </div>
+    <div>
+      <div class="text-right text-xs text-gray-400">
+        {{ item?.leftInfo?.title }}
+      </div>
+      <div
+        [class]="
+          'text-right transition-all flont-bold  text-lg ' +
+          (isActive ? 'font-bold' : '')
+        "
+      >
+        {{ item?.leftInfo?.description }}
+      </div>
+    </div>
+  </div>
+</div>

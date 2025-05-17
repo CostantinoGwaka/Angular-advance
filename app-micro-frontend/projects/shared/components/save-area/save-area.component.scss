@@ -1,0 +1,22 @@
+.confirm-div {
+  button {
+    //color: white;
+    border-radius: 20px!important;
+  }
+
+  .yes-button {
+    margin-right: 10px;
+    border: 2px solid green;
+    color: green;
+    border-radius: 20px;
+    font-weight: bolder;
+  }
+
+  .no-button {
+    margin-right: 10px;
+    border: 2px solid gray;
+    color: gray;
+    border-radius: 20px;
+    font-weight: bolder;
+  }
+}

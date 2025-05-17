@@ -1,0 +1,227 @@
+<!-- <app-modal-header (closeModal)="closeModal()" [title]="'TENDER SUBMISSION FORM'">
+</app-modal-header> -->
+<div class="flex flex-wrap justify-content-between items-center mb-4">
+  <h2>TENDER SUBMISSION FORM</h2>
+
+  <button
+    mat-flat-button
+    color="primary text-white"
+    (click)="closeModal()"
+    class="!m-0 py-1 pb-1 pl-3 pr-3 cursor-pointer items-center flex flex-wrap"
+  >
+    <mat-icon>close</mat-icon> Close
+  </button>
+</div>
+
+@if (loadingTemplate && formListTenderSubmissionForm?.length == 0) {
+<app-loader [message]="'Preparing Template...'"></app-loader>
+}
+
+<div class="form-holder">
+  @if (useOfficeLocation) {
+  <app-custom-alert-box [alertInfo]="addressDetectedAlert"> </app-custom-alert-box>
+  <main-dynamic-form
+    class="py-5"
+    [fields]="fields"
+    [form]="supportForm"
+    [confirmFirst]="false"
+    [hideTopLine]="true"
+    (submit)="setOfficeLocation($event)"
+    [loadingMessage]="'Setting office location, please wait...'"
+    [confirmMessage]="'confirmMessage'"
+  >
+  </main-dynamic-form>
+  } @if (loading) {
+  <app-loader [message]="'Getting tender submission details, please wait...'"> </app-loader>
+  } @if(formListTenderSubmissionForm?.length > 0 && !useOfficeLocation){
+  <div class="custom-box col-sm-12 p-1">
+    <h3 class="box-title">List of submission forms</h3>
+    <div class="box-content col-sm-12">
+      <mat-accordion [multi]="false">
+        @for(item of formListTenderSubmissionForm; track item){
+        <div>
+          @if(item.financialTemplateCode && item.technicalTemplateCode){
+          <div class="col-sm-12 pt-1">
+            <mat-expansion-panel
+              class="rounded-panel"
+              mat-elevation-z4
+              (click)="viewSubmissionFormFinancial(item.financialTemplateCode)"
+            >
+              <mat-expansion-panel-header class="bg-[#F9FAFB]">
+                <mat-panel-title>
+                  {{ capitalizeWords(item.financialTemplateCode | replace: "_":" ") }}
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div>
+                @if (loadingTemplate) {
+                <app-loader [message]="'Preparing Template...'"></app-loader>
+                } @if (htmlFinancial && !loading && !loadingTemplate) {
+                <div>
+                  <div class="flex flex-col">
+                    <div [innerHTML]="htmlFinancial | doNotSanitize"></div>
+                  </div>
+                </div>
+                }
+              </div>
+            </mat-expansion-panel>
+          </div>
+          <div class="col-sm-12 pt-3">
+            <mat-expansion-panel
+              class="rounded-panel"
+              mat-elevation-z4
+              (click)="viewSubmissionFormTechnical(item.technicalTemplateCode)"
+            >
+              <mat-expansion-panel-header class="bg-[#F9FAFB]">
+                <mat-panel-title>
+                  {{ capitalizeWords(item.technicalTemplateCode | replace: "_":" ") }}
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div>
+                @if (loadingTemplate) {
+                <app-loader [message]="'Preparing Template...'"></app-loader>
+                } @if (htmlTechnical && !loading && !loadingTemplate) {
+                <div>
+                  <div class="flex flex-col">
+                    <div [innerHTML]="htmlTechnical | doNotSanitize"></div>
+                  </div>
+                </div>
+                }
+              </div>
+            </mat-expansion-panel>
+          </div>
+          }
+        </div>
+        @if(!(item.financialTemplateCode && item.technicalTemplateCode)){
+        <div class="col-sm-12 pt-3">
+          <!-- Conditional Panel for Single Value -->
+          <mat-expansion-panel
+            class="rounded-panel"
+            mat-elevation-z4
+            (click)="viewSubmissionFormTechnical(item.financialTemplateCode || item.technicalTemplateCode)"
+          >
+            <mat-expansion-panel-header class="bg-[#F9FAFB]">
+              <mat-panel-title>
+                {{ capitalizeWords(item.financialTemplateCode || item.technicalTemplateCode |
+                replace: "_":" ")}}
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div></div>
+          </mat-expansion-panel>
+        </div>
+        } }
+      </mat-accordion>
+    </div>
+    @if (htmlTechnical && htmlFinancial) { 
+    @if (savingData) {
+  <app-loader [message]="savingDataMessage"> </app-loader>
+  }
+      @if (showConfirm && !savingData) {
+    <app-confirm-area
+      (confirm)="signSubmissionDocument()"
+      (cancel)="showConfirm = false"
+      [useConfirmCancel]="true"
+      [title]="'You are about to submit your bid, Do you want to continue?'"
+    >
+    </app-confirm-area> && !
+    } @if (!showConfirm) {
+    <div class="flex col-row justify-center items-center pt-3">
+      <div class="max-w-40%] mr-2">
+        <mat-form-field appearance="outline">
+          <mat-label>Key phrase</mat-label>
+          <input
+            [(ngModel)]="passphrase"
+            [type]="hide ? 'password' : 'text'"
+            matInput
+            placeholder="Key phrase"
+          />
+          <mat-icon (click)="hide = !hide" matSuffix>
+            {{ hide ? "visibility_off" : "visibility" }}
+          </mat-icon>
+        </mat-form-field>
+      </div>
+      <div>
+        @if (passphrase) {
+        <button
+          (click)="showConfirm = true"
+          @fadeIn
+          class="text-white focus:outline-none !bg-[#2494D2] rounded px-3 py-1.5 text-center inline-flex items-center"
+          type="button"
+        >
+          <mat-icon style="color: white;"> save </mat-icon>
+          &nbsp;&nbsp;Sign & Submit Bid
+        </button>
+        }
+      </div>
+    </div>
+    } }
+  </div>
+  } @if(formListTenderSubmissionForm?.length == 0){ @if (html && !loading) {
+  <div>
+    <div class="flex flex-col">
+      <div [innerHTML]="html | doNotSanitize"></div>
+    </div>
+  </div>
+  } @if (savingData) {
+  <app-loader [message]="savingDataMessage"> </app-loader>
+  } @if (html && !loading && !savingData) {
+  <div>
+    @if (showConfirm) {
+    <app-confirm-area
+      (confirm)="signSubmissionDocument()"
+      (cancel)="showConfirm = false"
+      [useConfirmCancel]="true"
+      [title]="'You are about to submit your bid, Do you want to continue?'"
+    >
+    </app-confirm-area>
+    } @if (userData?.userTypeEnum === 'DIRECT_MANUFACTURER') {
+    <div>
+      <div class="flex col-row justify-center items-center">
+        <div class="max-w-40%] mr-2">
+          <button
+            (click)="showConfirm = true"
+            @fadeIn
+            class="zoom-on-hover items-center"
+            color="primary"
+            mat-flat-button
+            style="border-radius: 5px; margin-top: 10px; padding: 5px 25px; font-size: 15px;"
+          >
+            <mat-icon>save</mat-icon>
+            Submit Bid
+          </button>
+        </div>
+      </div>
+    </div>
+    } @if (userData?.userTypeEnum !== 'DIRECT_MANUFACTURER') { @if (!showConfirm) {
+    <div class="flex col-row justify-center items-center">
+      <div class="max-w-40%] mr-2">
+        <mat-form-field appearance="outline">
+          <mat-label>Key phrase</mat-label>
+          <input
+            [(ngModel)]="passphrase"
+            [type]="hide ? 'password' : 'text'"
+            matInput
+            placeholder="Key phrase"
+          />
+          <mat-icon (click)="hide = !hide" matSuffix>
+            {{ hide ? "visibility_off" : "visibility" }}
+          </mat-icon>
+        </mat-form-field>
+      </div>
+      <div>
+        @if (passphrase) {
+        <button
+          (click)="showConfirm = true"
+          @fadeIn
+          class="text-white focus:outline-none !bg-[#2494D2] rounded px-3 py-1.5 text-center inline-flex items-center"
+          type="button"
+        >
+          <mat-icon style="color: white;"> save </mat-icon>
+          &nbsp;&nbsp;Sign & Submit Bid
+        </button>
+        }
+      </div>
+    </div>
+    } }
+  </div>
+  } }
+</div>

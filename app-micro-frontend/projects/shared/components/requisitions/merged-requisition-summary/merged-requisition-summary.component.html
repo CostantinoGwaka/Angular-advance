@@ -1,0 +1,104 @@
+<div class="flex spacex-3 items-start mb-3">
+	<div class="flex-1 font-bold text-xl">
+		{{ mergedMainProcurementRequisition?.tender.descriptionOfTheProcurement }}
+		({{ mergedMainProcurementRequisition?.tender.tenderNumber }})
+	</div>
+	<button
+		class="!bg-primary p-3 text-white rounded"
+		(click)="viewTenderDocument()"
+	>
+		View Tender Document
+	</button>
+</div>
+
+@if (mergedMainProcurementRequisition) {
+<div class="bg-gray-100 p-2 mb-2 rounded-md">
+	<div class="grid grid-cols-4 gap-4 mt-4">
+		<app-view-details-item
+			key="Tender Number"
+			[value]="mergedMainProcurementRequisition?.tender?.tenderNumber"
+		></app-view-details-item>
+		<app-view-details-item
+			key="Tender Description"
+			[value]="
+				mergedMainProcurementRequisition?.tender?.descriptionOfTheProcurement
+			"
+		>
+		</app-view-details-item>
+		<app-view-details-item
+			key="Tender Category"
+			[value]="
+				mergedMainProcurementRequisition?.tender?.procurementCategoryName
+			"
+		>
+		</app-view-details-item>
+		<app-view-details-item
+			key="Tender Sub Category"
+			[value]="mergedMainProcurementRequisition?.tender?.tenderSubCategoryName"
+		>
+		</app-view-details-item>
+	</div>
+	<div class="grid grid-cols-4 gap-4 mt-4">
+		<app-view-details-item
+			key="Estimated Budget"
+			[value]="
+				mergedMainProcurementRequisition?.tender?.estimatedBudget | number
+			"
+		>
+		</app-view-details-item>
+		<app-view-details-item
+			key="Procurement Method"
+			[value]="
+				mergedMainProcurementRequisition?.tender?.procurementMethod?.description
+			"
+		>
+		</app-view-details-item>
+		<app-view-details-item
+			key="Source Of Fund"
+			[value]="mergedMainProcurementRequisition?.tender?.sourceOfFund?.name"
+		>
+		</app-view-details-item>
+		<app-view-details-item
+			key="Financial Year"
+			[value]="mergedMainProcurementRequisition?.tender?.financialYearCode"
+		>
+		</app-view-details-item>
+		@if(mergedMainProcurementRequisition?.frameworkMainDescription){
+		<app-view-details-item
+			key="Framework"
+			[value]="mergedMainProcurementRequisition?.frameworkMainDescription"
+		></app-view-details-item>
+		} @if(mergedMainProcurementRequisition?.tender?.frameworkType){
+		<app-view-details-item
+			key="Framework Type"
+			[value]="mergedMainProcurementRequisition?.tender?.frameworkType"
+		></app-view-details-item>
+		} @if(mergedMainProcurementRequisition?.tender?.frameworkType){
+		<app-view-details-item
+			key="CUIS Option"
+			[value]="mergedMainProcurementRequisition?.tender?.cuisOption"
+		></app-view-details-item>
+		}
+	</div>
+	@if(businessLinesLabels){
+	<app-view-details-item
+		key="Applicable Business Lines"
+		[value]="businessLinesLabels"
+	>
+	</app-view-details-item>
+	} @if(contractorClassesLabels){
+	<app-view-details-item
+		key="Applicable Contractor Classes"
+		[value]="contractorClassesLabels"
+	>
+	</app-view-details-item>
+	}
+	<app-view-details-item
+		key="Invitation Date"
+		[value]="(invitationDate | async)?.actualDate || '-'"
+	>
+	</app-view-details-item>
+	<app-view-details-item key="Tenderer Types" [value]="tendererTypeLabels">
+	</app-view-details-item>
+</div>
+}

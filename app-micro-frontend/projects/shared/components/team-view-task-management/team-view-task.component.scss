@@ -1,0 +1,10 @@
+.reject{
+  @apply bg-red-600 border border-red-600 text-white py-2 px-3 rounded cursor-pointer
+}
+
+.approve{
+  @apply hover:bg-green-600 border-2 border-green-600 hover:text-white text-green-600 font-medium text-lg inline-block p-2 pl-4 pr-4  rounded  cursor-pointer
+}
+.disable-approve{
+  @apply  border-2 border-slate-600 text-slate-600 font-medium text-lg inline-block p-2 pl-4 pr-4  rounded-full  cursor-not-allowed
+}

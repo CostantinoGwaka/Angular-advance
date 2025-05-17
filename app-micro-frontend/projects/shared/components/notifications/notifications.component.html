@@ -1,0 +1,29 @@
+<div class="notification-area p-1">
+  @if (notifications.length == 0) {
+  <p class="lead p-2">No Notification</p>
+  } @if (notifications.length) { @for (notification of notifications; track notification) {
+  <div
+    class="text-sm bg-slate-100 hover:bg-slate-300 p-1 rounded-lg mb-1 cursor-pointer"
+    (click)="goToTaskUi(notification.url)"
+  >
+    <div>
+      <div class="p-2 inline-block w-10 h-10 rounded-full bg-slate-200">
+        <mat-icon>event-tick-outline</mat-icon>
+      </div>
+      <div class="inline-block ml-2">
+        <div class="font-medium">
+          You have <span class="font-medium text-md">{{ notification.count }}</span> {{
+          notification.model }} pending tasks
+        </div>
+        <div style="font-size: 0.55rem; line-height: 0.5rem;">
+          @for (task of notification?.tasks; track task) {
+          <div class="bg-white rounded-full py-1 inline-block px-2 mx-1">{{ task }}</div>
+          }
+          <!-- <div class="bg-white rounded-full py-1 inline-block px-2 mx-1">2023/2024 Approval</div> -->
+        </div>
+      </div>
+    </div>
+    <!-- {{notification|json}} -->
+  </div>
+  } }
+</div>

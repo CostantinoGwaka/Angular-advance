@@ -1,0 +1,17 @@
+:host {
+  .after-right {
+    &::after {
+      position: absolute;
+      content: '';
+      display: inline-block;
+      width: 0;
+      height: 0;
+      border-right: 13px solid #fff;
+      border-bottom: 12px solid transparent;
+      border-top: 12px solid transparent;
+      right: 100%;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+}

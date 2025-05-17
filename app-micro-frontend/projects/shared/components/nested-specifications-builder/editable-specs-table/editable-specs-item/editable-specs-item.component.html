@@ -1,0 +1,285 @@
+<div
+  #parentEditorElement
+  [class]="
+    'flex items-stretch group relative rounded text-gray-600 gap-0.5 overflow-hidden transition-all duration-500 ' +
+    (currentFocusedEditingItem?.uuid == specification.uuid
+      ? ' outline outline-offset-2 outline-4  my-2 ' +
+        (currentFocusedEditingItem?.incompleteReasons?.length == 0
+          ? '  outline-accent  '
+          : ' outline-red-500 ')
+      : ' ')
+  "
+>
+  @if (hasFormular()) {
+  <div
+    [matTooltip]="specification.formula.description"
+    class="absolute top-0 rounded-tl-sm rounded-br-md text-[8px] opacity-80 italic grid place-content-center px-1 text-white !bg-primary"
+  >
+    fn
+  </div>
+  } @if (showCodeOrSNColumn) {
+  <div [class]="' bg-white p-[10px] np flex ' + editableSpecsItemSizes.codeWidth">
+    @if (initialMode == 'select') {
+    <mat-checkbox
+      [(ngModel)]="specification.isSelected"
+      (change)="onSelectChange($event)"
+      class="mr-4"
+    ></mat-checkbox>
+    }
+    <div>
+      <span>
+        {{ specification.code }}
+      </span>
+    </div>
+  </div>
+  }
+  <div
+    [class]="
+      ' bg-white p-[10px] np flex-1 relative ' +
+      editableSpecsItemSizes.descriptionWidth
+    "
+  >
+    <ng-container *ngTemplateOutlet="indicators"></ng-container>
+    @if (!canEdit(specification, 'description')) {
+    <span>
+      {{ showDescriptionText() }} @if (descriptionExceedsLimit()) {
+      <button
+        (click)="showMoreOrLessDescription()"
+        class="px-1.5 !border-primary !border !text-primary rounded-full text-xs"
+      >
+        @if (!specification.showFullDescription) {
+        <span>read more</span>
+        } @if (specification.showFullDescription) {
+        <span>show less</span>
+        }
+      </button>
+      }
+    </span>
+    } @if (canEdit(specification, 'description')) {
+    <textarea
+      #descriptionInputRef
+      [(ngModel)]="currentEditingItem.description"
+      class="outline-none w-full"
+      (focus)="focusedInput = 'description'"
+      placeholder="Description*"
+    >
+    </textarea>
+    }
+  </div>
+  @if (showUnitOfMeasureColumn) {
+  <div
+    [class]="
+      ' bg-white p-[10px] np flex ' + editableSpecsItemSizes.unitOfMeasureWidth
+    "
+  >
+    <span> {{ specification.unitOfMeasure }} &nbsp; </span>
+  </div>
+  } @if (showValueColumn) {
+  <div
+    (click)="switchMode($event, 'edit', 'value')"
+    [class]="
+      'bg-white p-[10px] np  ' +
+      (showTotalColumn ? editableSpecsItemSizes.quantityWidth : ' flex-1 ') +
+      (canEdit(specification, 'value')
+        ? ' rounded !border !border-primary hover:bg-gray-100'
+        : '') +
+      (isClickable('value') ? ' hover:!bg-gray-100 ' : ' ')
+    "
+  >
+    <div [class]="'w-full relative ' + (showUnitRateColumn ? 'text-right' : '')">
+      @if (showTotalColumn && !canEdit(specification, 'value')) {
+      <span>
+        {{ specification.value }} &nbsp;
+      </span>
+      } @if (!showTotalColumn) {
+      <span>{{ specification.value | number : "1.2-2" }} &nbsp;</span>
+      } @if (canEdit(specification, 'value') && currentEditingItem) {
+      <input
+        #valueInputRef
+        [(ngModel)]="currentEditingItem.value"
+        (keyup)="calculateTotal()"
+        [class]="
+          'outline-none p-[7px] w-full ' +
+          (showUnitRateColumn ? 'text-right' : 'text-left')
+        "
+        (focus)="focusedInput = 'quantity'"
+        placeholder="Quantity/Value"
+        [decimal]="true"
+        digitOnly
+      />
+      }
+    </div>
+  </div>
+  } @if (showUnitRateColumn) {
+  <div
+    (click)="switchMode($event, 'edit', 'unit-rate')"
+    [class]="
+      'p-[10px] relative ' +
+      editableSpecsItemSizes.unitRateWidth +
+      ' bg-white ' +
+      (canEdit(specification, 'unit-rate')
+        ? ' rounded !border !border-primary '
+        : ' ') +
+      (isClickable('unit-rate') ? ' hover:!bg-gray-100 ' : ' ')
+    "
+  >
+    @if (!fieldIsEditable('unit-rate')) {
+    <ng-container *ngTemplateOutlet="lock"></ng-container>
+    } @if (!canEdit(specification, 'unit-rate')) {
+    <div (click)="switchMode($event, 'edit', 'unit-rate')" class="text-right w-full">
+      {{ specification.unitRate | number : "1.0-0" }} &nbsp;
+    </div>
+    } @if (canEdit(specification, 'unit-rate')) {
+    <input
+      #unitRateInputRef
+      [(ngModel)]="currentEditingItem.unitRate"
+      class="outline-none p-[7px] w-full text-right"
+      placeholder="Unit rate"
+      (focus)="focusedInput = 'unit-rate'"
+      (keyup)="calculateTotal()"
+      [decimal]="true"
+      digitOnly
+    />
+    }
+  </div>
+  } @if (showTotalColumn) {
+  <div class=" {{ editableSpecsItemSizes.totalWidth }} bg-white p-[10px] flex ">
+    @if (!canEdit(specification)) {
+    <div class="text-right w-full">
+      {{ specification.total | number : "1.0-0" }} &nbsp;
+    </div>
+    } @if (canEdit(specification)) {
+    <div class="text-right w-full">
+      {{ currentEditingItem.total | number : "1.0-0" }}&nbsp;
+    </div>
+    }
+  </div>
+  } @if (showDeleteConfirmation) {
+  <div
+    [class]="
+      'absolute flex items-center space-x-2  text-white right-0 top-0 bottom-0 '
+    "
+  >
+    <div class="flex items-center h-[40px] px-2 bg-red-600 text-white rounded-sm space-x-3">
+      <div class="font-light">Are you sure you want to delete this item?</div>
+      <button mat-stroked-button color="white" (click)="delete(2)">Yes</button>
+      <button mat-flat-button class="bg-white" (click)="showDeleteConfirmation = false">
+        No
+      </button>
+    </div>
+  </div>
+  } @if ( !showDeleteConfirmation && mode != 'edit' && (initialMode == 'manage' || initialMode ==
+  'initiation') ) {
+  <div
+    [class]="
+      'absolute items-stretch group-hover:flex hidden space-x-2  text-white right-2 top-3 bottom-0 '
+    "
+  >
+    @if (!fieldIsEditable('unit-rate')) {
+    <ng-container *ngTemplateOutlet="lock"></ng-container>
+    } @if (initialMode == 'initiation' || initialMode == 'manage') {
+    <button
+      (click)="onItemEdit(specification)"
+      mat-ripple
+      class="rounded-full pt-1 h-6 grid place-content-center text-sm !bg-primary aspect-square"
+    >
+      <mat-icon inline>edit</mat-icon>
+    </button>
+    } @if (specification.unitOfMeasure == '%') {
+    <button
+      [matMenuTriggerFor]="additionalActionsMenu"
+      aria-label="Example icon-button with a menu"
+      class="rounded-full pt-1 h-6 grid place-content-center text-sm !bg-primary aspect-square"
+    >
+      <mat-icon inline>more_vert</mat-icon>
+    </button>
+    }
+    <mat-menu #additionalActionsMenu="matMenu" xPosition="before">
+      <button mat-menu-item (click)="showProvisionSumSelector()">
+        Link Item for Percentage Calculation
+      </button>
+      @if (hasFormular()) {
+      <button mat-menu-item (click)="removePSLink()">
+        Unlink Item for Percentage Calculation
+      </button>
+      }
+    </mat-menu>
+    <button
+      (click)="delete(1)"
+      mat-ripple
+      class="rounded-full pt-1 grid place-content-center h-6 text-sm !bg-gray-500 aspect-square"
+    >
+      <mat-icon inline>delete</mat-icon>
+    </button>
+  </div>
+  }
+</div>
+@if (isLoading) {
+<div>
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</div>
+} @if ( currentFocusedEditingItem?.uuid == specification.uuid &&
+specification?.incompleteReasons?.length > 0 ) {
+<div class="px-2 pb-2 -mt-1">
+  <div class="bg-red-500 px-2 py-1 text-white rounded-b flex items-center space-x-2 w-full">
+    <div class="grid place-content-center">
+      <mat-icon inline>warning</mat-icon>
+    </div>
+    <div class="flex-1">
+      @for ( incompleteReason of specification.incompleteReasons; track incompleteReason; let i =
+      $index) {
+      <span
+        >{{ incompleteReason }}{{ i < specification.incompleteReasons?.length - 1 ? ", " : ""
+        }}</span
+      >
+      }
+    </div>
+  </div>
+</div>
+}
+
+<ng-template #lock>
+  <div
+    class="absolute rounded-full grid place-content-center aspect-square text-gray-500 w-[16px] text-[14px]"
+  >
+    <mat-icon inline>lock</mat-icon>
+  </div>
+</ng-template>
+
+<ng-template #indicators>
+  @if ( specification?.state && specification?.state?.code != itemStateCodes.NORMAL ) {
+  <div
+    class="absolute -top-[1px] right-[1px] rounded-full grid place-content-center aspect-square w-[16px] text-[14px]"
+  >
+    @if (specification.state.code == itemStateCodes.LOADING) {
+    <mat-spinner diameter="15" color="primary"></mat-spinner>
+    } @if ( specification.state.code == itemStateCodes.SAVE_ERROR || specification.state.code ==
+    itemStateCodes.DELETE_ERROR ) {
+    <mat-icon matTooltip="Item failed to save" inline class="text-red-500">cancel</mat-icon>
+    } @if (specification.state.code == itemStateCodes.MODIFIED) {
+    <div
+      matTooltip="Waiting to save"
+      class="w-[12px] rounded-full aspect-square !bg-secondary"
+    ></div>
+    } @if (specification.state.code == itemStateCodes.SUCCESS) {
+    <mat-icon matTooltip="Item has been saved" inline color="accent">check_circle</mat-icon>
+    } @if (specification.state.code == itemStateCodes.SAVE_ERROR) {
+    <button
+      class="bg-red-500 absolute top-2 right-4 flex p-2 text-xs rounded space-x-1 text-white"
+      (click)="retrySave()"
+    >
+      <mat-icon inline>refresh</mat-icon>
+      <div class="whitespace-nowrap">Retry Saving</div>
+    </button>
+    } @if (specification.state.code == itemStateCodes.DELETE_ERROR) {
+    <button
+      class="bg-red-500 absolute top-2 right-4 flex p-2 text-xs rounded space-x-1 text-white"
+      (click)="retryDelete()"
+    >
+      <mat-icon inline>refresh</mat-icon>
+      <div class="whitespace-nowrap">Retry Deleting</div>
+    </button>
+    }
+  </div>
+  }
+</ng-template>

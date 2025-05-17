@@ -1,0 +1,77 @@
+<div class="time-picker-container" [style.background-color]="backgroundColor" [style.width]="width + 'px'">
+  <div class="row d-flex justify-content-center">
+    <div class="d-flex">
+      <p class="justify-content-center text-primary font-bold mx-5">Hour</p>
+      <p class="justify-content-center text-primary font-bold mx-4">Minutes</p>
+    </div>
+    <ul class="col-6 pr-0 time-unit-card time-picker-list no-select"
+      [ngClass]="{'disable-scroll-animation': !enableAnimation}" #hoursList>
+      <cdk-virtual-scroll-viewport #hoursViewPort [itemSize]="unitHeight" class="viewport">
+        <li class="time-unit p-2 d-flex justify-content-center" *cdkVirtualFor="let hour of hours; let i = index"
+          [ngClass]="{'active': selectedHour === hour}"
+          [attr.id]="hour"
+          [style.color]="this.textColor"
+          [style.background-color]="selectedHour === hour ? this.primaryColor : 'unset'"
+        (click)="setHours(hour)">{{hour}}</li>
+      </cdk-virtual-scroll-viewport>
+    </ul>
+
+    <ul class="col-6 time-unit-card pl-0 time-picker-list no-select"
+      [ngClass]="{'disable-scroll-animation': !enableAnimation}" #minutesList>
+      <cdk-virtual-scroll-viewport #minutesViewPort [itemSize]="unitHeight" class="viewport">
+        <li class="time-unit p-2 d-flex justify-content-center" *cdkVirtualFor="let minute of minutes; let i = index"
+          [ngClass]="{'active': selectedMinute === minute}"
+          [style.color]="this.textColor"
+          [style.background-color]="selectedMinute === minute ? this.primaryColor : 'unset'"
+        (click)="setMinutes(minute)">{{minute}}</li>
+      </cdk-virtual-scroll-viewport>
+    </ul>
+  </div>
+  <div class="row d-flex justify-content-center align-items-center">
+    @if (manualInput) {
+      <div class="form col-12 d-flex justify-content-center">
+        <input type="number" readonly class="d-inline-flex form-control text-center px-0"
+          hours
+          [max]="maxHours"
+          [min]="minHours"
+          [style.border-bottom-color]="this.primaryColor"
+          [style.background-color]="this.inputControlBackgroundColor"
+          [style.color]="this.textColor"
+          [style.width]="hoursInputWidth"
+          (focus)="hoursInput.select()"
+          #hoursInput
+          [value]="selectedHour">
+        <input type="text" class="d-inline-flex form-control text-center" value=":" readonly disabled
+          [style.color]="this.textColor">
+        <input type="number" readonly class="d-inline-flex form-control text-center px-0" minutes
+          [max]="maxMinutes"
+          [min]="minMinutes"
+          [style.border-bottom-color]="this.primaryColor"
+          [style.background-color]="this.inputControlBackgroundColor"
+          [style.color]="this.textColor"
+          (focus)="minutesInput.select()"
+          #minutesInput
+          [value]="selectedMinute">
+      </div>
+    }
+    <div class="mt-2">
+      <div class="flex flex-row-reverse">
+        <button type="button" class="btn btn-primary" (click)="pickedTimeBtnClicked()"
+          style="font-size: 1rem"
+          [disabled]="isDisable"
+          [style.width]="this.width + 'px'"
+          [style.background-color]="this.primaryColor"
+          [style.border-color]="this.primaryColor">{{pickTimeText}}
+        </button>
+
+        <button type="button" (click)="resetDateInput()"
+          class=" mx-2 text-white bg-red-700 hover:bg-red-800 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2">
+          <svg class="h-8 w-8 text-white"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

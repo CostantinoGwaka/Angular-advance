@@ -1,0 +1,103 @@
+@if (loading) {
+<app-loader message="Loading..."></app-loader>
+} @if (!loading) {
+<div class="w-full">
+  <mat-accordion>
+    @for ( mergedProcurementRequisition of
+    mergedMainProcurementRequisition?.mergedProcurementRequisitions; track
+    mergedProcurementRequisition; let i = $index) {
+    <mat-expansion-panel
+      class="custom-panel"
+      (opened)="onOpenPanel(mergedProcurementRequisition?.uuid)"
+      (closed)="onClosePanel(mergedProcurementRequisition?.uuid)"
+      [expanded]="i == 0"
+    >
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{ mergedProcurementRequisition?.lotDescription }} ({{
+          mergedProcurementRequisition?.lotNumber }})
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <table class="table m-0">
+        <thead>
+          <tr>
+            <th style="width: 54px;">S/N</th>
+            <!--          <th>Item Gfs Code</th>-->
+            <th>Item Description</th>
+            <th>From Department</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if ( mergedProcurementRequisition?.mergedProcurementRequisitionItems ?.length === 0 ) {
+          <tr>
+            <td colspan="4" class="text-center">
+              Currently There is no Items in the List
+            </td>
+          </tr>
+          } @for ( pReqItem of mergedProcurementRequisition?.mergedProcurementRequisitionItems;
+          track pReqItem; let i1 = $index) {
+          <tr style="--order: {{ i1 * 0.7 }}" class="move-up">
+            <td class="relative align-middle">
+              {{ i1 + 1 }}
+              <div
+                class="arrow-d-c cursor-pointer {{
+									!toggleViewReqItem[pReqItem.uuid] ? 'expanded' : ''
+								}}"
+                (click)="
+									toggleViewReqItem[pReqItem.uuid] =
+										!toggleViewReqItem[pReqItem.uuid]
+								"
+              >
+                <mat-icon>chevron_right</mat-icon>
+              </div>
+            </td>
+            <!--    <td class="align-middle">{{ pReqItem?.gfsCode?.code }}</td>-->
+            <td class="align-middle">
+              {{ mergedProcurementRequisition?.lotDescription }}
+            </td>
+            <td class="align-middle">
+              {{ pReqItem?.departmentName || "N/A" }}
+            </td>
+          </tr>
+          @if (!toggleViewReqItem[pReqItem.uuid]) {
+          <tr>
+            <td colspan="4" class="indent-left" style="padding-left: 54px !important;">
+              <div>
+                <app-boqs-viewer
+                  [forPPRAAdmin]="forPPRAAdmin"
+                  [requisitionUuid]="mergedMainProcurementRequisition.uuid"
+                  [requisitionDate]="requisitionDateForBOQViewer"
+                  [itemUuid]="pReqItem.uuid"
+                  [showUnitRateColumn]="showUnitRateColumn"
+                  [showTotalColumn]="showTotalColumn"
+                  [endPointName]="
+										forPPRAAdmin
+											? 'getAllMergedMainProcurementRequisitionData'
+											: 'getMergedMainProcurementRequisitionData'
+									"
+                  [requisitionObjectFieldName]="'mergedProcurementRequisitions'"
+                  [requisitionItemsFieldName]="
+										'mergedProcurementRequisitionItems'
+									"
+                  [requisitionItemsItemizationsFieldName]="
+										'worksRequisitionItemItemizations'
+									"
+                ></app-boqs-viewer>
+                <div class="my-2">
+                  <app-sharable-attachment-form
+                    [attachmentList]="attachmentList[pReqItem.uuid]"
+                    [viewMode]="true"
+                  >
+                  </app-sharable-attachment-form>
+                </div>
+              </div>
+            </td>
+          </tr>
+          } }
+        </tbody>
+      </table>
+    </mat-expansion-panel>
+    }
+  </mat-accordion>
+</div>
+}

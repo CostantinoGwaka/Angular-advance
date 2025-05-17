@@ -1,0 +1,331 @@
+<div class="container-fluid">
+  <app-modal-header
+    (closeModal)="closeModal()"
+    [title]="'Government Compliance'"
+  ></app-modal-header>
+
+  @if (fetchSavedDate) {
+    <div class="row">
+      <table class="table sample-table">
+        <tbody>
+          <tr>
+            <td>Company Name</td>
+            <th>
+              {{ fetchSavedDate?.tenderer?.name }}
+            </th>
+          </tr>
+          @if (fetchSavedDate?.tenderer?.taxIdentificationNumber) {
+            <tr>
+              <td>TIN Number</td>
+              <th>
+                {{ fetchSavedDate?.tenderer?.taxIdentificationNumber }}
+              </th>
+            </tr>
+          }
+          @if (fetchSavedDate?.registrationNumber) {
+            <tr>
+              <td>Registration Number</td>
+              <th>
+                {{ fetchSavedDate?.registrationNumber }}
+              </th>
+            </tr>
+          }
+          @if (fetchSavedDate?.temporaryRegistrationNumber) {
+            <tr>
+              <td>Temporary Registration Number</td>
+              <th>
+                {{ fetchSavedDate?.temporaryRegistrationNumber }}
+              </th>
+            </tr>
+          }
+          @if (fetchSavedDate?.complianceStatus) {
+            <tr>
+              <td>Compliance Status</td>
+              <th>
+                {{ fetchSavedDate?.complianceStatus }}
+              </th>
+            </tr>
+          }
+          @if (fetchSavedDate?.registrationStatus) {
+            <tr>
+              <td>Registration Status</td>
+              <th>
+                {{ fetchSavedDate?.registrationStatus }}
+              </th>
+            </tr>
+          }
+        </tbody>
+      </table>
+      <div class="text-black font-bold pt-2 mt-2">
+        Note: You have already registered on this Government Compliance, Please recheck your
+        registration.
+      </div>
+    </div>
+  }
+  @if (fetchSavedDate == null) {
+    <div class="row">
+      <div class="col-sm-6" @fadeIn>
+        <app-paginated-select
+          (fieldValue)="selectPE($event)"
+          [field]="field"
+          [(ngModel)]="selectedPeUid"
+        ></app-paginated-select>
+      </div>
+      @if (selectedPeUid) {
+        <div class="col-sm-6" @fadeIn>
+          <mat-form-field appearance="outline">
+            <mat-label>Select your registration status</mat-label>
+            <mat-select
+              [(ngModel)]="govType"
+              placeholder="Select your registration status"
+              (selectionChange)="selectedgovType($event.value)"
+              >
+              @for (item  of govTypeEnum; track item ) {
+                <mat-option [value]="item.value">
+                  {{item.name}}
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+      }
+      @if (govType == 'REGISTERED') {
+        <div class="col-sm-6">
+          <mat-form-field appearance="outline">
+            <mat-label>Enter Registration Number</mat-label>
+            <input
+              type="number"
+              matInput
+              [(ngModel)]="govNumber"
+              placeholder="Enter Registration Number"
+              />
+          </mat-form-field>
+        </div>
+      }
+      <!-- <app-loader
+      *ngIf="searchSearch"
+      [message]="'Please wait,while fetch your information...'"
+    ></app-loader> -->
+    @if (registeredData == null && govType == 'UN_REGISTERED') {
+      <div>
+        <table class="table sample-table">
+          <tbody>
+            <tr>
+              <td>TIN Number</td>
+              <th>
+                {{ user?.tenderer.taxIdentificationNumber }}
+              </th>
+            </tr>
+            <tr>
+              <td>Bussiness Type</td>
+              <th>
+                {{ user?.tenderer.businessType }}
+              </th>
+            </tr>
+            <tr>
+              <td>Office Phone</td>
+              <th>
+                {{ user?.tenderer.phone }}
+              </th>
+            </tr>
+            <tr>
+              <td>Office Location</td>
+              <th>
+                {{ user?.tenderer.physicalAddress }}
+              </th>
+            </tr>
+            <tr>
+              <td>Employer Name</td>
+              <th>
+                {{ user?.tenderer.name }}
+              </th>
+            </tr>
+            <tr>
+              <td>Postal Address</td>
+              <th>
+                {{ user?.tenderer.postalAddress }}
+              </th>
+            </tr>
+            <tr>
+              <td>Physical Address</td>
+              <th>
+                {{ user?.tenderer.physicalAddress }}
+              </th>
+            </tr>
+            <tr>
+              <td>Office eMail</td>
+              <th>
+                {{ user?.email }}
+              </th>
+            </tr>
+          </tbody>
+        </table>
+        @if (govType == 'UN_REGISTERED' && isNssfRegistration) {
+          <div class="col-sm-12">
+            <mat-form-field appearance="outline">
+              <mat-label>Number of employee</mat-label>
+              <input
+                type="number"
+                matInput
+                [(ngModel)]="numberOfEmployees"
+                placeholder="Number of employee"
+                />
+            </mat-form-field>
+          </div>
+        }
+        @if (!loading && govType == 'UN_REGISTERED') {
+          <div class="col-sm-12" @fadeIn>
+            <app-save-area
+              [saveDisabled]="(isNssfRegistration && numberOfEmployees == null)"
+              [confirmFirst]="true"
+              [saveText]="'Request Registration'"
+              loadingMessage="Saving data ..."
+              [savingData]="loading"
+              [showCancel]="false"
+              (save)="saveNSSFRegisterData()"
+              (cancel)="close(false)"
+            ></app-save-area>
+          </div>
+        }
+        @if (loading) {
+          <app-loader
+            [message]="'Please wait,sending you are information...'"
+          ></app-loader>
+        }
+      </div>
+    }
+    @if (!searchSearch && fetchedData != null && govType == 'REGISTERED' && fetchedData.message == 'NOT_REGISTERED') {
+      <div
+        class="col-sm-12"
+        @fadeIn
+        >
+        <div
+          class="w-full p-4 border-4 border-dotted border-spacing-3 rounded-md text-lg border-white bg-green-200 text-black cursor-pointer mb-2 pb-2"
+          >
+          <div>
+            <span>
+              No Information Found With {{ govNumber }} Please try again, with correct number
+            </span>
+            &nbsp;&nbsp;
+          </div>
+          <div class="text-black font-bold pt-2 mt-2">
+            Note: Please Contact Government Compliance Agency.
+          </div>
+        </div>
+      </div>
+    }
+    @if (!noData && !searchSearch && registeredData && govType == 'UN_REGISTERED') {
+      <div
+        class="col-sm-12"
+        @fadeIn
+        >
+        <table class="table sample-table">
+          <tbody>
+            <tr>
+              <td>Registration Message</td>
+              <th>
+                {{ registeredData.message?.includes('Employer already exists') ? 'Employer already
+                exists' : registeredData.message }}
+              </th>
+            </tr>
+            <tr>
+              <td>Registration Status</td>
+              <th>
+                Wait Government Compliance to Complete Registration.
+              </th>
+            </tr>
+          </tbody>
+        </table>
+        @if (!loading && fetchedData) {
+          <div class="col-sm-12" @fadeIn>
+            <app-save-area
+              [confirmFirst]="false"
+              [showCancel]="false"
+              loadingMessage="Saving data ..."
+              [savingData]="loading"
+              [saveDisabled]="!govNumber"
+              [saveText]="'Save Information'"
+              (save)="saveInformation()"
+              >
+            </app-save-area>
+          </div>
+        }
+        @if (loading) {
+          <app-loader
+            [message]="'Please wait,sending you are information...'"
+          ></app-loader>
+        }
+      </div>
+    }
+    @if (!noData && !searchSearch && fetchedData && fetchedData.message == 'REGISTERED' && govType == 'REGISTERED') {
+      <div
+        class="col-sm-12"
+        @fadeIn
+        >
+        <table class="table sample-table">
+          <tbody>
+            <tr>
+              <td>Registration Number</td>
+              <th>
+                {{ fetchedData.nssf_employer_number ?? fetchedData?.employer_number }}
+              </th>
+            </tr>
+            <tr>
+              <td>Registration Status</td>
+              <th>
+                {{ fetchedData.message }}
+              </th>
+            </tr>
+            <tr>
+              <td>Message</td>
+              <th>
+                {{ fetchedData?.description ?? "Response from " + governConfiguration?.description }}
+              </th>
+            </tr>
+          </tbody>
+        </table>
+        @if (!loading && fetchedData && fetchedData?.regNo) {
+          <div class="col-sm-12" @fadeIn>
+            <app-save-area
+              [confirmFirst]="false"
+              [showCancel]="false"
+              loadingMessage="Saving data ..."
+              [savingData]="loading"
+              [saveDisabled]="!govNumber"
+              [saveText]="'Save Information'"
+              (save)="saveInformation()"
+              >
+            </app-save-area>
+          </div>
+        }
+        @if (loading) {
+          <app-loader
+            [message]="'Please wait,sending you are information...'"
+          ></app-loader>
+        }
+      </div>
+    }
+    @if (!searchSearch && govType == 'REGISTERED' && fetchedData == null) {
+      <div
+        class="col-sm-12"
+        @fadeIn
+        >
+        <app-save-area
+          [confirmFirst]="false"
+          [showCancel]="false"
+          [saveIcon]="'search'"
+          loadingMessage="Saving data ..."
+          [savingData]="loading"
+          [saveDisabled]="!govNumber"
+          [saveText]="'Retrieve Information'"
+          (save)="retriveData()"
+          >
+        </app-save-area>
+      </div>
+    }
+    @if (searchSearch) {
+      <app-loader [message]="'Please wait,...'"></app-loader>
+    }
+  </div>
+}
+</div>

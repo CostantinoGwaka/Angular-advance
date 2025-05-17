@@ -1,0 +1,23 @@
+.control-area{
+  @apply  p-3
+}
+
+.text-edtitor-area{
+  @apply pt-3 h-[350px]
+}
+
+.send-button{
+  @apply h-[38px] w-[110px] inline-block bg-[#44ABD7] text-white text-center py-2 px-4 rounded-full cursor-pointer
+}
+
+.icon-dimensions{
+
+}
+
+.file-attachment-button{
+  @apply h-[30px] w-[30px]  inline-block text-center ml-8 rounded-full  cursor-pointer  rounded-full hover:font-bold
+}
+
+.image-attachment-button{
+  @apply h-[35px] w-[35px]  inline-block text-center ml-4  rounded-full cursor-pointer  rounded-full hover:font-bold
+}

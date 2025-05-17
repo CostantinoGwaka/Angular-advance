@@ -1,0 +1,53 @@
+<app-modal-header (closeModal)="closeModal(null)" [title]=" (actionBidModify)? 'Confirm Bid modification request' : 'Confirm Bid withdraw request'"></app-modal-header>
+
+<div class="form-holder">
+  <div class="row">
+
+    <app-custom-alert-box
+      [alertClass]="alertClass"
+      [alertTextClass]="alertTextClass"
+      [alertInfo]="(actionBidModify)? modifyAlert : withdrawAlert">
+    </app-custom-alert-box>
+
+
+    <div class="col-sm-12 mt-4 mb-3" @fadeIn>
+
+      <app-paginated-select (fieldValue)="setSelectedReason($event)" [field]="(actionBidModify) ? field2 : field" [(ngModel)]="reasonUuid">
+      </app-paginated-select>
+
+      <mat-form-field appearance="outline">
+        <mat-label>More information</mat-label>
+        <textarea matInput [(ngModel)]="withdrawReason"></textarea>
+        <mat-hint>This field is optional</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Please type {{entityNumber}} to confirm</mat-label>
+        <input matInput
+          [(ngModel)]="confirmKey"
+          placeholder=""
+          [type]="'text'"
+          />
+        <mat-hint class="!text-[#e60000]">
+          Please type {{entityNumber}} to confirm this action
+        </mat-hint>
+      </mat-form-field>
+    </div>
+
+    @if (reasonUuid && confirmKey == entityNumber) {
+      <div class="col-sm-12"  @fadeIn>
+        <app-save-area
+          [confirmFirst]="true"
+          [loadingMessage]="savingMessage"
+          [savingData]="isLoading"
+          (save)="(actionBidModify)? modifyBid() :withdrawBid()"
+          [confirmText]="confirmMessage"
+          [showCancel]="false"
+          [saveText]="(actionBidModify)? 'Modify Bid' :'Withdraw Bid'"
+          [saveColor]="(actionBidModify)? 'primary' : 'warn'"
+          (cancel)="closeModal(false)"
+        ></app-save-area>
+      </div>
+    }
+  </div>
+</div>

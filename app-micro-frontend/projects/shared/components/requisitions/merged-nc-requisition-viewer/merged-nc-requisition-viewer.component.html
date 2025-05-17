@@ -1,0 +1,218 @@
+@if (loadingMergedProcurementRequisitions) {
+<div class="border border-blue-300 shadow rounded-md p-10 w-full mx-auto">
+  <div class="animate-pulse">
+    @for (_ of [].constructor(pageSize); track _) {
+    <div class="flex-1 space-y-6 py-1">
+      <div class="h-2 bg-slate-200 rounded"></div>
+      <div class="space-y-3">
+        <div class="grid grid-cols-3 gap-4">
+          <div class="h-2 bg-slate-200 rounded col-span-2"></div>
+          <div class="h-2 bg-slate-200 rounded col-span-1"></div>
+        </div>
+        <div class="h-2 bg-slate-200 rounded"></div>
+      </div>
+    </div>
+    }
+  </div>
+</div>
+} @if (!loadingMergedProcurementRequisitions) {
+<div class="w-full">
+  <mat-accordion>
+    @for (mergedProcurementRequisition of (mergedProcurementRequisitions || []); track
+    mergedProcurementRequisition; let i = $index) {
+    <mat-expansion-panel
+      class="custom-panel"
+      (opened)="getMergedProcurementRequisitionItemsByMergedUuid(mergedProcurementRequisition.uuid)"
+    >
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{ mergedProcurementRequisition?.lotDescription }}
+          ({{mergedProcurementRequisition?.lotNumber}})
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <table class="table m-0">
+        <thead>
+          <tr>
+            <th style="width: 54px;">S/N</th>
+            <th>Item Gfs Code</th>
+            <th>Item Description</th>
+            <th>From Department</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (loadingMergedProcurementRequisitionItems[mergedProcurementRequisition.uuid]) {
+          <tr>
+            <td colspan="4">Loading ...</td>
+          </tr>
+          } @if (!loadingMergedProcurementRequisitionItems[mergedProcurementRequisition.uuid]) { @if
+          (mergedProcurementRequisitionItems[mergedProcurementRequisition.uuid]?.length === 0) {
+          <tr>
+            <td colspan="4" class="text-center">Currently There is no Items in the List</td>
+          </tr>
+          } @for (pReqItem of mergedProcurementRequisitionItems[mergedProcurementRequisition.uuid] |
+          sortBy: 'asc': 'id'; track pReqItem; let i1 = $index) {
+          <tr style="--order: {{ i1 * 0.7 }}" class="move-up">
+            <td class="relative align-middle">
+              {{i1 + 1}}
+              <div
+                class="arrow-d-c cursor-pointer {{!toggleViewReqItem[pReqItem.uuid] ? 'expanded' : ''}}"
+                (click)="toggleViewReqItem[pReqItem.uuid] = !toggleViewReqItem[pReqItem.uuid]"
+              >
+                <mat-icon>chevron_right</mat-icon>
+              </div>
+            </td>
+            <td class="align-middle">{{pReqItem.gfsCode?.code}}</td>
+            <td class="align-middle">{{pReqItem?.gfsCode?.description}}</td>
+            <td class="align-middle">{{pReqItem?.departmentName}}</td>
+          </tr>
+          @if (!toggleViewReqItem[pReqItem.uuid]) {
+          <tr>
+            <td colspan="4" class="indent-left" style="padding-left: 54px !important;">
+              <div>
+                <table class="table m-0">
+                  <thead>
+                    <tr>
+                      <th style="width: 56px;">S/N</th>
+                      <th>Description</th>
+                      <th>Unit of Measure</th>
+                      @if(showEstimatedBudget){
+                      <th class="item-number">Estimated Unit Price</th>
+                      }
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (itemization of pReqItem?.mergedRequisitionItemizations | sortBy: 'asc':
+                    'id'; track itemization; let i2 = $index) {
+                    <tr style="--order: {{ i2 * 0.7 }}" class="move-up">
+                      <td class="relative align-middle">
+                        {{i2 + 1}}
+                      </td>
+                      <td class="align-middle">{{itemization?.description}}</td>
+                      <td class="align-middle">{{itemization?.unitOfMeasure}}</td>
+                      @if(showEstimatedBudget){
+                      <td class="align-middle item-number">
+                        {{itemization?.quantity}} x {{itemization?.estimatedUnitCost | number}} =
+                        {{itemization?.estimatedUnitCost * itemization.quantity | number}}/=
+                      </td>
+                      }
+                    </tr>
+                    } @if(showEstimatedBudget){
+                    <tr>
+                      <td colspan="3" class="item-number">Grand Total</td>
+                      <td class="align-middle item-number font-semibold">
+                        {{getGrandTotal(pReqItem?.mergedRequisitionItemizations) | number}} /=
+                      </td>
+                    </tr>
+                    }
+                  </tbody>
+                </table>
+                <!--Merged Attachments-->
+                <div class="mb-2">
+                  <app-sharable-attachment-form
+                    [attachmentList]="attachmentList[pReqItem.uuid]"
+                    [viewMode]="true"
+                  >
+                  </app-sharable-attachment-form>
+                </div>
+              </div>
+              <table class="table m-0">
+                <thead>
+                  <tr>
+                    <th style="width: 56px;">S/N</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    @if
+                    ((mergedNonConsultancyRequisitionSpecificationsByMergedItemUuid[pReqItem.uuid]
+                    || []).length == 0) {
+                    <th>
+                      <button
+                        mat-raised-button
+                        color="primary"
+                        class="w-full"
+                        (click)="getMergedNonConsultancyRequisitionSpecificationsByMergedItemUuid(pReqItem.uuid)"
+                      >
+                        View Specifications
+                      </button>
+                    </th>
+                    }
+                  </tr>
+                </thead>
+                <tbody>
+                  @if
+                  (loadingMergedNonConsultancyRequisitionSpecificationsByMergedItemUuid[pReqItem.uuid])
+                  {
+                  <tr>
+                    <td colspan="4">
+                      Loading Specifications...
+                    </td>
+                  </tr>
+                  } @for (spec of
+                  mergedNonConsultancyRequisitionSpecificationsByMergedItemUuid[pReqItem.uuid];
+                  track spec; let i1 = $index) {
+                  <tr style="--order: {{ (i1 + 1) * 0.7 }}" class="move-up">
+                    <td class="relative align-middle">
+                      {{1 + i1}}
+                      <!--<mat-checkbox></mat-checkbox>-->
+                      <!--<div class="arrow-d-c cursor-pointer {{ 'expanded'}}">
+                                  <mat-icon>chevron_right</mat-icon>
+                                </div>-->
+                    </td>
+                    <td
+                      class="align-middle"
+                      [colSpan]="spec?.mergedNonConsultancyPerformanceRequirements?.length > 0 ? 2 : ''"
+                    >
+                      {{spec.name}}
+                    </td>
+                    @if (spec?.mergedNonConsultancyPerformanceRequirements?.length === 0) {
+                    <td class="align-middle" [innerHTML]="spec?.description"></td>
+                    }
+                  </tr>
+                  @if (spec?.mergedNonConsultancyPerformanceRequirements?.length > 0) {
+                  <tr>
+                    <td colspan="3" class="indent-left" style="padding-left: 56px !important;">
+                      <table class="table m-0">
+                        <thead>
+                          <tr>
+                            <th style="width: 56px;">S/N</th>
+                            <th>Service Output Name</th>
+                            <th>Specification Requirement</th>
+                            <th>Performance Standard</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          @for (subSpec of spec?.mergedNonConsultancyPerformanceRequirements; track
+                          subSpec; let i2 = $index) {
+                          <tr style="--order: {{ ((i1 + 1) + i2) * 0.7 }}" class="move-up">
+                            <td class="relative align-middle">
+                              {{i2 + 1}}
+                            </td>
+                            <td class="align-middle">{{subSpec?.serviceOutputName}}</td>
+                            <td class="align-middle">{{subSpec?.specificationRequirement}}</td>
+                            <td class="align-middle">{{subSpec?.performanceStandard}}</td>
+                          </tr>
+                          }
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                  } }
+                </tbody>
+              </table>
+            </td>
+          </tr>
+          } } }
+        </tbody>
+      </table>
+    </mat-expansion-panel>
+    }
+  </mat-accordion>
+</div>
+}
+<mat-paginator
+  #pagedPaginator
+  [length]="totalRecords"
+  [pageSize]="pageSize"
+  [pageSizeOptions]="[5, 10, 20, 50, 100]"
+  (page)="onChangePage($event)"
+  showFirstLastButtons
+></mat-paginator>

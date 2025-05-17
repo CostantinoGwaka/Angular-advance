@@ -1,0 +1,77 @@
+.back__icon {
+  color: #1394db;
+  padding: 7px;
+  border: 2px solid rgba(#1394db, .5);
+  background: white;
+  aspect-ratio: 1;
+  display: inline-flex;
+  border-radius: 50%;
+  transition: all .250ms ease-in;
+  cursor: pointer;
+  margin-right: 5px;
+  &:hover {
+    border-color: #1394db;
+  }
+}
+
+.app-main-heading-title {
+  font-size: 16px !important;
+}
+
+.ks-title {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+  h3 {
+    font-size: 16px;
+    margin-top: 0px;
+  }
+  .btn {
+    color: white;
+    font-weight: 500;
+    margin-bottom: 10px;
+
+  }
+}
+
+.menuButton {
+  border: 1px solid rgba(0,0,0,0.2);
+  background-color: white;
+  margin-right: 2px;
+  padding: 5px 8px;
+  border-radius: 5px;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+  img {
+    height: 17px;
+    width: 17px;
+  }
+}
+
+.menuButton:hover {
+  transform: scale(1.04);
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+.active-menu {
+  border: 1px solid rgba(0,0,0,0.2);
+  background-color: rgba(0, 0, 0, 0.12);
+  transform: scale(1.04);
+  font-weight: 600;
+}
+
+.modules-links{
+  border-bottom: 1px solid #eaeaea;
+  border-bottom-color: #83d1ff;
+  button{
+    font-weight: 500;
+    font-size: 0.7rem;
+    background-image: -webkit-linear-gradient(top,#fff,#f9f9f9);
+    &.active-menu1{
+      background-color: rgba(0, 0, 0, 0.12);
+      // background-image: -webkit-linear-gradient(top, #ebf1f4, #cfcfcf);
+      background-image: -webkit-linear-gradient(top, #efefef, #9b9b9b);
+    }
+  }
+}

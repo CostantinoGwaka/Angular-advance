@@ -1,0 +1,118 @@
+<!-- If we're loading -->
+@if (field?.optionData?.loading) {
+  <mat-form-field @fadeIn appearance="outline">
+    <mat-label>Loading {{ field?.label }} ...</mat-label>
+    <input matInput disabled />
+    <mat-spinner
+      matSuffix
+      [diameter]="18"
+      style="float: right; margin-left: 8px"
+    ></mat-spinner>
+  </mat-form-field>
+}
+
+@if (!field?.optionData?.loading) {
+  <mat-form-field
+    @fadeIn
+    class="demo-full-width margin-top"
+    [hideRequiredMarker]="field?.hideRequiredMarker"
+    [formGroup]="group"
+    appearance="outline"
+    >
+    <mat-label>{{ field?.label }}</mat-label>
+    <mat-select
+      #infiniteScrollSelect
+      [required]="field.key && group?.get(field.key)?.errors !== null && group?.get(field.key)?.errors?.['required']"
+      [placeholder]="field?.placeholder || field.label || ''"
+      [formControlName]="field.key || ''"
+      (selectionChange)="fieldChange($event)"
+      [multiple]="field.multiple"
+      >
+      <mat-option>
+        @if (!field.multiple) {
+          <!--disableScrollToActiveOnOptionsChanged should be set to true-->
+          <app-select-search
+            [formControl]="searchCtrl"
+            [disableScrollToActiveOnOptionsChanged]="true"
+            [noEntriesFoundLabel]="noEntriesFoundLabel"
+            >
+          </app-select-search>
+        }
+        @if (field.multiple) {
+          <app-select-search
+            [formControl]="searchCtrl"
+            [noEntriesFoundLabel]="noEntriesFoundLabel"
+            [showToggleAllCheckbox]="true"
+          [toggleAllCheckboxIndeterminate]="
+            field.key != null &&
+            (group.controls[field.key]?.value || []).length > 0 &&
+            (group.controls[field.key]?.value || []).length <
+              (field?.optionData?.value || []).length
+          "
+          [toggleAllCheckboxChecked]="
+            field.key != null &&
+            (group.controls[field.key]?.value || []).length ===
+              (field?.optionData?.value || []).length
+          "
+            (toggleAll)="toggleSelectAll($event)"
+            >
+          </app-select-search>
+        }
+      </mat-option>
+      @if (!field.removeUnderscore) {
+        <span>
+          @for (group of (filteredBatchedData$ | async) || []; track group) {
+            <mat-optgroup>
+              @for (
+                item of group.groupItems
+                | search : field.filterKey || '' : filterVal
+                ; track
+                item) {
+                <mat-option
+                  [value]="item.value"
+                  [disabled]="item.disabled"
+                  [ngClass]="{ danger: item.danger }"
+                  >{{ item.name }}
+                </mat-option>
+              }
+            </mat-optgroup>
+          }
+        </span>
+      } @else {
+        @for (group of (filteredBatchedData$ | async) || []; track group) {
+          <mat-optgroup>
+            @for (
+              item of group.groupItems || []
+              | search : field.filterKey || '' : filterVal
+              ; track
+              item) {
+              <mat-option
+                [value]="item.value"
+                [disabled]="item.disabled"
+                [ngClass]="{ danger: item.danger }"
+                >{{ item.name | replace : "_" : " " }}
+              </mat-option>
+            }
+          </mat-optgroup>
+        }
+      }
+    </mat-select>
+    @if (field?.icon) {
+      <mat-icon matPrefix>{{ field?.icon }}</mat-icon>
+    }
+    <mat-hint
+      ><strong>{{ field.hint }}</strong>
+    </mat-hint>
+    @for (validation of field.validations; track validation) {
+      <ng-container
+        ngProjectAs="mat-error"
+        >
+        @if (field.key && group.controls[field.key]?.hasError(validation.name)) {
+          <mat-error
+            >{{ validation.message }}</mat-error
+            >
+          }
+        </ng-container>
+      }
+    </mat-form-field>
+  }

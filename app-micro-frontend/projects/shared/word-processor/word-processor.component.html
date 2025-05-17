@@ -1,0 +1,108 @@
+<div class="word-processor relative">
+  <div
+    class="absolute z-40 bg-white left-0 right-0 {{ customClassTopContainer }}"
+    >
+    @if (additionalOptions.toolBarPosition == 'TOP') {
+      <app-tool-bar
+        [selectedToolBarButtons]="selectedToolBarButtons"
+        [customToolBarButtons]="customToolBarButtons"
+        [editArea]="editArea"
+        (onToolbarButtonClick)="toolbarButtonClick($event, $event)"
+        (onInsertTable)="insertTable($event)"
+        >
+      </app-tool-bar>
+    }
+  </div>
+  <div
+    class="outline-none border-l border-r border-b border-[#e2e2e2] h-full overflow-y-scroll relative {{
+      customClassBottomContainer
+    }}"
+    >
+    <div
+      disableTypingInsideConditionBlock
+      id="editAreaContent"
+      (mousemove)="onMouseMoveInEditArea()"
+      (keypress)="onKeyPress($event)"
+      (keydown)="onKeyDown($event)"
+      [innerHTML]="content | doNotSanitize"
+      (input)="handleChange($event)"
+      [contentEditable]="!disabled"
+      #editAreaRef
+      [class]="
+        'editArea outline-none relative h-full  px-3' +
+        (additionalOptions.toolBarPosition == 'TOP'
+          ? ' pt-[60px] pb-[100px] '
+          : ' pt-3 pb-[40px] ')
+      "
+    ></div>
+    @if (showTableProperties) {
+      <div
+        [style.top.px]="tablePropertiesTop"
+        [style.left.px]="tablePropertiesLeft"
+        (mouseenter)="mouseIsInTableProperties = true"
+        (mouseleave)="mouseIsInTableProperties = false"
+        class="absolute"
+        >
+        <app-table-properties [table]="currentTable"></app-table-properties>
+      </div>
+    }
+    @if (showTableOptions) {
+      <div
+        [style.top.px]="tableOptionsTop"
+        [style.left.px]="tableOptionsLeft"
+        (mouseenter)="mouseIsInTableProperties = true"
+        (mouseleave)="mouseIsInTableProperties = false"
+        class="absolute"
+        >
+        <app-table-cell-properties
+          [currentTd]="currentTd"
+          [currentTr]="currentTr"
+          [selectedCells]="selectedCells"
+          [currentTrPosition]="currentTrPosition"
+          [table]="currentTable"
+          (onActionFinished)="onCellsActionFinished()"
+        ></app-table-cell-properties>
+      </div>
+    }
+
+  </div>
+  <div class="absolute z-40 bg-white left-0 right-0">
+    @if (additionalOptions.toolBarPosition == 'BOTTOM') {
+      <app-tool-bar
+        [selectedToolBarButtons]="selectedToolBarButtons"
+        [customToolBarButtons]="customToolBarButtons"
+        [editArea]="editArea"
+        (onToolbarButtonClick)="toolbarButtonClick($event, $event)"
+        (onInsertTable)="insertTable($event)"
+      ></app-tool-bar>
+    }
+  </div>
+  @if (showCodeView) {
+    <div class="absolute inset-0 z-50">
+      <html-code-editor
+        [content]="content"
+      ></html-code-editor>
+    </div>
+  }
+  <div class="absolute bottom-0 left-0 right-0 p-2 border-t border-t-gray-100 z-50">
+    @if (allowCodeView) {
+      <div class="flex text-xs space-x-2">
+        <div>
+          View:
+        </div>
+        <div class="font-bold">
+          @if (showCodeView) {
+            <button (click)="toggleView()">
+              Code
+            </button>
+          }
+          @if (!showCodeView) {
+            <button (click)="toggleView()">
+              Visual
+            </button>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>

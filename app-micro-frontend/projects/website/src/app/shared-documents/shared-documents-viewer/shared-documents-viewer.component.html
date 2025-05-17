@@ -1,0 +1,62 @@
+<web-layout>
+  <parallax-container
+    [title]="document?.title"
+    [description]=""
+    [seo_description]="
+      document?.title + ' published by NeST'
+    "
+    >
+    <div class="p-10">
+      @if (loading) {
+        <app-loader
+          message="Please wait... while fetching document details"
+        ></app-loader>
+      }
+
+      @if (!loading) {
+        <div>
+          @if (document?.title) {
+            <div class="flex items-center bg-white rounded-lg shadow-xs">
+              <div>
+                <p class="mb-2 text-lg font-medium  text-gray-900">
+                  {{document?.title}}
+                </p>
+                <p class="text-sm text-gray-700" [innerHTML]="document?.description"></p>
+              </div>
+            </div>
+            @if (document?.attachmentUuid) {
+              <div
+                [align]="'right'"
+                class="flex flex-rows w-full items-right my-1"
+                style="overflow-y: auto">
+                @if (!loadingAttachment[document?.attachmentUuid]) {
+                  <div class="w-[80px] cursor-pointer"
+                    (click)="viewAttachment(document?.attachmentUuid)">
+                    <div class="aspect-square h-16 grid place-content-center" #logoWrapper>
+                      <img _ngcontent-wwh-c466="" style="height: 58px;" class="w-[100%] sm:w-auto" alt="NeST Documents"
+                        src="assets/images/pdf-icon.png">
+                      </div>
+                    </div>
+                  }
+                  @if (loadingAttachment[document?.attachmentUuid]) {
+                    <p class="w-auto mx-3" role="status">
+                      <mat-spinner [diameter]="18" style="margin-top:11px;"></mat-spinner>
+                    </p>
+                  }
+                </div>
+              }
+            }
+            @if (!document?.title) {
+              <div class="flex items-center  w-1/2 p-2 mb-4 text-sm mx-auto text-blue-400 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400" role="alert">
+                <mat-icon class="mx-2">info</mat-icon>
+                <span class="sr-only">Info</span>
+                <div>
+                  <span class="font-medium"> Info!</span> Document not found...!
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </parallax-container>
+  </web-layout>

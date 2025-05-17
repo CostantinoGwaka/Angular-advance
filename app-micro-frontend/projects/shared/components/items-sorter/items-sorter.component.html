@@ -1,0 +1,54 @@
+<h2 mat-dialog-title>{{ sortData.title }}</h2>
+<mat-dialog-content class="mat-typography relative min-h-[40px]">
+  <div
+    #itemsListViewPort
+    class=""
+    cdkDropList
+    [cdkDropListData]="dropListData"
+    (cdkDropListDropped)="drop($event)"
+    >
+    @for (item of items; track item; let i = $index) {
+      <div
+        #itemElement
+        id="sort-{{ item?.[sortData.fields['id']]}}"
+        class="mb-0.5 flex p-2 border bg-white rounded cursor-move"
+        cdkDrag
+        >
+        <div class="flex-1">
+          {{ getText(item) }}
+        </div>
+        <!-- <div class="flex cursor-default space-x-3">
+        <button matTooltip="Move up" mat-ripple>
+          <mat-icon inline>arrow_upward</mat-icon>
+        </button>
+        <button matTooltip="Move down" mat-ripple>
+          <mat-icon inline>arrow_downward</mat-icon>
+        </button>
+        <button matTooltip="More actions" mat-ripple>
+          <mat-icon inline>more_vert</mat-icon>
+        </button>
+      </div> -->
+    </div>
+  }
+</div>
+@if (items.length == 0) {
+  <div
+    class="absolute inset-0 grid place-content-center bg-white"
+    >
+    <div>No items to sort</div>
+  </div>
+}
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  @if (items.length > 0) {
+    <button
+      mat-button
+      [mat-dialog-close]="true"
+      cdkFocusInitial
+      (click)="save()"
+      >
+      Save
+    </button>
+  }
+</mat-dialog-actions>

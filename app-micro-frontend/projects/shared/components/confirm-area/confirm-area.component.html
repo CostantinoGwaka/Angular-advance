@@ -1,0 +1,30 @@
+<div class="">
+  <p class="lead text-center {{confirmTextClass}}">{{ title }}</p>
+  <p class="confirm-div">
+    @if (!useConfirmCancel) {
+      <button
+        mat-raised-button class="yes-button zoom-on-hover"  @fadeIn
+        (click)="confirm.emit(emitValue)">
+        <mat-icon>done</mat-icon> Yes
+      </button>
+      <button mat-raised-button class="no-button zoom-on-hover" @fadeIn
+        (click)="confirm.emit()">
+        <mat-icon>clear</mat-icon> No
+      </button> &nbsp;
+    }
+
+    @if (useConfirmCancel) {
+      <button
+        mat-raised-button class="yes-button zoom-on-hover"  @fadeIn
+        (click)="confirm.emit()">
+        <mat-icon>done</mat-icon> Yes
+      </button>
+      <button mat-raised-button class="no-button zoom-on-hover" @fadeIn
+        (click)="cancel.emit()">
+        <mat-icon>clear</mat-icon> No
+      </button> &nbsp;
+    }
+
+  </p>
+
+</div>

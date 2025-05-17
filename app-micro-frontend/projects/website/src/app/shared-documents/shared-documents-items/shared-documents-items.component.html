@@ -1,0 +1,49 @@
+<div class="!border-b !border-b-gray-200 hover:bg-gray-50 transition-all">
+  <div class="p-1">
+    <div class="flex spacex-[13px]" #contentWrapper>
+      <div class="w-[80px]">
+        <div class="aspect-square h-16 grid place-content-center" #logoWrapper>
+          <img _ngcontent-wwh-c466="" style="height: 35px;" class="w-[100%] sm:w-auto" alt="NeST Documents"
+            [src]="document?.attachmentUuid ? 'assets/images/pdf-icon.png' : 'assets/images/doc-icon.png'">
+          </div>
+        </div>
+        <div class="items-center flex flex-row justify-between pt-2 w-100">
+          <div class="items-center cursor-pointer" (click)="navigateViewDetails(document.uuid)" >
+            <a>
+              <h2 class="!text-gray-600 !text-[16px] cursor-pointer !leading-none !m-0">
+                {{ document.title }}
+              </h2>
+            </a>
+            <div class="mt-2">
+
+              <div class="hover:text-gray-700 text-gray-500 !text-sm !mb-0">
+                {{document.createdAt | datetime}}
+              </div>
+            </div>
+          </div>
+
+          <!--        ********-->
+          <div class="text-[11px] flex space-x-4">
+            @if (document.attachmentUuid && !loadingAttachment[document.attachmentUuid]) {
+              <div class="cursor-pointer mx-2 pt-1" (click)="viewAttachment(document.attachmentUuid)">
+                <mat-icon color="primary">file_download</mat-icon>
+              </div>
+            }
+
+            @if (loadingAttachment[document.attachmentUuid]) {
+              <p class="w-auto mx-3" role="status">
+                <mat-spinner [diameter]="18" style="margin-top:11px;"></mat-spinner>
+              </p>
+            }
+
+            <button
+              (click)="navigateViewDetails(document.uuid)"
+              class="py-1 whitespace-nowrap px-2 mx-1 !border !border-primary rounded !text-primary"
+              >
+            {{ "VIEW_DETAILS" | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

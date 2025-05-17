@@ -1,0 +1,78 @@
+<div class="grid place-content-center h-[100vh] bg-gray-200">
+  <div class="flex items-center">
+    <div class="w-[35vw]">
+      <div class="block bg-white mt-4 mb-2 p-3  md:rounded-xl shadow-xl">
+        <div class="flex flex-col space-y-2 justify-center items-center px-11 py-11">
+          @if (!loading && !hasError) {
+            <div class="text-center space-y-5">
+              @if (modificationStatus) {
+                <div
+              class="aspect-square text-4xl w-20 rounded-full border-2 border-[#049E26]
+                           m-auto !bg-[#EDFCF0] grid place-content-center !text-gray-700">
+                  <mat-icon inline class="text-[#049E26]">done</mat-icon>
+                </div>
+              }
+              @if (!modificationStatus) {
+                <div
+              class="aspect-square text-4xl w-20 rounded-full border-2 border-[#1394DB]
+                           m-auto !bg-white grid place-content-center !text-primary">
+                  <mat-icon inline>block</mat-icon>
+                </div>
+              }
+              @if (!modificationStatus) {
+                <h3 class="!font-bold text-[#1394DB]">Bid Modification Rejected</h3>
+              }
+              @if (modificationStatus) {
+                <h3 class="!font-bold text-[#049E26]">Bid Modification Approved</h3>
+              }
+              @if (modificationStatus) {
+                <p class="justify-center">
+                  You have successfully enable modification all submitted bid details in NeST.
+                </p>
+              }
+              @if (!modificationStatus) {
+                <p class="justify-center">
+                  You have successfully rejected a bid modification request in NeST.
+                </p>
+              }
+              <div class="col-sm-12 col-xl-12 p-0 ml-4 mt-8">
+                <a [routerLink]="['']" mat-button href=""
+                  class="!-ml-[20px] !border !border-primary !bg-primary rounded !text-white">
+                  <mat-icon matPrefix class="mr-3">keyboard_backspace</mat-icon>
+                  Home
+                </a>
+              </div>
+            </div>
+          }
+
+          @if (!loading && hasError) {
+            <div class="text-center space-y-5">
+            <div class="aspect-square text-4xl w-20 rounded-full border-2 border-[#FF0000]
+                           m-auto !bg-[#FFEBEB] grid place-content-center !text-gray-700">
+                <mat-icon inline class="text-[#FF0000]">info</mat-icon>
+              </div>
+              <h3 class="!font-bold text-[#FF0000]">Link has Expired</h3>
+              <p class="justify-center">
+                Sorry this link has expired and no longer active, please try to submit modification request again and try again...
+              </p>
+              <div class="col-sm-12 col-xl-12 p-0 ml-4 mt-8">
+                <a [routerLink]="['']" mat-button href=""
+                  class="!-ml-[20px] !border !border-primary !bg-primary rounded !text-white">
+                  <mat-icon matPrefix class="mr-3">keyboard_backspace</mat-icon>
+                  Home
+                </a>
+              </div>
+            </div>
+          }
+
+          @if (loading) {
+            <div class="flex flex-col justify-center space-y-5">
+              <mat-progress-spinner [diameter]="80" mode="indeterminate" style="align-self: center"></mat-progress-spinner>
+              <p class="justify-center">Checking modification status, please wait ....</p>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

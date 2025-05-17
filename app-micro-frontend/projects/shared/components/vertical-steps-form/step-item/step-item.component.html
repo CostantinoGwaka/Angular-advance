@@ -1,0 +1,58 @@
+<div
+  (mouseenter)="mouseEnter()"
+  (mouseleave)="mouseLeave()"
+  (click)="handleClick()"
+  >
+  <div class="h-3">
+    <div
+      class="flex justify-end"
+      [class]="step.isActive || mouseIn ? 'block' : 'hidden'"
+      >
+      <div class="h-3 aspect-square bg-white overflow-hidden">
+        <div
+          class="h-6 rounded-full aspect-square bg-gray-100 -mt-3 -ml-3 overflow-hidden"
+        ></div>
+      </div>
+    </div>
+  </div>
+  <div
+    [class]="
+      (step.isActive || mouseIn ? 'bg-white' : '') +
+      '   p-[15px] cursor-pointer ml-3 rounded-l-full flex items-center space-x-2'
+    "
+    >
+    @if ((!step.isComplete && step.hasInvalidField)) {
+      <img
+        src="/assets/images/warning-icon-red.svg"
+        class="w-4 aspect-square"
+        />
+    } @else {
+      @if (!step.isComplete) {
+        <img
+          src="/assets/images/check-faint.svg"
+          class="w-4 aspect-square"
+          />
+      }
+      @if (step.isComplete) {
+        <img
+          src="/assets/images/check-green.svg"
+          class="w-4 aspect-square"
+          />
+      }
+    }
+
+    <div class="text-sm {{step.hasInvalidField ? '!text-warning' : 'text-gray-800'}}">{{ step.label }}</div>
+  </div>
+  <div class="h-3">
+    <div
+      class="flex justify-end"
+      [class]="step.isActive || mouseIn ? 'block' : 'hidden'"
+      >
+      <div class="h-3 aspect-square bg-white overflow-hidden">
+        <div
+          class="h-6 rounded-full aspect-square bg-gray-100 -mb-3 -ml-3 overflow-hidden"
+        ></div>
+      </div>
+    </div>
+  </div>
+</div>

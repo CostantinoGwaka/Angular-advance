@@ -1,0 +1,122 @@
+// body {
+//   margin: 0;
+//   height: 100vh;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+// }
+
+// {
+//   width: 100%;
+//   height: 100%;
+//   border-radius: 3px;
+// }
+
+// .content-area {
+//   border-left: 1px solid #e2e2e2;
+//   border-right: 1px solid #e2e2e2;
+//   border-bottom: 1px solid #e2e2e2;
+// }
+
+
+.toolbar .line {
+  display: flex;
+  border: 1px solid #e2e2e2;
+}
+
+.toolbar .line .box {
+  display: flex;
+  border-left: 1px solid #e2e2e2;
+}
+
+.toolbar .line .box .editor-btn {
+  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: 0.2s ease all;
+}
+
+.toolbar .line .box .editor-btn:hover,
+.toolbar .line .box .editor-btn.active {
+  background-color: #e1e1e1;
+  cursor: pointer;
+}
+
+.toolbar .line .box .editor-btn.icon img {
+  width: 15px;
+  padding: 9px;
+  box-sizing: content-box;
+}
+
+.toolbar .line .box .editor-btn.icon.smaller img {
+  width: 16px;
+}
+
+.toolbar .line .box .editor-btn.has-submenu {
+  width: 20px;
+  padding: 0 10px;
+}
+
+
+.toolbar .line .box .editor-btn.has-submenu .submenu {
+  display: none;
+  position: absolute;
+  top: 34px;
+  left: -1px;
+  z-index: 10;
+  background-color: #FFF;
+  border: 1px solid #b5b5b5;
+  border-top: none;
+}
+
+.toolbar .line .box .editor-btn.has-submenu .submenu .btn {
+  width: 39px;
+}
+
+.toolbar .line .box .editor-btn.has-submenu .submenu:hover {
+  display: block;
+}
+
+.toolbar .line .box .editor-btn.has-submenu:hover .submenu {
+  display: block;
+}
+
+.content-area {
+
+  line-height: 1.5;
+}
+
+.content-area .editArea {
+  outline: none;
+  min-height: 100%;
+}
+
+.content-area .editArea p {
+  margin: 12px 0;
+}
+
+.content-area .html-view {
+  outline: none;
+  display: none;
+  width: 100%;
+  height: 100%;
+  border: none;
+  resize: none;
+}
+
+::ng-deep {
+  .editArea {
+    @import '../../../../styles/editor-styles.scss';
+
+    .word-processor-borderless{
+      table,
+        td {
+          border: 1px dashed #dddddd !important
+        }
+    }
+
+        
+  }
+}

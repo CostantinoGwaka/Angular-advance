@@ -1,0 +1,35 @@
+<div class="flex bg-white rounded mt-4 p-4">
+  <div class="w-[50%]">
+    <div class="transform transition cursor-pointer hover:-translate-y-2
+                       ml-10 relative flex items-center px-3 py-2 !bg-gray-100
+                       rounded mb-4 flex-col md:flex-row space-y-2 md:space-y-0">
+      <div class="w-5 h-5 bg-[#1095db] absolute -left-10 transform -translate-x-2/4 rounded-full z-10 mt-1 md:mt-0">
+      </div>
+      <div class="w-10 h-1 bg-[#d7f1fa] absolute -left-10 z-0"></div>
+      <div class="flex flex-row">
+        <mat-icon class="mr-1">event_note</mat-icon>
+        <span class="text-sm font-bold">Tender calendar</span>
+      </div>
+    </div>
+
+    @if (loading) {
+      <app-loader message="Loading Tender calendar. Please wait..."></app-loader>
+    }
+    @if (tenderCalendarDates.length > 0 && !loading) {
+      @for (data of tenderCalendarDates; track data) {
+        <div class="transform transition cursor-pointer hover:-translate-y-2
+                       ml-10 relative flex items-center p-3 bg-[#d7f1fa]
+                       rounded mb-4 flex-col md:flex-row space-y-2 md:space-y-0">
+          <div class="w-5 h-5 bg-[#1095db] absolute -left-10
+                      transform -translate-x-2/4 rounded-full z-10 mt-1 md:mt-0">
+          </div>
+          <div class="w-10 h-1 bg-[#d7f1fa] absolute -left-10 z-0"></div>
+          <div class="w-100 flex flex-row justify-between">
+            <span class="text-sm">{{data.procurementStage?.name}}</span>
+            <span class="text-sm">{{isCuis ? "N/A" : data?.plannedDate |date}}</span>
+          </div>
+        </div>
+      }
+    }
+  </div>
+</div>

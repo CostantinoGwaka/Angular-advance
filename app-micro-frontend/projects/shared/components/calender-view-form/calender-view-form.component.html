@@ -1,0 +1,5 @@
+<div [ngClass]="{'rounded-[16px] p-[43px] bg-white flex-col gap-[27px]':showContainer}">
+  @for (calenderItem of calendarFormatted; track calenderItem) {
+    <app-calender-view-item (valueChange)="onDateChange($event, calenderItem)" [calenderItem]="calenderItem" [calender]="calendarFormatted" [dateFilters]="dateFilters" [onSaving]="onSaving"></app-calender-view-item>
+  }
+</div>

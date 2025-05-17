@@ -1,0 +1,40 @@
+<div class="pl-2">
+  <div class="container-fluid">
+    <div ngProjectAs="table">
+      <div class="row">
+        <div class="col-12">
+          @if (loading) {
+            <app-loader [message]="'Please wait...'"></app-loader>
+          }
+          @if (fetchSubject) {
+            <div class="flex align-items-center space-x-4 w-[80] items-center">
+              <div>
+                <span class="font-bold text-base">Subject: </span>
+              </div>
+              <div class="w-[80%]">
+                <select
+                  [(ngModel)]="selectedSubjectUuid"
+                  name="selectedSubjectUuid"
+                  (change)="subjectSelected($event)"
+                  class="text-black focus:outline-none appearance-none h-10 w-[800px] pl-5 pr-10 text-base">
+                  <option>Select a subject</option>
+                  @for (subject  of subjectTitle; track subject ) {
+                    <option [value]="subject.uuid" class="text-black text-base font-bold">{{subject.title}}</option>
+                  }
+                </select>
+                <!-- <mat-form-field appearance="outline" class="text-black focus:outline-none appearance-none h-10 pl-5 pr-10 text-base">
+                <mat-label>Subject Title</mat-label>
+                <mat-select [(ngModel)]="selectedSubjectUuid" placeholder="Subject Title"
+                  (selectionChange)="subjectSelected($event.value)">
+                  <mat-option [value]="subject.uuid" *ngFor="let subject  of subjectTitle">
+                  {{subject.title}}</mat-option>
+                </mat-select>
+              </mat-form-field>  -->
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>
+</div>

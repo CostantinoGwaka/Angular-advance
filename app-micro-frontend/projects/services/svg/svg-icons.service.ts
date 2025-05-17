@@ -1,0 +1,368 @@
+import { bots } from './icons/bots';
+import { add_email } from './icons/add_email';
+import { bill_compl } from './icons/bill_comp';
+import { list } from './icons/list';
+import { specification } from './icons/specifications';
+import { tenderer } from './icons/tenderer';
+import { home } from './icons/home';
+import { lock_u } from './icons/lock_u';
+import { lock_i } from './icons/lock_i';
+import { webicon } from './icons/webicon';
+import { pintrest } from './icons/pintrest';
+import { facebook } from './icons/facebook';
+import { add_icon } from './icons/add_icons';
+import { help_desk } from './icons/help_desk';
+import { handover } from './icons/handover';
+import { flag1 } from './icons/flag1';
+import { forwards } from './icons/forwards';
+import { users } from './icons/users';
+import { add_users } from './icons/add_users';
+import { cross } from './icons/cross';
+import { check } from './icons/check';
+import { institutions } from './icons/instituation';
+import { clarification_alert } from './icons/clarification_alert';
+import { pdf } from './icons/pdf';
+import { back_arrow_left } from './icons/back_arrow_left';
+import { backarrow } from './icons/backarrow';
+import { board_members } from './icons/board_members';
+import { ask_clarification } from './icons/ask_clarification';
+import { reports } from './icons/reports';
+import { bill_receipts } from './icons/bill_receipts';
+import { waiver } from './icons/waive';
+import { money } from './icons/money';
+import { winner_badge } from './icons/winner_badge';
+import { lookup_icon } from './icons/lookup';
+import { change_mngmnt } from './icons/change_mngmnt';
+import { bills } from './icons/bills';
+import { transcations } from './icons/transcations';
+import { end_message } from './icons/end_message';
+import { searchIcon } from './icons/search';
+import { back_arrow } from './icons/back_arrow';
+import { forward } from './icons/forward';
+import { tune_setting } from './icons/tune_setting';
+import { more_menu } from './icons/more_menu';
+import { arrow_down } from './icons/arrow_down';
+import { star } from './icons/star';
+import { sent } from './icons/sent';
+import { inbox } from './icons/inbox';
+import { notificatioBell } from './icons/notification_bell';
+import { trash_inbox } from './icons/trash_inbox';
+import { back_notes } from './icons/bank_notes';
+import { credit_card } from './icons/credit_card';
+import { Injectable } from '@angular/core';
+import { ApolloNamespace } from '../../apollo.config';
+import { settingsSvg } from './icons/settings';
+import { menuIcons } from './icons/menu';
+import { gisp_project_1 } from './icons/gisp_project_1';
+import { gisp_list } from './icons/gisp_list';
+import { gisp_schedule } from './icons/gisp_schedule';
+import { gisp_standards } from './icons/gisp_standards';
+import { call_tracking } from './icons/call_tracking';
+import { gisp_profile } from './icons/gisp_profile';
+import { gisp_home } from './icons/gisp_home';
+import { nest_document } from './icons/nest_document';
+import { clipboard } from './icons/clipboard';
+import { closed_lock } from './icons/closed_lock';
+import { document_download } from './icons/document_download';
+import { uploadSvg } from './icons/upload';
+import { people } from './icons/people';
+import { add_shopping_cart } from './icons/add_shopping_cart';
+import { data_base } from './icons/data_base';
+import { back_icon } from './icons/back_icon';
+import { briefcase } from './icons/briefcase';
+import { success } from './icons/success';
+import { edit } from './icons/edit';
+import { trash_delete } from './icons/trash_delete';
+import { s_view } from './icons/s_view';
+import { calendar_month } from './icons/calendar_month';
+import { payment } from './icons/payment';
+import { balace } from './icons/balance';
+import { message } from './icons/message';
+import { paperclip } from './icons/paper-clip';
+import { image } from './icons/image';
+import { question_mark } from './icons/question_mark';
+import { add } from './icons/add';
+import { wallet_account } from './icons/wallets';
+import { money_wallet } from './icons/money_wallet';
+import { requisition } from './icons/requisition';
+import { tenders } from './icons/tenders';
+import { Save } from './icons/save';
+import { evaluate } from './icons/evaluate';
+import { team } from './icons/team';
+import { chevron_down } from './icons/chevron_down';
+import { chevron_up } from './icons/chevron_up';
+import { user_account } from './icons/user_account';
+import { tasks } from './icons/tasks';
+import { language } from './icons/language';
+import { approved_cart } from './icons/approved_cart';
+import { done_check } from './icons/done_check';
+import { tenderCancellation } from './icons/tender-cancellation';
+import { cancelledOptions } from './icons/cancelled-options';
+import { redo } from './icons/redo';
+import { reply } from './icons/reply';
+import { flag2 } from './icons/flag2';
+import { post_qualification } from './icons/post-qualification';
+import { negotiation } from './icons/negotiation';
+import { bidMeeting } from './icons/bidMeeting';
+import { siteVisitSvg } from './icons/siteVisit';
+import { tenderAwards } from './icons/tender_awards';
+import { pendingTenderAward } from './icons/pending_tender_award';
+import { tenderOpeningSvg } from './icons/tender_opening';
+import { openedTender } from './icons/opened_tender';
+import { closedTender } from './icons/closed-tender';
+import { twitter } from './icons/twitter';
+import { instagram } from './icons/instagram';
+import { gpn } from './icons/gpn';
+import { approved_tender } from './icons/approved_tender';
+import { my_task } from './icons/my_task';
+import { frameWorkAgreement } from './icons/framework-agreement';
+import { contract } from './icons/contract';
+import { pre_qualification } from './icons/pre_qualification';
+import { team_report } from './icons/team_report';
+import { team_manage } from './icons/team_manage';
+import { teams } from './icons/teams';
+import { setup } from './icons/setup';
+import { menu_icon } from './icons/menu_icons';
+import { excel } from './icons/excel';
+import { right_open } from './icons/right_open';
+import { left_open } from './icons/left_open';
+import { play_btn } from './icons/play_btn';
+import { notification } from './icons/notifications';
+import { cart_icon } from './icons/cart_icons';
+import { evaluation_icon } from './icons/evaluation-icon';
+import { ppraDashboard } from './icons/ppraDashboard';
+import { custom_bill } from './icons/custom_bill';
+import { taneps_payments } from './icons/taneps_payments';
+import { reload } from './icons/reload';
+import { design } from './icons/design';
+import { tracking } from './icons/tracking';
+import { on_progress } from './icons/onprogress';
+import { closed_complaint } from './icons/closed';
+import { sendIcons } from './icons/sendIcon';
+import { closeX } from './icons/closeX';
+import { tracking_i } from './icons/tracking_i';
+import { lower_level } from './icons/lower';
+import { workflow } from './icons/workflow';
+import { cartGovernment } from './icons/cart';
+import { appeal_tndr } from './icons/appeal_tndr';
+import { calloff_icon } from './icons/calloff_icon';
+import { manage_order_icon } from './icons/manage_order_icon';
+import { exchange_rate } from './icons/exchange_rate';
+import { excelFile } from './icons/excelfile';
+import { submitted_icon } from './icons/submitted';
+import { isWinner } from './icons/isWinner';
+import { hasLot } from './icons/hasLots';
+import { link_join } from './icons/link';
+import { monitor } from './icons/monitor';
+import { pendingAward } from './icons/pending_awards';
+import { execution } from './icons/execution';
+import { loaderTenderer } from './icons/loader';
+import { planIcon } from './icons/plan-icon';
+import { statsDashboard } from './icons/statsDashboard';
+import { hide_eye } from './icons/hide';
+import { show_hide } from './icons/show_hide';
+import { monitoring } from './icons/monitoring';
+import { tortoise } from './icons/tortoise';
+import { warning } from './icons/warning';
+import { clear_all } from './icons/clear_all';
+import { shared_data } from './icons/shared_data';
+import { succesIcon } from './icons/success_icon';
+import { error_Icon } from './icons/errror_icon';
+import {govesb} from "./icons/govebs";
+import { done_circle } from './icons/done_circle';
+import { greater_than } from './icons/greater_than';
+import {arrow_right} from "./icons/arrow_right";
+import { clockCount } from './icons/time-count';
+
+export interface SvgIcon {
+  name: string;
+  tag: string;
+}
+
+@Injectable({
+  providedIn: 'root',
+})
+export class SvgIconsService {
+
+  app_icons: SvgIcon[] = [
+    { name: 'settings', tag: settingsSvg },
+    { name: 'menu', tag: menuIcons.menuSettingsSvg },
+    { name: 'gisp_project_1', tag: gisp_project_1 },
+    { name: 'gisp_list', tag: gisp_list },
+    { name: 'gisp_schedule', tag: gisp_schedule },
+    { name: 'reload', tag: reload },
+    { name: 'gisp_standard', tag: gisp_standards },
+    { name: 'submitted_icon', tag: submitted_icon },
+    { name: 'menu_icon', tag: menu_icon },
+    { name: 'facebook', tag: facebook },
+    { name: 'lower_level', tag: lower_level },
+    { name: 'loaderTenderer', tag: loaderTenderer },
+    { name: 'cartGovernment', tag: cartGovernment },
+    { name: 'twitter', tag: twitter },
+    { name: 'instagram', tag: instagram },
+    { name: 'planIcon', tag: planIcon },
+    { name: 'isWinner', tag: isWinner },
+    { name: 'pintrest', tag: pintrest },
+    { name: 'hasLot', tag: hasLot },
+    { name: 'hide_eye', tag: hide_eye },
+    { name: 'show_hide', tag: show_hide },
+    { name: 'appeal_tndr', tag: appeal_tndr },
+    { name: 'succesIcon', tag: succesIcon },
+    { name: 'error_Icon', tag: error_Icon },
+    { name: 'play_btn', tag: play_btn },
+    { name: 'tracking_i', tag: tracking_i },
+    { name: 'bill_compl', tag: bill_compl },
+    { name: 'execution', tag: execution },
+    { name: 'evaluation_icon', tag: evaluation_icon },
+    { name: 'webicon', tag: webicon },
+    { name: 'call_tracking', tag: call_tracking },
+    { name: 'cross', tag: cross },
+    { name: 'gisp_profile', tag: gisp_profile },
+    { name: 'check', tag: check },
+    { name: 'pdf', tag: pdf },
+    { name: 'clear_all', tag: clear_all },
+    { name: 'sendIcons', tag: sendIcons },
+    { name: 'closed_complaint', tag: closed_complaint },
+    { name: 'reports', tag: reports },
+    { name: 'tenders', tag: tenders },
+    { name: 'tenderer', tag: tenderer },
+    { name: 'bots', tag: bots },
+    { name: 'on_progress', tag: on_progress },
+    { name: 'gisp_home', tag: gisp_home },
+    { name: 'users', tag: users },
+    { name: 'cart_icon', tag: cart_icon },
+    { name: 'monitor', tag: monitor },
+    { name: 'tracking', tag: tracking },
+    { name: 'list', tag: list },
+    { name: 'notification', tag: notification },
+    { name: 'add_users', tag: add_users },
+    { name: 'reply', tag: reply },
+    { name: 'forwards', tag: forwards },
+    { name: 'lock_i', tag: lock_i },
+    { name: 'lock_u', tag: lock_u },
+    { name: 'home', tag: home },
+    { name: 'help_desk', tag: help_desk },
+    { name: 'handover', tag: handover },
+    { name: 'nest_document', tag: nest_document },
+    { name: 'ask_clarification', tag: ask_clarification },
+    { name: 'flag1', tag: flag1 },
+    { name: 'flag2', tag: flag2 },
+    { name: 'link_join', tag: link_join },
+    { name: 'clipboard', tag: clipboard },
+    { name: 'closed_lock', tag: closed_lock },
+    { name: 'institutions', tag: institutions },
+    { name: 'document_download', tag: document_download },
+    { name: 'upload', tag: uploadSvg },
+    { name: 'add_shopping_cart', tag: add_shopping_cart },
+    { name: 'specification', tag: specification },
+    { name: 'data_base', tag: data_base },
+    { name: 'done_check', tag: done_check },
+    { name: 'closed_lock', tag: closed_lock },
+    { name: 'clarification_alert', tag: clarification_alert },
+    { name: 'bill_receipts', tag: bill_receipts },
+    { name: 'searchIcon', tag: searchIcon },
+    { name: 'document_download', tag: document_download },
+    { name: 'right_open', tag: right_open },
+    { name: 'left_open', tag: left_open },
+    { name: 'upload', tag: uploadSvg },
+    { name: 'people', tag: people },
+    { name: 's_back_icon', tag: back_icon },
+    { name: 'add_icon', tag: add_icon },
+    { name: 'briefcase', tag: briefcase },
+    { name: 'success', tag: success },
+    { name: 'edit', tag: edit },
+    { name: 'trash_delete', tag: trash_delete },
+    { name: 's_view', tag: s_view },
+    { name: 'calendar_month', tag: calendar_month },
+    { name: 'credit_card', tag: credit_card },
+    { name: 'bank_notes', tag: back_notes },
+    { name: 'payment', tag: payment },
+    { name: 'balance', tag: balace },
+    { name: 'message', tag: message },
+    { name: 'paperclip', tag: paperclip },
+    { name: 'trashInbox', tag: trash_inbox },
+    { name: 'notificatioBell', tag: notificatioBell },
+    { name: 'sent', tag: sent },
+    { name: 'inbox', tag: inbox },
+    { name: 'back_arrow_left', tag: back_arrow_left },
+    { name: 'image', tag: image },
+    { name: 'question_mark', tag: question_mark },
+    { name: 'arrow_down', tag: arrow_down },
+    { name: 'star', tag: star },
+    { name: 'more_menu', tag: more_menu },
+    { name: 'forward', tag: forward },
+    { name: 'tune_setting', tag: tune_setting },
+    { name: 'add', tag: add },
+    { name: 'back_arrow', tag: back_arrow },
+    { name: 'backarrow', tag: backarrow },
+    { name: 'end_message', tag: end_message },
+    { name: 'wallet_account', tag: wallet_account },
+    { name: 'transcations', tag: transcations },
+    { name: 'money_wallet', tag: money_wallet },
+    { name: 'bills', tag: bills },
+    { name: 'waiver', tag: waiver },
+    { name: 'requisition', tag: requisition },
+    { name: 'save', tag: Save },
+    { name: 'evaluate', tag: evaluate },
+    { name: 'team', tag: team },
+    { name: 'chevron_down', tag: chevron_down },
+    { name: 'chevron_up', tag: chevron_up },
+    { name: 'user_account', tag: user_account },
+    { name: 'done_circle', tag: done_circle },
+    { name: 'excelFile', tag: excelFile },
+    { name: 'tasks', tag: tasks },
+    { name: 'language', tag: language },
+    { name: 'approved-cart', tag: approved_cart },
+    { name: 'tender-cancellation', tag: tenderCancellation },
+    { name: 'cancelled-options', tag: cancelledOptions },
+    { name: 'redo-icon', tag: redo },
+    { name: 'post-qualification', tag: post_qualification },
+    { name: 'negotiation', tag: negotiation },
+    { name: 'bidMeeting', tag: bidMeeting },
+    { name: 'siteVisit', tag: siteVisitSvg },
+    { name: 'tenderAwards', tag: tenderAwards },
+    { name: 'contract', tag: contract },
+    { name: 'pendingTenderAward', tag: pendingTenderAward },
+    { name: 'pendingAward', tag: pendingAward },
+    { name: 'tenderOpening', tag: tenderOpeningSvg },
+    { name: 'openedTender', tag: openedTender },
+    { name: 'closedTender', tag: closedTender },
+    { name: 'gpn', tag: gpn },
+    { name: 'closeX', tag: closeX },
+    { name: 'add_email', tag: add_email },
+    { name: 'approved_tender', tag: approved_tender },
+    { name: 'my_task', tag: my_task },
+    { name: 'frameWorkAgreement', tag: frameWorkAgreement },
+    { name: 'pre_qualification', tag: pre_qualification },
+    { name: 'teams', tag: teams },
+    { name: 'team_manage', tag: team_manage },
+    { name: 'team_report', tag: team_report },
+    { name: 'boardMembers', tag: board_members },
+    { name: 'setup', tag: setup },
+    { name: 'excel', tag: excel },
+    { name: 'money', tag: money },
+    { name: 'winner_badge', tag: winner_badge },
+    { name: 'ppraDashboard', tag: ppraDashboard },
+    { name: 'custom_bill', tag: custom_bill },
+    { name: 'taneps_payments', tag: taneps_payments },
+    { name: 'design', tag: design },
+    { name: 'workflow', tag: workflow },
+    { name: 'lookup_icon', tag: lookup_icon },
+    { name: 'calloff_icon', tag: calloff_icon },
+    { name: 'manage_order_icon', tag: manage_order_icon },
+    { name: 'exchange_rate', tag: exchange_rate },
+    { name: 'change_mngmnt', tag: change_mngmnt },
+    { name: 'statsDashboard', tag: statsDashboard },
+    { name: 'warning', tag: warning },
+    { name: 'tortoise', tag: tortoise },
+    { name: 'monitoring', tag: monitoring },
+    { name: 'shared_data', tag: shared_data },
+    { name: 'govesb', tag:  govesb},
+    { name: 'greater_than', tag:  greater_than},
+    { name: 'arrow_right', tag:  arrow_right},
+    { name: 'time-count', tag:  clockCount},
+  ];
+
+  constructor() { }
+}
+//

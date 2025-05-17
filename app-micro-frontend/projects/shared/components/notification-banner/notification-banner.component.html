@@ -1,0 +1,63 @@
+<ng-container *appHasPermission="mainPermission">
+	@if(totalNotifications >=1){
+		<div class="w-full rounded-md bg-red-100 px-2 py-2 mb-3">
+			<div class="flex items-center gap-3">
+				<!-- Navigation Controls -->
+				<div class="flex items-center gap-2">
+					<button
+						(click)="previousNotification()"
+						[disabled]="currentIndex === 0"
+						class="text-red-900 p-1 hover:bg-red-100 rounded-full disabled:opacity-50 disabled:cursor-not-allowed">
+						<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+							<path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+						</svg>
+					</button>
+
+					<span class="text-red-900 text-sm">
+            {{ currentIndex + 1 }} / {{ totalNotifications }}
+          </span>
+
+					<button
+						(click)="nextNotification()"
+						[disabled]="currentIndex === totalNotifications - 1"
+						class="text-red-900 p-1 hover:bg-red-100 rounded-full disabled:opacity-50 disabled:cursor-not-allowed">
+						<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+							<path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+						</svg>
+					</button>
+
+					<!-- Alert Icon with dynamic color based on validity days -->
+					<!--			<div [ngClass]="{-->
+					<!--            'flex items-center justify-center w-5 h-5 rounded-full border-2': true,-->
+					<!--            'border-red-900': currentNotification?.validityDays <= 7,-->
+					<!--            'border-yellow-500': currentNotification?.validityDays > 7 && currentNotification?.validityDays <= 15,-->
+					<!--            'border-blue-600': currentNotification?.validityDays > 15-->
+					<!--          }">-->
+					<!--				<span class="text-white text-xs font-bold">!</span>-->
+					<!--			</div>-->
+
+					<div class="flex items-center justify-center w-5 h-5 rounded-full border-red-900 border-2">
+						<span class="text-red-900 text-xs font-bold">!</span>
+					</div>
+				</div>
+
+				<!-- Message -->
+				<span class="text-red-900 !text-sm flex-grow">
+			<b>Action Required :</b> {{ currentNotification?.message }}
+		</span>
+
+				<!-- Action Link -->
+
+
+				<div *appHasPermission="buttonPermission">
+					<button
+						(click)="extendTenderValidity(currentNotification)"
+						class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-black rounded-md !hover:bg-gray-800"
+					>
+						{{ currentNotification?.actionText }}
+					</button>
+				</div>
+			</div>
+		</div>
+	}
+</ng-container>

@@ -1,0 +1,224 @@
+@if (this.field.type === 'sampleAttachment') {
+  <mat-form-field class="demo-full-width" [formGroup]="group" appearance="outline">
+    <mat-label>{{ field.label | translate}}</mat-label>
+    <div class="flex flex-col">
+      <div class="flex flex-row justify-between">
+        @if (field?.icon) {
+          <mat-icon>{{ field?.icon }}</mat-icon>
+        }
+        <input matInput appOnlyNumber [acceptedDecimalPoints]="field.acceptedDecimalPoints"
+          [inputType]="field.inputType" [formControlName]="field.key || null"
+          placeholder="{{ field.placeholder || field.label || '' | translate}}"
+          [type]="field.inputType == 'formattedNumber'? 'text': (field.inputType || 'text')"
+          [readonly]="field.readonly || loading" (input)="fieldChange($event)"
+          [required]="field.key && group?.get(field.key).errors !== null" />
+        <mat-icon class="pointer text-gray-400 hover:!text-primary" (click)="openHelpPage()">help_outline
+        </mat-icon>
+      </div>
+      <div class="flex flex-row justify-end">
+        @if (uploading || deleting) {
+          <div class="mt-2 h-50 flex flex-row justify-end align-items-baseline">
+            <span class="mr-1 text-xs text-muted"> {{ uploading ? 'Uploading': 'Deleting'}} document, please
+            wait...</span>
+            <mat-spinner [diameter]="25"></mat-spinner>
+          </div>
+        }
+        @if (!uploading && !uploadedSampleMedia) {
+          <div class="flex flex-row justify-end align-items-baseline">
+            @if (this.inputValue && this.inputValue != '') {
+              <mat-error class="!text-xs">
+                Please select sample document
+              </mat-error>
+            }
+            <div class="file-upload mt-2 ml-3">
+              <input #inputFile (change)="onFileSelected($event)" [accept]="accept" [disabled]="loading" type="file"
+                [multiple]="field.multiple" />
+              <div class="w-auto flex flex-row text-center text-sm py-2 px-2 rounded border-0 !bg-primary text-white">
+                <mat-icon inline class="text-xl">attachment</mat-icon>&nbsp;Choose file
+              </div>
+            </div>
+          </div>
+        }
+        @if (uploadedSampleMedia && !uploading && !deleting) {
+          <div class="file-upload mt-2">
+            <div class="rounded border border-gray bg-gray-100 p-2 flex flex-row align-items-center !cursor-pointer">
+              <span class="!text-black-50">{{uploadedSampleMedia.fileName}}</span>
+              <mat-icon inline class="!font-medium text-danger ml-4 !text-[20px]" (click)="deleteDocument()">cancel
+              </mat-icon>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+    <mat-hint align="start" [ngClass]="{ danger: field.hintDanger }">{{field.hint | translate}}</mat-hint>
+    @for (validation of field.validations; track validation) {
+      <ng-container ngProjectAs="mat-error">
+        @if (field.key && group?.get(field.key)?.hasError(validation.name)) {
+          <mat-error>
+            {{ validation.message | translate}}
+          </mat-error>
+        }
+      </ng-container>
+    }
+  </mat-form-field>
+  <!--  <div class="attachment" *ngIf="field.multiple || (!field.multiple&&uploadedMedia.length == 0)" @fadeIn>-->
+  <!--    <div class="attach-button">-->
+  <!--      &lt;!&ndash; <a style="color: #1A405D; font-weight: 600; cursor: pointer" (click)="showAttachment()">View Attached Attachment</a> &ndash;&gt;-->
+  <!--      &lt;!&ndash; <br> &ndash;&gt;-->
+  <!--      <button style="width:100%; height: 45px; margin-top: 5px" mat-raised-button color="default"-->
+  <!--              (click)="inputFile.click()" title="Upload associated file" type="button" class="attach-button">-->
+  <!--        <mat-icon>attach_file</mat-icon>-->
+  <!--        <span *ngIf="fileUploadedName; else weHaveFile"> {{ fileUploadedName }}</span>-->
+  <!--        <ng-template #weHaveFile> {{ field?.label | translate }}</ng-template>-->
+<!--      </button>-->
+<!--      <input hidden mat-raised-button color="default" #inputFile (change)="onFileSelected($event)" [accept]="accept"-->
+<!--             type="file" [multiple]="field.multiple"/>-->
+<!--    </div>-->
+<!--  </div>-->
+}
+
+@if (this.field.type !== 'sampleAttachment') {
+  @if (field.multiple || (!field.multiple&&uploadedMedia.length == 0)) {
+    <div class="rounded border p-3">
+      <div class="flex flex-row justify-between cursor-pointer">
+        <div class="flex flex-row items-center" (click)="inputFile.click()">
+          <mat-icon class="text-gray-400">file_upload</mat-icon>
+          <div class="flex flex-col items-center font-bold">
+            <span>{{ field?.label | translate }}</span>
+            @if (fileUploadedName) {
+              <span class="text-gray-400 text-sm" @fadeIn>{{ fileUploadedName }}</span>
+            }
+          </div>
+        </div>
+        <div class="flex flex-row items-center gap-2" (click)="inputFile.click()">
+          <span class="text-[#11405d]">Choose file</span>
+        <div class="rounded-full h-8 aspect-square
+         flex flex-row justify-center items-center bg-[#11405d]">
+            <mat-icon class="p-[2px] text-[#FFFFFF]" style="font-size:18px">attachment</mat-icon>
+          </div>
+        </div>
+        <input hidden mat-raised-button color="default" #inputFile (change)="onFileSelected($event)" [accept]="accept"
+          type="file" [multiple]="field.multiple" />
+      </div>
+    </div>
+  }
+}
+
+<!--<ng-container *ngIf="this.field.type !== 'sampleAttachment'">-->
+<!--  <div class="attachment" *ngIf="field.multiple || (!field.multiple&&uploadedMedia.length == 0)" @fadeIn>-->
+
+<!--    <div class="attach-button">-->
+<!--      &lt;!&ndash; <a style="color: #1A405D; font-weight: 600; cursor: pointer" (click)="showAttachment()">View Attached Attachment</a> &ndash;&gt;-->
+<!--      &lt;!&ndash; <br> &ndash;&gt;-->
+<!--      <button style="width:100%; height: 45px; margin-top: 5px" mat-raised-button color="default"-->
+<!--              (click)="inputFile.click()" title="Upload associated file" type="button" class="attach-button">-->
+<!--        <mat-icon>attach_file</mat-icon>-->
+<!--        <span *ngIf="fileUploadedName; else weHaveFile"> {{ fileUploadedName }}</span>-->
+<!--        <ng-template #weHaveFile> {{ field?.label | translate }}</ng-template>-->
+<!--      </button>-->
+<!--      <input hidden mat-raised-button color="default" #inputFile (change)="onFileSelected($event)" [accept]="accept"-->
+<!--             type="file" [multiple]="field.multiple"/>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</ng-container>-->
+
+@if (uploadedMedia.length > 0) {
+  <div @fadeIn>
+    @if (!field.hideLabel && uploadedMedia.length == 1) {
+      <span class="text-sm font-semibold">
+        {{ (field.label) ? field.label: ("SYSTEM_ATTACHMENT" | translate)}}
+      </span>
+    }
+    <div class="rounded border p-3">
+      @if (!field.hideLabel && uploadedMedia.length !== 1) {
+        <span class="text-sm font-semibold mb-2 mt-2">
+          {{ "SYSTEM_ATTACHMENT" | translate}}
+        </span>
+      }
+      @for (media of uploadedMedia; track media; let i = $index) {
+        <div class="flex flex-row justify-between {{ (i+1) !== uploadedMedia.length ? 'border-b mb-1': ''}}"
+          >
+          <div>
+            @if (media.isImage) {
+              <div style="margin-right: 8px;"
+                [ngClass]="{'blur-sm' :media.fileProgress<100, 'blur-none' :media.fileProgress ==100  }">
+                <img width="120px" height="120px" [src]="media.fileUrl" alt="Photo">
+              </div>
+            }
+        <div class="flex flex-row gap-1 text-xs hover:text-blue-600
+             hover:font-bold cursor-pointer" (click)="openFile(media)">
+              @if (uploadedMedia.length !== 1) {
+                <span class="mr-1">
+                  {{i+1}} -
+                </span>
+              }
+              <span style="word-wrap: break-word; white-space: pre-line">
+                {{ media.fileName }}
+              </span>
+            </div>
+          </div>
+          @if (media.fileProgress < 100) {
+            <div class="flex flex-row justify-center text-center" @fadeIn>
+              <mat-spinner [diameter]="20" [strokeWidth]="2" color="accent">
+              </mat-spinner>
+              <span>{{media.fileProgress}}%</span>
+            </div>
+          }
+          @if (media.fileProgress === 100 && !loading) {
+<div @fadeIn class="flex flex-row items-center gap-1 text-xs cursor-pointer text-red-700
+         hover:font-bold hover:text-red-900 font-medium ml-20" (click)="removeImage(i)">
+              <span>{{ "SYSTEM_REMOVE" | translate }}</span>
+              <mat-icon class="text-red-700 hover:text-red-900">delete</mat-icon>
+            </div>
+          }
+        </div>
+      }
+    </div>
+    <!--  -->
+    <!--  <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">-->
+    <!--    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">-->
+    <!--    <tr>-->
+    <!--      <th style="width: 246px"></th>-->
+    <!--      <th style="width: 200px"></th>-->
+    <!--      <th style="width: 100px;"></th>-->
+  <!--    </tr>-->
+<!--    </thead>-->
+<!--    <tbody>-->
+<!--    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"-->
+<!--        *ngFor="let media of uploadedMedia; let i = index">-->
+<!--      <td>-->
+<!--        <div class="flex flex-row items-center">-->
+<!--          <div *ngIf="media.isImage" style="margin-right: 8px;"-->
+<!--               [ngClass]="{'blur-sm' :media.fileProgress<100, 'blur-none' :media.fileProgress ==100  }">-->
+<!--            <img width="120px" height="120px" [src]="media.fileUrl" alt="Photo">-->
+<!--          </div>-->
+<!--          <div class="text-xs  hover:text-blue-600 hover:font-bold cursor-pointer" (click)="openFile(media)">-->
+<!--              <span style="word-wrap: break-word; white-space: pre-line">-->
+<!--                {{ media.fileName }}-->
+<!--              </span>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </td>-->
+<!--      <td class="align-middle">-->
+<!--        <div class="flex flex-column w-full" style="margin-top: 18px;">-->
+<!--          <div class="w-full bg-gray-200 rounded-full dark:bg-gray-700">-->
+<!--            <div style="background-color: #0E86D4"-->
+<!--                 class="text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full  hover:opacity-80"-->
+<!--                 [style.width.%]="media.fileProgress"> {{media.fileProgress}}%-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="text-center text-xs">-->
+<!--            {{ media.fileProgressSize }} of {{ media.fileSize }}-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </td>-->
+<!--      <td class="align-middle items-end">-->
+<!--        <a @fadeIn *ngIf="media.fileProgress === 100"-->
+<!--           class="text-xs cursor-pointer text-red-700 hover:font-bold hover:text-red-300 font-medium ml-20"-->
+<!--           (click)="removeImage(i)">{{ "SYSTEM_REMOVE" | translate }}</a>-->
+<!--      </td>-->
+<!--    </tr>-->
+<!--    </tbody>-->
+<!--  </table>-->
+</div>
+}

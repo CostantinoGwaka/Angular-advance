@@ -1,0 +1,69 @@
+@if (loadingAdverts) {
+  <div class="w-full">
+    <div class="flex items-center justify-center h-screen">
+      <!-- Loader -->
+<!--      <div class="loader border-t-4 border-blue-500 rounded-full w-16 h-16 animate-spin"></div>-->
+			<app-video-advertisement-skeleton></app-video-advertisement-skeleton>
+    </div>
+  </div>
+} @else if (!loadingAdverts && publicAdvertisements.length > 0) {
+  <div class="w-full">
+    <div class="flex justify-center items-center">
+      @if (publicAdvertisements.length > 1) {
+        <div [ngClass]="'div-right'"
+             class="m-2 w-[57px] h-[57px] rounded-full bg-white  items-center justify-center cursor-pointer hidden md:flex"
+             (click)="movePrevious()">
+          <svg width="17" height="12" viewBox="0 0 17 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5.95 12L6.8425 11.1L2.4225 6.64286H17V5.35714H2.4225L6.8425 0.9L5.95 0L0 6L5.95 12Z"
+                  fill="black"/>
+          </svg>
+        </div>
+      }
+
+      <div class="m-2">
+        <div class="min-w-[320px] min-h-[320px] max-w-xs p-4 rounded-lg bg-white
+  sm:min-w-[360px] sm:min-h-[360px]
+  md:min-w-[420px] md:min-h-[420px]
+  lg:min-w-[492px] lg:min-h-[492px] lg:max-w-sm">
+          @if (publicAdvertisement?.advertisementContentType == 'IMAGE') {
+            <app-image-advertisement
+              [sampleAdvertisement]="publicAdvertisement"
+            ></app-image-advertisement>
+          }
+          @if (publicAdvertisement?.advertisementContentType == 'VIDEO') {
+            <app-video-advertisement
+              [sampleAdvertisement]="publicAdvertisement"></app-video-advertisement>
+          }
+          @if (publicAdvertisement?.advertisementContentType == 'TIPS') {
+            <app-tip-advertisement
+              [sampleAdvertisement]="publicAdvertisement"></app-tip-advertisement>
+          }
+        </div>
+      </div>
+
+
+      @if (publicAdvertisements.length > 1) {
+        <div [ngClass]="'div-left'"
+             class="m-2 w-[57px] h-[57px] rounded-full bg-white  items-center justify-center cursor-pointer hidden md:flex"
+             (click)="moveNext()">
+          <svg width="17" height="12" viewBox="0 0 17 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M11.05 -9.66022e-07L10.1575 0.899999L14.5775 5.35714L-5.80737e-07 5.35714L-4.68336e-07 6.64286L14.5775 6.64286L10.1575 11.1L11.05 12L17 6L11.05 -9.66022e-07Z"
+              fill="black"/>
+          </svg>
+        </div>
+      }
+    </div>
+    <!--- indicators --->
+    @if (publicAdvertisements.length > 1) {
+      <div class="flex justify-center items-center">
+        @for (sample of publicAdvertisements; track sample; let i = $index) {
+          <div [ngClass]="i === currentActive ? 'bg-blue-500' : 'bg-white'"
+               class="m-2 w-[12px] h-[12px] rounded-full flex items-center justify-center border border-transparent !cursor-pointer hover-border-blue"
+               (click)="currentIndexClicked(i)"></div>
+        }
+      </div>
+    }
+    <!--- end of indicators -->
+  </div>
+}

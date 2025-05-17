@@ -1,0 +1,152 @@
+<web-layout>
+  <parallax-container
+    [description]="'General Procurement Notices'"
+    [title]="'General Procurement Notices'">
+    <div class="p2 justify-center min-h-[500px] items-center ">
+      <div class="flex pt-2 pr-2">
+        <div class="flex-grow items-center">
+          <a [routerLink]="['/annual-procurement-plans']"
+             class="ml-2 p-2 h-10 1-20 inline-block items-center
+             justify-center rounded-full hover:bg-slate-200 cursor-pointer">
+            <mat-icon>chevron_left</mat-icon>
+          </a>
+        </div>
+        <div class="flex flex-row items-center">
+          <div class="mr-2 flex items-center">
+            <mat-form-field appearance="outline">
+              <mat-label>Financial year</mat-label>
+              <mat-select
+                (selectionChange)="onChangeFinancialYear($event.value)"
+                [(ngModel)]="financialYearCode"
+                placeholder="Select financial year">
+                @for (item  of financialYears; track item ) {
+                  <mat-option
+                    [value]="item.code">
+                    {{item.code}}
+                  </mat-option>
+                }
+              </mat-select>
+              @if (loadingFinancialYear) {
+                <mat-spinner
+                  @fadeIn
+                  [diameter]="30"
+                  [strokeWidth]="3"
+                  matSuffix>
+                </mat-spinner>
+              }
+            </mat-form-field>
+          </div>
+          <button
+            (click)="exportTableToExcel('gpn_table', 'General Procurement Notice')"
+            @fadeIn
+            class="ml-2 py-1 whitespace-nowrap w-auto justify-center
+               px-2 !border !border-primary !bg-primary rounded
+               !text-white !cursor-pointer">
+            Export to excel
+          </button>
+        </div>
+
+      </div>
+      <div class="p-2 bg-white rounded-[5px] overflow-auto">
+        <div class="text-center font-medium text-lg">Made pursuant to Regulation 18 (1&amp;2) of GN No 446 of 2013</div>
+        <div class="text-center font-medium text-lg mb-2">Consolidated Govt GPN of financial
+        year {{financialYearCode}}</div>
+        <table class="rounded-lg table table-auto table-bordered text-xs" id="gpn_table">
+          <tbody>
+            <tr class="bg-[#BBCFDB]">
+              <th class="text-center bg-slate-400 p-3">No.</th>
+              <th class="text-center bg-slate-400 p-3">Source Of Fund</th>
+              <th class="text-center bg-slate-400 p-3">Number Of Tenders</th>
+              <th class="text-center bg-slate-400 p-3">Total Approved Budget for Planned Procurement (Tshs)</th>
+              <th class="text-center bg-slate-400 p-3">% Approved Budget</th>
+            </tr>
+
+            @for (group of groups; track group) {
+              <tr class="bg-[#cdd9e1]">
+                <th class="bg-slate-400 p-3 text-left" colspan="5">{{ group }}</th>
+              </tr>
+              @for (source of groupsItems[group]; track source; let i = $index) {
+                <tr>
+                  <td>{{ i + 1 }}</td>
+                  <td class=" p-3">{{ source.sourceOfFund }}</td>
+                  <td class="text-right p-3  ">{{ source.totalNumber }}</td>
+                  <td class="text-right p-3  ">{{ source.totalBudget | currency:'':''  }}</td>
+                  <td class="text-right p-3 ">{{ source.percentageValue }}%</td>
+                </tr>
+              }
+            }
+            <tr>
+              <td></td>
+              <td class="font-medium p-3">Total</td>
+              <td class="text-right font-medium p-3">{{ getTotal(sourceFundByConsolidated, 'totalNumber') }}</td>
+              <td class="text-right font-medium p-3">{{ getTotal(sourceFundByConsolidated, 'totalBudget')|currency:'':'' }}</td>
+              <td
+                class="text-right font-medium p-3">{{ getTotal(sourceFundByConsolidated, 'percentageValue').toFixed(0) }}%
+              </td>
+            </tr>
+            <tr>
+              <td class="p-5 border-0" colspan="5"></td>
+            </tr>
+            <tr class="bg-[#BBCFDB]">
+              <th class="text-center p-3">No.</th>
+              <th class="text-center p-3">Category</th>
+              <th class="text-center p-3">Number Of Tenders</th>
+              <th class="text-center p-3">Total Values (Tsh)</th>
+              <th class="text-center p-3">% Per Category</th>
+            </tr>
+            @for (source of procurementCategoryConsolidatedReport; track source; let i = $index) {
+              <tr>
+                <td class=" p-3">{{ i + 1 }}</td>
+                <td class=" p-3">{{ source.budgetPurposeId }}</td>
+                <td class="text-right p-3  ">{{ source.totalNumber }}</td>
+                <td class="text-right p-3  ">{{ source.totalBudget | currency:'':''  }}</td>
+                <td class="text-right p-3  ">{{ source.percentageValue }}</td>
+              </tr>
+            }
+            <tr>
+              <td></td>
+              <td class="font-medium p-3">Total</td>
+              <td class="text-right p-3 font-medium">{{ getTotal(procurementCategoryConsolidatedReport, 'totalNumber') }}</td>
+              <td class="text-right p-3 font-medium">{{ getTotal(procurementCategoryConsolidatedReport, 'totalBudget') | currency:'':'' }}</td>
+              <td
+                class="text-right p-3 font-medium">{{ getTotal(procurementCategoryConsolidatedReport, 'percentageValue').toFixed(0) }}
+                %
+              </td>
+            </tr>
+            <tr>
+              <td class="p-5 border-0" colspan="5"></td>
+            </tr>
+            <tr class="bg-[#BBCFDB]">
+              <th class="text-center bg-slate-400 p-3">No.</th>
+              <th class="text-center bg-slate-400 p-3">Procurement Method</th>
+              <th class="text-center bg-slate-400 p-3">Number Of Tenders</th>
+              <th class="text-center bg-slate-400 p-3">Total Values (Tsh)</th>
+              <th class="text-center bg-slate-400 p-3">% Per Method</th>
+            </tr>
+
+            @for (method of procurementMethodConsolidatedReport; track method; let i = $index) {
+              <tr>
+                <td class=" p-3">{{ i + 1 }}</td>
+                <td class=" p-3">{{ method.budgetPurposeId }}</td>
+                <td class="text-right p-3">{{ method.totalNumber }}</td>
+                <td class="text-right p-3">{{ method.totalBudget | currency:'':''  }}</td>
+                <td class="text-right p-3">{{ method.percentageValue }}%</td>
+              </tr>
+            }
+            <tr>
+              <td></td>
+              <td class="font-medium p-3">Total</td>
+              <td class="text-right font-medium p-3">{{ getTotal(procurementMethodConsolidatedReport, 'totalNumber') }}</td>
+              <td class="text-right font-medium p-3">{{ getTotal(procurementMethodConsolidatedReport, 'totalBudget')|currency:'':'' }}</td>
+              <td class="text-right font-medium p-3">{{ getTotal(procurementMethodConsolidatedReport, 'percentageValue').toFixed(0) }}
+                %
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+  </parallax-container>
+</web-layout>
+

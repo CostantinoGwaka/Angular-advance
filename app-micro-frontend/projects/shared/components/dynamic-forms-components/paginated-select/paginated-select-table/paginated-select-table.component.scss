@@ -1,0 +1,57 @@
+.mat-mdc-dialog-content {
+  margin: 0px;
+  padding: 0px 0px;
+}
+
+.mat-mdc-dialog-title {
+  margin: 16px 0 20px;
+}
+
+.dailog-container {
+  padding: 24px !important;
+}
+
+table {
+  width: 100%;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+
+  td {
+    padding-left: 10px !important;
+    word-break: break-word;
+  }
+
+  ;
+
+  th {
+    padding-left: 10px !important;
+    color: black !important;
+    ;
+    font-weight: bolder !important;
+  }
+}
+
+.mat-mdc-row.hovered {
+  background: #eee;
+}
+
+.mat-mdc-row.highlighted {
+  background: #999;
+}
+
+
+
+.mat-mdc-cell,
+.mat-mdc-footer-cell {
+  font-size: 12px;
+}
+
+.error {
+  background-color: rgba(255, 0, 6, 0.18) !important;
+  color: black !important;
+}
+
+.excel-button {
+  justify-self: end;
+  align-self: center;
+  margin-bottom: 12px;
+}

@@ -1,0 +1,139 @@
+<div class="justify-end flex">
+  <button
+    (click)="exit()"
+    mat-ripple
+    class="h-10 aspect-square grid place-content-center hover:bg-gray-100 rounded-full"
+    >
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<div class="p-2 text-center space-y-5">
+  <div class="space-y-5">
+    <div class="font-bold text-black text-2xl">Creating Document</div>
+    <div class="text-gray-500 max-w-[800px] mx-auto">
+      {{ documentCreationData?.title }}
+    </div>
+    @if (documentCreationData?.template) {
+      <div
+        class="flex justify-center mt-3"
+        >
+        <div
+          class="text-xs leading-[11px] text-gray-500 flex rounded-full p-2 border-gray-500 border items-center"
+          >
+          <span>Template: {{ documentCreationData?.template?.name }}</span>
+          <span class="rounded-full bg-slate-200 text-gray-800 p-1 ml-2">
+            Version: {{ documentCreationData?.template?.version }}
+          </span>
+        </div>
+      </div>
+    }
+  </div>
+  <div class="relative mt-5">
+    @if (isFetchingData) {
+      <div class="space-y-1 grid place-content-center">
+        <app-data-fetcher-circular-progress
+          #dataFetcher
+          [dataFetcher]="documentCreationData.dataFetcher"
+          [forPPRAAdmin]="documentCreationData.forPPRAAdmin"
+          (fetchingComplete)="onFetchingComplete($event)"
+          [finishMessage]="'Starting document creation...'"
+        ></app-data-fetcher-circular-progress>
+      </div>
+    }
+    @if (!isFetchingData) {
+      <div class="flex items-center">
+        <mat-card appearance="outlined" class="m-auto">
+          <div class="grid place-content-center">
+            <div class="flex">
+              <ng-container>
+                @for (creationStep of creationSteps; track creationStep; let i = $index) {
+                  <document-creator-step
+                    [isFirst]="i == 0"
+                    [isLast]="i == creationSteps.length - 1"
+                    [creationStep]="creationStep"
+                  ></document-creator-step>
+                }
+              </ng-container>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+    }
+  </div>
+  @if (errorMessage) {
+    <div class="mt-3 grid place-content-center">
+      <div
+        class="bg-red-100 !border !border-red-500 rounded p-2 text-red-500 max-w-[600px] text-center"
+        >
+        {{ errorMessage }}
+      </div>
+    </div>
+  }
+  <div class="mt-3 text-center w-[80%]">
+    <div class="m-auto relative bg-gray-100 rounded-md">
+      <div></div>
+    </div>
+  </div>
+
+  @if (placeholdersErrorsExist) {
+    <div class="mt-3">
+      <div class="grid place-content-center">
+        <div>
+          <placeholders-replacement-summary
+            [placeholderReplacementSummary]="placeholderReplacementSummary"
+          ></placeholders-replacement-summary>
+        </div>
+      </div>
+    </div>
+  }
+
+  <div class="grid place-content-center">
+    @if (this.finished || errorMessage) {
+      <div
+        [style.marginTop.px]="50"
+        class="flex space-x-2"
+        >
+        <button mat-stroked-button (click)="startDocumentCreation()">
+          Recreate Document
+        </button>
+        @if (canViewDocument && pdfDocumentUuid) {
+          <button
+            [disabled]="gettingFile"
+            mat-stroked-button
+            color="primary"
+            (click)="viewDocument()"
+            >
+            @if (!gettingFile) {
+              <span>View Document</span>
+            }
+            @if (gettingFile) {
+              <div class="flex space-x-2 items-center">
+                <mat-spinner [diameter]="20" [strokeWidth]="3"></mat-spinner>
+                <div>Getting document...</div>
+              </div>
+            }
+          </button>
+        }
+        @if (
+          (!placeholdersErrorsExist || !stopOnDocumentErrors || canContinue) &&
+          pdfDocumentUuid
+          ) {
+          <button
+            mat-stroked-button
+            (click)="save()"
+            color="primary"
+            mat-flat-button
+            >
+            <div class="flex space-x-2 items-center">
+              <div>Save & Continue</div>
+              <mat-icon>arrow_forward</mat-icon>
+            </div>
+          </button>
+        }
+      </div>
+    }
+  </div>
+</div>
+<ng-template #templateProgress>
+  <div>test</div>
+</ng-template>

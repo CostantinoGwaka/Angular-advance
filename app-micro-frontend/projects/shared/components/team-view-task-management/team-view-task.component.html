@@ -1,0 +1,325 @@
+<div class="bg-white p-2 rounded">
+	@if (tableConfigurations.tableColumns && useQuery && financialYearCode) {
+		<app-paginated-table-expandable-row
+			@fadeIn
+			(expadendRow)="toggleView($event)"
+			[mapFunction]="mapFunction"
+			[query]="query"
+			[resetTable]="resetTable"
+			[additionalVariables]="additionalVariables"
+			[filters]="[
+            {
+              fieldName: 'financialYearCode',
+              value1: financialYearCode,
+              operation: 'EQ',
+            },
+      ]"
+			[apolloNamespace]="apolloNamespace"
+			[tableConfigurations]="tableConfigurations">
+			<ng-template #action let-committee="data">
+				<ng-container
+					[ngTemplateOutletContext]="{data : committee}"
+					[ngTemplateOutlet]="workFlowTemplate">
+				</ng-container>
+			</ng-template>
+		</app-paginated-table-expandable-row>
+	}
+
+	@if (tableConfigurations.tableColumns && !useQuery) {
+		<app-normal-table-expandable-row2
+			@fadeIn
+			(expadendRow)="toggleView($event)"
+			[mapFunction]="mapFunction"
+			[loading]="loadingTeams"
+			[tableConfigurations]="tableConfigurations"
+			[tableList]="committeeList">
+			<ng-template #action let-committee="data">
+				<ng-container
+					[ngTemplateOutletContext]="{data : committee}"
+					[ngTemplateOutlet]="workFlowTemplate">
+				</ng-container>
+			</ng-template>
+		</app-normal-table-expandable-row2>
+	}
+</div>
+
+<ng-template #infoRow let-data="data">
+	<tr class="flex flex-col flex-no wrap sm:table-row mb-2 sm:mb-0
+  even:bg-white odd:bg-gray-100 border-b">
+		<td class="text-left p-3 font-bold">{{ data.title }}</td>
+		<td class="text-left p-3 border-l">
+			{{ data.info }}
+		</td>
+	</tr>
+</ng-template>
+
+<ng-template #workFlowTemplate let-commit="data">
+	<app-work-flow-main
+		(onTaskComplete)="fetchCommitteeDetails()"
+		[comments]="committee.approvals||[]"
+		[modelUuid]="committee.uuid"
+		[hideAction]="lettersNotPrepared !== 0 || viewOnly"
+		[possibleActions]="possibleActions"
+		[type]="(type)?'EvaluationTeam':''">
+		<ng-container ngProjectAs="work-flow-content">
+			@if (loadingTrnder) {
+				<app-loader [message]="'Loading task details please wait'"></app-loader>
+			}
+			@if (!loadingTrnder) {
+				@if (showNoticeBox && committee?.approvalStatus !== 'APPROVED') {
+					<app-custom-alert-box
+						[alertClass]="'bg-red-100 border-red-300  rounded'"
+						[alertButtonClass]="'border-grey !bg-white'"
+						[alertTextClass]="'text-[#302e2e] text-lg'"
+						[alertInfo]="noticeAlert">
+					</app-custom-alert-box>
+				}
+				<!--- tab buttons -->
+				<div class="mt-2">
+					<div
+						class=" inline-block py-3 px-4 rounded-t-md cursor-pointer"
+						(click)="setSelectedIndex(0)"
+						[ngClass]="{
+              'bg-white':selectedIndex == 0,
+              'bg-slate-200':selectedIndex != 0
+              }">
+						Tender Information
+					</div>
+					<div
+						class=" inline-block py-3 px-4 rounded-t-md ml-2 cursor-pointer"
+						(click)="setSelectedIndex(1)"
+						[ngClass]="{
+              'bg-white':selectedIndex == 1,
+              'bg-slate-200':selectedIndex != 1
+              }">
+						Evaluation Planned Date
+					</div>
+					<div
+						class="relative inline-block py-3 px-4
+                 ml-2 rounded-t-md cursor-pointer"
+						(click)="setSelectedIndex(2)"
+						[ngClass]="{
+                  'bg-white':selectedIndex == 2,
+                  'bg-slate-200':selectedIndex != 2
+                }">
+						Evaluation committee (team)
+						@if (showNoticeBox && committee?.approvalStatus !== 'APPROVED') {
+							<div class="absolute inline-flex items-center justify-center w-6 h-6
+                         text-xs font-bold text-white bg-red-500 border-2 border-white
+                          rounded-full -top-2 -right-2 dark:border-gray-900">
+								<mat-icon
+									style="font-size: 16px;text-align: center;padding-top: 4px;">
+									info
+								</mat-icon>
+							</div>
+						}
+					</div>
+				</div>
+				<!--- end of tab buttons -->
+				<div class="bg-white p-3">
+					<!-- tender information -->
+					@if (selectedIndex == 0) {
+						<div class="row">
+							<table class="w-full">
+								<tbody class="flex-1 sm:flex-none text-gray-700">
+									@for (displayInfo of displayInfoList; track displayInfo; let i = $index) {
+										@if (displayInfo.info) {
+											<ng-container
+												[ngTemplateOutletContext]="{
+                          data : {
+                            title: displayInfo.title,
+                            info: displayInfo.info,
+                            useBackground: (i / 2 !== 0)
+                          }}"
+												[ngTemplateOutlet]="infoRow">
+											</ng-container>
+										}
+									}
+								</tbody>
+							</table>
+						</div>
+					}
+					<!-- end of tender information -->
+					<!-- evaluation planned dates -->
+					@if (selectedIndex == 1) {
+						<div class="grid grid-cols-12">
+							<div class="col-span-12">
+								<div class="w-[60%]">
+									<div class="transform transition cursor-pointer hover:-translate-y-2
+                           ml-10 relative flex items-center px-3 py-2 !bg-gray-100
+                           rounded mb-4 flex-col md:flex-row space-y-2 md:space-y-0">
+										<div class="w-5 h-5 bg-[#1095db] absolute -left-10
+                           transform -translate-x-2/4 rounded-full z-10 mt-1 md:mt-0">
+										</div>
+										<div
+											class="w-10 h-1 bg-[#d7f1fa] absolute -left-10 z-0"></div>
+										<div class="flex flex-row">
+											<mat-icon class="mr-1">event_note</mat-icon>
+											<span
+												class="text-sm font-bold">Evaluation Planned Date</span>
+										</div>
+									</div>
+									@if (committee?.plannedEvaluationStartDate && committee?.plannedEvaluationEndDate) {
+										<div class="transform transition cursor-pointer hover:-translate-y-2
+                           ml-10 relative flex items-center p-3 bg-[#d7f1fa]
+                           rounded mb-4 flex-col md:flex-row space-y-2 md:space-y-0">
+											<div class="w-5 h-5 bg-[#1095db] absolute -left-10
+                          transform -translate-x-2/4 rounded-full z-10 mt-1 md:mt-0">
+											</div>
+											<div
+												class="w-10 h-1 bg-[#d7f1fa] absolute -left-10 z-0"></div>
+											<div class="w-100 flex flex-row justify-between">
+												<span class="text-sm">Planned start date</span>
+												<span
+													class="text-sm">{{ committee?.plannedEvaluationStartDate }}</span>
+											</div>
+										</div>
+										<div class="transform transition cursor-pointer hover:-translate-y-2
+                             ml-10 relative flex items-center p-3 bg-[#d7f1fa]
+                             rounded mb-4 flex-col md:flex-row space-y-2 md:space-y-0">
+											<div class="w-5 h-5 bg-[#1095db] absolute -left-10
+                          transform -translate-x-2/4 rounded-full z-10 mt-1 md:mt-0">
+											</div>
+											<div
+												class="w-10 h-1 bg-[#d7f1fa] absolute -left-10 z-0"></div>
+											<div class="w-100 flex flex-row justify-between">
+												<span class="text-sm font-bold">Planned end date</span>
+												<span
+													class="text-sm">{{ committee?.plannedEvaluationEndDate }}</span>
+											</div>
+										</div>
+									}
+								</div>
+							</div>
+						</div>
+					}
+					<!-- end of evaluation planned dates -->
+					<!-- Evaluation committee -->
+					@if (selectedIndex == 2) {
+						@if (!viewOnly) {
+							<div class="flex flex-row justify-end">
+								<ng-container
+									*appHasPermission="['ROLE_TNDR_EVL_TEAM_MANAGEMENT_UPDT_TM_MEMBR']">
+									@if (committee?.approvalStatus !== 'APPROVED') {
+										<button mat-button
+														(click)="onAdd(committee.tenderUuid, committee)"
+														class="!bg-primary text-white py-1 px-3">
+											<mat-icon inline class="text-xl">add</mat-icon>&nbsp;Add/Update
+											Members
+										</button>
+									}
+								</ng-container>
+							</div>
+						}
+						<div class="mt-2">
+							<app-team-member-viewer
+								(onUpdate)="fetchCommitteeDetails()"
+								(onPrepareLetterEvent)="toggleView($event)"
+								(onViewLetterEvent)="viewMemberLetter($event)"
+								[hideActionButton]="false"
+								[isForTask]="true"
+								[loading]="loading"
+								[members]="committee.teamMembers">
+							</app-team-member-viewer>
+
+
+							<div class="flex flex-row justify-end mt-2">
+								<ng-container
+									*appHasPermission="['ROLE_TNDR_EVL_TEAM_MANAGEMENT_PRAPR_APPTMNT_LETTER']">
+									@if (lettersNotPrepared == committee.teamMembers.length) {
+										<button mat-button
+														(click)="prepareAppointmentLetters(committee.teamMembers)"
+														class="!bg-primary text-white py-1 px-3">
+											Prepare All appointment letter
+										</button>
+									}
+								</ng-container>
+								<ng-container
+									*appHasPermission="['ROLE_TNDR_EVL_TEAM_MANAGEMENT_SIGN_APPTMNT_LETTER']">
+									@if (lettersNotSigned == committee.teamMembers.length) {
+										<button mat-button
+														(click)="prepareAppointmentLetters(
+													 committee.teamMembers,
+													 'SIGN',
+													 'Sign All appointment letter'
+													 )"
+														class="!bg-primary text-white py-1 px-3">
+											Sign All appointment letter
+										</button>
+									}
+								</ng-container>
+							</div>
+
+						</div>
+						@if (sendingLetters) {
+							<app-loader
+								[message]="'Sending appointment letters, please wait...'">
+							</app-loader>
+						}
+
+						<ng-container
+							*appHasPermission="['ROLE_TNDR_EVL_TEAM_MANAGEMENT_SEND_APPTMNT_LETTER']">
+							@if (allowTaskFix) {
+								<app-custom-alert-box
+									[alertClass]="'bg-red-100 border-red-300  rounded'"
+									[alertButtonClass]="'border-grey !bg-white'"
+									[alertTextClass]="'text-[#302e2e] text-lg'"
+									(buttonClicked)="fixTaskData(committee.uuid)"
+									[alertInfo]="badTaskAlert">
+								</app-custom-alert-box>
+							}
+						</ng-container>
+						<ng-container
+							*appHasPermission="['ROLE_TNDR_EVL_TEAM_MANAGEMENT_SEND_APPTMNT_LETTER']">
+							@if (committee?.approvalStatus !== 'APPROVED'
+							&& !committee.appointmentLettersSent
+							&& committee.allAppointmentLettersSigned
+							&& !sendingLetters) {
+								<div
+									class="flex flex-row {{(showConfirm)? 'mt-3 justify-center' : 'justify-end'}}"
+								>
+									@if (showConfirm) {
+										<app-confirm-area
+											@fadeIn
+											[useYesNo]="true"
+											[useConfirmCancel]="true"
+											[title]="'You are about to send appointment letters. Do you want to continue?'"
+											(confirm)="sendAppointmentLetters()"
+											(cancel)="showConfirm = false"
+										>
+										</app-confirm-area>
+									}
+									@if (committee.allAppointmentLettersSigned && !showConfirm) {
+										<button
+											mat-stroked-button
+											mat-button
+											class="!text-[#1394db] !border-[#1394db] !ml-2"
+											(click)="showConfirm = true"
+											style="
+                              border-radius: 5px;
+                              margin-top: 10px;
+                              padding: 5px 25px;
+                              font-size: 15px;
+                            ">
+											<mat-icon inline class="text-xl">send</mat-icon>&nbsp;Send
+											appointment letters
+										</button>
+									}
+								</div>
+							}
+						</ng-container>
+					}
+					<!-- end of Evaluation committee -->
+					<!--- workflow activities -->
+					@if (selectedIndex == 3) {
+						<app-sharable-comments-viewer
+							[comments]="committee?.approvals">
+						</app-sharable-comments-viewer>
+					}
+					<!--- workflow activities -->
+				</div>
+			}
+		</ng-container>
+	</app-work-flow-main>
+</ng-template>
+

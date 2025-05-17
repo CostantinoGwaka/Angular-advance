@@ -1,0 +1,105 @@
+<div>
+  <div class="flex-1 justify-center">
+    <div class="text-center">
+      @if (
+        placeholderReplacementSummary.placeholdersWithNoValues?.length == 0 &&
+        placeholderReplacementSummary.placeholdersWithUnknownError?.length ==
+        0 &&
+        placeholderReplacementSummary.placeholderNotFoundInDatabase?.length ==
+        0
+        ) {
+        <div
+          class="text-accent"
+          >
+          Successfully Finished
+        </div>
+      }
+    </div>
+    <div class="mt-2 mx-auto !border !border-red-200 rounded-md max-w-[600px]">
+      <table class="w-full text-left text-red-500">
+        @if (
+          placeholderReplacementSummary.placeholdersWithNoValues?.length > 0
+          ) {
+          <tr
+            class="even:bg-red-100 odd:bg-red-200 hover:bg-red-300 cursor-pointer"
+            (click)="viewSummaryDetails('placeholdersWithNoValues')"
+            >
+            <td class="p-2">Missing data</td>
+            <td class="text-right">
+              <span class="p-2 cursor-pointer hover:font-bold">
+                {{
+                placeholderReplacementSummary.placeholdersWithNoValues?.length
+                }}&nbsp;({{
+                getUniquePlaceholdersCountByName(
+                placeholderReplacementSummary.placeholdersWithNoValues
+                )
+                }}
+                Unique)
+              </span>
+            </td>
+          </tr>
+        }
+        @if (
+          placeholderReplacementSummary.placeholdersWithUnknownError?.length >
+          0
+          ) {
+          <tr
+            class="even:bg-red-100 odd:bg-red-200 hover:bg-red-300 cursor-pointer"
+            (click)="viewSummaryDetails('placeholdersWithUnknownError')"
+            >
+            <td class="p-2">Data with unknown errors</td>
+            <td class="text-right">
+              <span class="p-2 cursor-pointer hover:font-bold">
+                {{
+                placeholderReplacementSummary.placeholdersWithUnknownError
+                ?.length
+                }}&nbsp;({{
+                getUniquePlaceholdersCountByName(
+                placeholderReplacementSummary.placeholdersWithUnknownError
+                )
+                }}
+                Unique)
+              </span>
+            </td>
+          </tr>
+        }
+        @if (
+          placeholderReplacementSummary.placeholderNotFoundInDatabase
+          ?.length > 0
+          ) {
+          <tr
+            class="even:bg-red-100 odd:bg-red-200 hover:bg-red-300 cursor-pointer"
+            (click)="viewSummaryDetails('placeholderNotFoundInDatabase')"
+            >
+            <td class="p-2">Unknown Placeholders</td>
+            <td class="text-right">
+              <span class="p-2 cursor-pointer hover:font-bold">
+                {{
+                placeholderReplacementSummary.placeholderNotFoundInDatabase
+                ?.length
+                }}&nbsp;({{
+                getUniquePlaceholdersCountByName(
+                placeholderReplacementSummary.placeholderNotFoundInDatabase
+                )
+                }}
+                Unique)
+              </span>
+            </td>
+          </tr>
+        }
+      </table>
+    </div>
+  </div>
+  @if (
+    placeholderReplacementSummary.placeholdersWithNoValues?.length > 0 ||
+    placeholderReplacementSummary.placeholdersWithUnknownError?.length > 0 ||
+    placeholderReplacementSummary.placeholderNotFoundInDatabase?.length > 0
+    ) {
+    <div
+      class="mt-3 italic"
+      >
+      Please contact PPRA about the above errors, We will fix them as soon as
+      possible.
+    </div>
+  }
+</div>

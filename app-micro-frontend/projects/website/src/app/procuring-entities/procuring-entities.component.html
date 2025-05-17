@@ -1,0 +1,269 @@
+<web-layout>
+	<parallax-container [description]="subtitle" [title]="'Procuring Entities'">
+		<div>
+			<div class="mt-2 flex justify-center">
+				<div
+					(click)="setSelectedIndex(0)"
+					[ngClass]="{
+          'bg-[#1394DB] text-white font-normal': selectedIndex == 0,
+          'bg-slate-200 font-normal text-[#302E2E]': selectedIndex != 0
+        }"
+					class="inline-block py-3 px-4 ml-2 rounded-md cursor-pointer shadow"
+				>
+					@if (!loadCount && peMain != 0) {
+						Procuring Entities (Main & Delegate) - {{
+							peMain |
+								number
+						}}
+					}
+					@if (peMain == 0 || peMain == null) {
+						<div class="flex flex-row">
+							<div>
+								Procuring Entities (Main & Delegate) -&nbsp;
+							</div>
+							<div style="height: 20px;" class="flex items-center justify-center mr-7">
+								@if (loadCount) {
+									<mat-progress-spinner
+										[diameter]="20"
+										mode="indeterminate"
+										[color]="selectedIndex !== 0 ? 'primary' : 'accent'"
+									></mat-progress-spinner>
+								}
+								@if (!loadCount && peMain == 0) {
+									<div class="text-left">
+										<button
+											class="flex items-center border rounded p-1 space-x-2"
+											(click)="getItemsCount()"
+										>
+											<mat-icon inline>refresh</mat-icon>
+											<span>Reload</span>
+										</button>
+									</div>
+								}
+							</div>
+						</div>
+					}
+				</div>
+				<div
+					(click)="setSelectedIndex(1)"
+					[ngClass]="{
+          'bg-[#1394DB] text-white font-normal': selectedIndex == 1,
+          'bg-slate-200 font-normal text-[#302E2E]': selectedIndex != 1
+        }"
+					class="inline-block py-3 px-4 ml-5 rounded-md cursor-pointer shadow"
+				>
+					@if (!loadCount && (peLower != 0)) {
+						Lower Level PE - {{ peLower | number }}
+					}
+					@if (peMain ==
+					0 || peLower == null) {
+						<div class="flex flex-row">
+							<div>Lower Level PE -&nbsp;</div>
+							<div style="height: 20px;" class="flex items-center justify-center mr-7">
+								@if (loadCount) {
+									<mat-progress-spinner
+										[diameter]="20"
+										mode="indeterminate"
+										[color]="selectedIndex !== 1 ? 'primary' : 'accent'"
+									></mat-progress-spinner>
+								}
+								@if (!loadCount && peMain == 0) {
+									<div class="text-left">
+										<button
+											class="flex items-center border rounded p-1 space-x-2"
+											(click)="getItemsCount()"
+										>
+											<mat-icon inline>refresh</mat-icon>
+											<span>Reload</span>
+										</button>
+									</div>
+								}
+							</div>
+						</div>
+					}
+				</div>
+			</div>
+			<div class="mt-2">
+				<ng-container>
+					@if (selectedIndex == 0) {
+						<div class="bg-white rounded p-1 mb-2">
+							<app-custom-alert-box
+								[alertClass]="'bg-white border-[#E2E8F0] rounded'"
+								[alertButtonClass]="'border-grey !bg-white'"
+								[alertTextClass]="'text-[#302e2e] text-lg'"
+								[alertInfo]="reportAlert"
+							>
+							</app-custom-alert-box>
+						</div>
+						<div @fadeIn>
+							<div
+								class="!bg-[#fbfbfb] search-area-wrapper home-search-area py-2 px-3 flex md:justify-between items-center"
+							>
+								<div class="flex w-full md:w-auto items-center">
+									<div class="flex w-full md:w-auto items-center space-x-4">
+										<div class="flex flex-row pt-1 space-x-4">
+											<mat-form-field appearance="outline">
+												<mat-label>{{ "SEARCH_BY_KEYWORD" | translate }}</mat-label>
+												<input
+													[(ngModel)]="filters.search"
+													matInput
+													placeholder="{{ 'ENTER_KEYWORD' | translate }}"
+												/>
+											</mat-form-field>
+										</div>
+										<button
+											(click)="searchByInputFilters()"
+											class="!bg-secondary !text-black flex space-x-2 p-2 md:mr-4 rounded-md !border-4 !border-secondary items-center"
+										>
+											<mat-icon>search</mat-icon>
+											<div>{{ "SEARCH" | translate }}</div>
+										</button>
+										<button
+											(click)="clearSearch()"
+											class="hidden lg:flex space-x-2 p-2 md:mr-4 rounded-md !border text-gray-400 hover:text-black border-gray-400 hover:border-black items-center"
+										>
+											<div class="hidden sm:block p-1">
+												{{ "CLEAR_SEARCH" | translate }}
+											</div>
+										</button>
+									</div>
+								</div>
+							</div>
+
+							<div class="divide-y">
+								<div class="px-[14px] py-2">
+									<div class="flex justify-between items-center text-sm">
+										<div class="">
+											@if (items.length && paginatorInput?.totalRecords >= 0 && !loading) {
+												<span
+												>
+                          {{ getPaginatorLabel() }}
+                        </span>
+											}
+											@if (loading) {
+												<div class="bg-gray-300 animate-pulse text-gray-300 rounded-md">
+													Loading items...
+												</div>
+											}
+										</div>
+										<app-items-sort-filter
+											(onSortOptionChange)="onSortOptionChange($event)"
+											[sortOptions]="sortOptions"
+										>
+										</app-items-sort-filter>
+									</div>
+								</div>
+								@if (loading) {
+									<div class="text-[10px]">
+										<app-loader [message]="'Loading Procuring Entities please wait...'"></app-loader>
+									</div>
+								}
+								@for (item of items; track item) {
+									<procuring-entity-item [pe]="item"></procuring-entity-item>
+								}
+							</div>
+
+							@if (items.length > 0) {
+								<web-page-paginator
+									(pageOutput)="onPageNumberChange($event)"
+									(pageSizeOutput)="onPageSizeChange($event)"
+									[paginatorInput]="paginatorInput"
+								>
+								</web-page-paginator>
+							}
+						</div>
+					}
+				</ng-container>
+				<ng-container>
+					@if (selectedIndex == 1) {
+						<div class="bg-white rounded p-1 mb-2">
+							<app-custom-alert-box
+								[alertClass]="'bg-white border-[#E2E8F0] rounded'"
+								[alertButtonClass]="'border-grey !bg-white'"
+								[alertTextClass]="'text-[#302e2e] text-lg'"
+								[alertInfo]="lowerlevel"
+							>
+							</app-custom-alert-box>
+						</div>
+						<div
+							@fadeIn
+							class="!bg-[#fbfbfb] search-area-wrapper home-search-area py-2 px-3 flex md:justify-between items-center"
+						>
+							<div class="flex w-full md:w-auto items-center">
+								<div class="flex w-full md:w-auto items-center space-x-4">
+									<div class="flex flex-row pt-1 space-x-4">
+										<mat-form-field appearance="outline">
+											<mat-label>{{ "SEARCH_BY_KEYWORD" | translate }}</mat-label>
+											<input
+												[(ngModel)]="filters.search"
+												matInput
+												placeholder="{{ 'ENTER_KEYWORD' | translate }}"
+											/>
+										</mat-form-field>
+									</div>
+									<button
+										(click)="searchByInputFilters()"
+										class="!bg-secondary !text-black flex space-x-2 p-2 md:mr-4 rounded-md !border-4 !border-secondary items-center"
+									>
+										<mat-icon>search</mat-icon>
+										<div>{{ "SEARCH" | translate }}</div>
+									</button>
+									<button
+										(click)="clearSearch()"
+										class="hidden lg:flex space-x-2 p-2 md:mr-4 rounded-md !border text-gray-400 hover:text-black border-gray-400 hover:border-black items-center"
+									>
+										<div class="hidden sm:block p-1">
+											{{ "CLEAR_SEARCH" | translate }}
+										</div>
+									</button>
+								</div>
+							</div>
+						</div>
+
+						<div class="divide-y">
+							<div class="px-[14px] py-2">
+								<div class="flex justify-between items-center text-sm">
+									<div class="">
+										@if (itemsLowerLevel.length && paginatorInput?.totalRecords >= 0 && !loading) {
+											<span
+											>
+                        {{ getPaginatorLabel() }}
+                      </span>
+										}
+										@if (loading) {
+											<div class="bg-gray-300 animate-pulse text-gray-300 rounded-md">
+												Loading items...
+											</div>
+										}
+									</div>
+									<app-items-sort-filter
+										(onSortOptionChange)="onSortOptionChange($event)"
+										[sortOptions]="sortOptions"
+									>
+									</app-items-sort-filter>
+								</div>
+							</div>
+							@if (loading) {
+								<div class="text-[10px]">
+									<app-loader [message]="'Loading Lower Level please wait...'"></app-loader>
+								</div>
+							}
+							@for (item of itemsLowerLevel; track item) {
+								<procuring-entity-item [pe]="item" [showRegion]="true"></procuring-entity-item>
+							}
+						</div>
+
+						@if (itemsLowerLevel.length > 0) {
+							<web-page-paginator
+								(pageOutput)="onPageNumberChange($event)"
+								(pageSizeOutput)="onPageSizeChange($event)"
+								[paginatorInput]="paginatorInput"
+							>
+							</web-page-paginator>
+						}
+					}
+				</ng-container>
+			</div>
+		</div>
+	</parallax-container>
+</web-layout>

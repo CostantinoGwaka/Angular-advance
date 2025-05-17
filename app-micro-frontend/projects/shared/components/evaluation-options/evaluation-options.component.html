@@ -1,0 +1,290 @@
+@if (savingData || loading) {
+  <app-loader
+    [message]=" (loading)? 'Checking evaluation status, please wait ....' : 'Saving evaluation score,please wait...'"></app-loader>
+}
+
+
+@if (!viewOnly && !savingData && !loading) {
+  @if (!alreadyEvaluation && !submissionCriteria?.hasSubCriteria) {
+    @if (showConfirm) {
+      <div @fadeIn class="mt-4">
+        <app-confirm-area
+          [title]="'You are about to evaluate this criteria. Do you want to continue?'"
+          [emitValue]="true"
+          (confirm)="submitEvaluationResponse(false)">
+        </app-confirm-area>
+      </div>
+    }
+    @if (previousEvaluationScore) {
+      <!-- current evaluation score-->
+      <span>Previous Evaluation Detail</span>
+      @if ((viewOnly && !loading)) {
+        <ng-container
+          [ngTemplateOutlet]="evaluationScoreTemplate"
+          [ngTemplateOutletContext]="{data : previousEvaluationScore}">
+        </ng-container>
+      }
+      <!-- end of current evaluation score-->
+    }
+    @if (!showConfirm) {
+      @if (scoreType == 'TRUE_FALSE') {
+        <div class="flex flex-col mt-4">
+          <div class="row" @fadeIn>
+            <div class="col-md-6">
+              @if (isFinancialEvaluation) {
+                <mat-form-field appearance="outline">
+                  <mat-label>Select pricing action</mat-label>
+                  <mat-select
+                    [(ngModel)]="selectedPriceAction"
+                    placeholder="select options"
+                  >
+                    <mat-option>select options</mat-option>
+                    <mat-option [value]="'NORMAL'">
+                      <span class="text-accent">NORMAL</span>
+                    </mat-option>
+                    <mat-option [value]="'ABNORMALY_LOW'">
+                      <span class="text-amber-500">ABNORMALLY LOW</span>
+                    </mat-option>
+                    <mat-option [value]="'ABNORMALY_HIGH'">
+                      <span class="text-danger">ABNORMALLY HIGH</span>
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              }
+
+              @if (!isFinancialEvaluation) {
+                <mat-form-field appearance="outline">
+                  <mat-label>Select evaluation status</mat-label>
+                  <mat-select [(ngModel)]="selectedAction" placeholder="select options">
+                    <mat-option>select options</mat-option>
+                    <mat-option [value]="true">
+                      <span class="text-accent">Comply</span>
+                    </mat-option>
+                    <mat-option [value]="false">
+                      <span class="text-danger">Not Comply</span>
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              }
+              @if (
+                  (selectedAction != null && !isFinancialEvaluation) ||
+                  (selectedPriceAction != null && isFinancialEvaluation)
+                ) {
+                <mat-form-field
+                  appearance="outline"
+                  class="material-form"
+                  @fadeIn>
+                  <mat-label>{{ (isFinancialEvaluation) ? 'Comment' : 'Justification' }}</mat-label>
+                  <textarea
+                    [(ngModel)]="justification"
+                    matInput
+                    [placeholder]="(isFinancialEvaluation)? 'Comment':'Justification'"
+                  ></textarea>
+                </mat-form-field>
+              }
+            </div>
+          </div>
+          @if (selectedAction != null && justification) {
+            <div class="flex flex-row items-start justify-start"
+                 @fadeIn>
+              @if (evaluationScore.evaluated) {
+                <button
+                  mat-stroked-button
+                  class="no-button zoom-on-hover items-center comply-btn"
+                  color="warn"
+                  @fadeIn
+                  (click)="alreadyEvaluation = true">
+                  <mat-icon>clear</mat-icon>
+                  Cancel
+                </button>
+              }
+              <button
+                @fadeIn
+                class="zoom-on-hover items-center comply-btn"
+                mat-flat-button
+                (click)=" (
+                  evaluationScore.submissionCriteria.sameForAllLots &&
+                 evaluationScore.submissionCriteria.hasLot
+                 ) ? submitEvaluationResponse(true) : showConfirm = true"
+                color="primary">
+                <mat-icon>save</mat-icon>
+                Save
+              </button>
+            </div>
+          }
+        </div>
+      }
+      @if (scoreType == 'MIN_MAX') {
+        <div class="flex flex-col items-start justify-start mt-4" @fadeIn>
+          <div class="flex flex-col col-4 py-[5px]">
+            @if (showExtraDetails && evaluationScore.weight) {
+              <span>Weight for this criteria is: {{ evaluationScore.weight }}</span>
+            }
+            @if (!isFinancialEvaluation) {
+              <mat-form-field
+                appearance="outline"
+                class="material-form">
+                <mat-label>Evaluation Mark</mat-label>
+                <input matInput
+                       [(ngModel)]="customMarks"
+                       (keyup)="checkRange()"
+                       [formControl]="customMarksControl"
+                       placeholder="add marks between 0 to 100." digitOnly>
+                <mat-hint>add marks between 0 to 100.</mat-hint>
+                <mat-error>add marks between 0 to 100.</mat-error>
+              </mat-form-field>
+            }
+            @if (customMarks !== null) {
+              <mat-form-field
+                appearance="outline"
+                class="material-form"
+                @fadeIn>
+                <mat-label>{{ (isFinancialEvaluation) ? 'Comment' : 'Justification' }}</mat-label>
+                <textarea
+                  [(ngModel)]="justification"
+                  matInput
+                  [placeholder]="(isFinancialEvaluation)? 'Comment':'Justification'">
+                </textarea>
+              </mat-form-field>
+            }
+          </div>
+          @if (justification) {
+            <div class="col-4 ml-1" @fadeIn>
+              <button
+                @fadeIn
+                class="zoom-on-hover items-center comply-btn mr-2"
+                mat-flat-button
+                [disabled]="disableSave"
+                (click)="setMarks(customMarks)"
+                color="primary">
+                <mat-icon>save</mat-icon>
+                Save
+              </button>
+              @if (evaluationScore) {
+                <button
+                  mat-stroked-button
+                  class="no-button zoom-on-hover items-center comply-btn"
+                  color="warn"
+                  @fadeIn
+                  (click)="alreadyEvaluation = true">
+                  <mat-icon>clear</mat-icon>
+                  Cancel
+                </button>
+              }
+            </div>
+          }
+        </div>
+      }
+    }
+  }
+  @if (alreadyEvaluation) {
+    <ng-container @fadeIn>
+      <div class="rounded border !border-grey-300 bg-[#f4f6fa] mt-2 mb-2 p-4">
+        <div class="flex flex-row justify-between">
+          <div class="flex flex-col">
+            @if (!isFinancialEvaluation) {
+              <div>
+                <span class="text-lg mr-2">Evaluation score : </span>
+                @if (evaluationScore.scoreType == 'TRUE_FALSE') {
+                  <span class="text-base font-bold {{(evaluationScore.score == 1)  ? 'text-accent': 'text-red-700'}}"
+                  > {{ (evaluationScore.score == 1) ? 'COMPLIED' : 'NOT COMPLIED' }}</span>
+                }
+                @if (evaluationScore.scoreType !== 'TRUE_FALSE') {
+                  <span class="text-lg font-bold"
+                  > {{ evaluationScore.score }}</span>
+                }
+              </div>
+            }
+
+            @if(evaluationScore.priceReasonability !== null) {
+              <div class="flex flex-row">
+                <span class="text-lg mr-2">
+                  Pricing Reasonability :
+                </span>
+                <span class="text-base font-bold">
+                  {{ evaluationScore.priceReasonability  | replace:'_':' '| titlecase }}
+                </span>
+              </div>
+            }
+
+            @if (evaluationScore?.justification != '') {
+              <div>
+                <span class="text-lg mr-2">{{ (!isFinancialEvaluation) ? 'Evaluation justification' : 'Comment' }}
+                  : </span>
+                <span class="text-base font-bold">{{ evaluationScore.justification }}</span>
+              </div>
+            }
+            <span
+              class="text-sm">This criteria has already been {{ (!isFinancialEvaluation) ? 'evaluated' : 'commented' }}
+            </span>
+
+          </div>
+
+
+          <div class="flex flex-col justify-end">
+            <button
+              mat-stroked-button
+              mat-button class="m-2 !text-[#1394db] !border-[#1394db]"
+              (click)="alreadyEvaluation = false">
+              <mat-icon inline>edit</mat-icon>
+              Update {{ (!isFinancialEvaluation) ? 'Evaluation' : 'Comment' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  }
+}
+
+<!-- current evaluation score-->
+@if (viewOnly && !loading) {
+  <ng-container
+    [ngTemplateOutlet]="evaluationScoreTemplate"
+    [ngTemplateOutletContext]="{data : evaluationScore}">
+  </ng-container>
+}
+<!-- end of current evaluation score-->
+
+
+<!-- reusable templates-->
+<ng-template #evaluationScoreTemplate let-data="data">
+  <div class="rounded border !border-grey-300 bg-[#f4f6fa] mt-2 mb-2 p-4">
+    <div class="flex flex-row justify-start">
+      <div class="flex flex-col">
+        @if (!isFinancialEvaluation) {
+          <div>
+            <span class="text-lg mr-2">Evaluation score : </span>
+            @if (data?.scoreType) {
+              @if (data.scoreType == 'TRUE_FALSE') {
+                <span class="text-base font-bold
+                {{(data.score == 1)  ? 'text-accent': 'text-red-700'}}"
+                >
+                  {{ (data.score == 1) ? 'COMPLIED' : 'NOT COMPLIED' }}
+                </span>
+              }
+              @if (data.scoreType !== 'TRUE_FALSE') {
+                <span class="text-lg font-bold"
+                >
+                  {{ data.score }}
+                </span>
+              }
+            }
+            @if (!data?.scoreType) {
+              <span class="text-lg font-bold text-danger"> Not Marked</span>
+            }
+          </div>
+        }
+
+        @if (data?.justification && data?.justification != '') {
+          <div>
+            <span class="text-lg mr-2">{{ (isFinancialEvaluation) ? 'Comment' : 'Evaluation justification' }} : </span>
+            <span class="text-base font-bold"> {{ data.justification }}</span>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</ng-template>
+<!-- end of reusable templates-->
+
+

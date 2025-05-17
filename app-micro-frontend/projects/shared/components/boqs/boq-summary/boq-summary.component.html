@@ -1,0 +1,150 @@
+@if (fetchingBOQCategory) {
+<div>
+	<app-loader [message]="'Setting up BOQ summary'"></app-loader>
+</div>
+} @if (!fetchingBOQCategory && fullBOQSummary) {
+<div class="mt-10 border rounded overflow-hidden text-gray-800">
+	<div class="p-3 text-2xl">Summary</div>
+	@for (item of fullBOQSummary.summaryItems; track item) {
+	<div class="flex justify-between border-top p-3">
+		<div class="flex">
+			@if (item.code) {
+			<div>{{ item.code }}:&nbsp;</div>
+			}
+			<div>{{ item.description }}</div>
+		</div>
+		<div>{{ item.total | number : "1.2-2" }}</div>
+	</div>
+	}
+
+	<div class="bg-gray-100">
+		@for (summarySection of fullBOQSummary.summarySections; track
+		summarySection) { @switch (summarySection.id) { @case ('VAT') {
+		<div class="flex justify-between border-top p-3 items-center">
+			<div class="flex items-center">
+				@if (viewMode == 'edit') {
+				<mat-checkbox
+					[(ngModel)]="vatRequired"
+					class="ml-2 mr-2"
+					(change)="confirmVATRequirement($event.checked)"
+				></mat-checkbox>
+				}
+				<div>
+					{{
+						getSummarySectionById("VAT", fullBOQSummary.summarySections)?.label
+					}}
+				</div>
+			</div>
+			<div class="">
+				{{
+					getSummarySectionById("VAT", fullBOQSummary.summarySections)?.amount
+						| number : "1.2-2"
+				}}
+			</div>
+		</div>
+		} @case ('PROVISIONAL_SUM_OF_PC') {
+		<div class="flex justify-between border-top px-3 py-2 items-center">
+			<div class="flex items-center">
+				<div>
+					{{
+						getSummarySectionByCode("D", fullBOQSummary.summarySections)?.label
+					}}
+					[
+				</div>
+				<div>
+					@if (viewMode == 'edit') {
+					<input
+						(change)="calculateItemsTotal()"
+						(keyup)="calculateItemsTotal()"
+						[(ngModel)]="provisionSumPhysicalContingencyPercent"
+						class="w-20 p-2 outline outline-gray-800 mx-1 rounded-sm text-right"
+						type="number"
+					/>
+					} @if (viewMode == 'readOnly' || viewMode == 'tendererEditing') {
+					<span>
+						{{ provisionSumPhysicalContingencyPercent }}
+					</span>
+					}
+				</div>
+				<div>% of (C)]</div>
+			</div>
+			<div class="">
+				{{
+					getSummarySectionByCode("D", fullBOQSummary.summarySections)?.amount
+						| number : "1.2-2"
+				}}
+			</div>
+		</div>
+		} @case ('PROVISIONAL_SUM_OF_VP') {
+		<div class="flex justify-between border-top p-3 items-center">
+			<div class="flex items-center">
+				<div>
+					{{
+						getSummarySectionByCode("F", fullBOQSummary.summarySections)?.label
+					}}
+					[
+				</div>
+				<div>
+					@if (viewMode == 'edit') {
+					<input
+						(change)="calculateItemsTotal()"
+						(keyup)="calculateItemsTotal()"
+						[(ngModel)]="provisionSumVariationOfPricesPercent"
+						class="w-20 p-2 outline outline-gray-800 mx-1 rounded-sm text-right"
+						type="number"
+					/>
+					} @if (viewMode == 'readOnly' || viewMode == 'tendererEditing') {
+					<span>{{ provisionSumVariationOfPricesPercent }}</span>
+					}
+				</div>
+				<div>% of (E)]</div>
+			</div>
+			<div class="">
+				{{
+					getSummarySectionByCode("F", fullBOQSummary.summarySections)?.amount
+						| number : "1.2-2"
+				}}
+			</div>
+		</div>
+		} @case ('TMA_FEE') {
+		<div
+			class="flex justify-between border-top p-3 items-center"
+			[ngClass]="{ 'font-bold': summarySection.bold }"
+		>
+			<div class="flex items-center space-x-3">
+				{{ summarySection?.label }}
+				<button
+					class="-mb-1"
+					mat-icon-button
+					matSuffix
+					(click)="openInfoDialog(summarySection)"
+				>
+					<mat-icon
+						class="text-gray-400 hover:!text-primary"
+						matSuffix
+						matTooltip="More information about this Fee"
+					>
+						help_outline
+					</mat-icon>
+				</button>
+			</div>
+			<div class="">
+				{{ summarySection?.amount | number : "1.2-2" }}
+			</div>
+		</div>
+		} @default {
+		<div
+			class="flex justify-between border-top p-3 items-center"
+			[ngClass]="{ 'font-bold': summarySection.bold }"
+		>
+			<div class="flex">
+				{{ summarySection?.label }}
+			</div>
+			<div class="">
+				{{ summarySection?.amount | number : "1.2-2" }}
+			</div>
+		</div>
+		} } }
+	</div>
+</div>
+}

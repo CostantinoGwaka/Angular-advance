@@ -1,0 +1,58 @@
+<h1 mat-dialog-title>{{ title }}</h1>
+<div mat-dialog-content>
+  @if (inputType != 'textarea') {
+    <form
+      [formGroup]="form"
+      autocomplete="off"
+      class="flex flex-wrap"
+      >
+      <mat-form-field appearance="outline">
+        <mat-label>{{ inputLabel }}</mat-label>
+        <input
+          [type]="inputType"
+          matInput
+          formControlName="inputValue"
+          placeholder="Enter {{ title }}"
+          />
+        @if (!form.get('inputValue').valid && form.get('inputValue').touched) {
+          <mat-error
+            >
+            {{ inputLabel }} is required
+          </mat-error>
+        }
+      </mat-form-field>
+    </form>
+  }
+  @if (inputType == 'textarea') {
+    <form
+      [formGroup]="form"
+      autocomplete="off"
+      class="flex flex-wrap"
+      >
+      <mat-form-field appearance="outline">
+        <mat-label>{{ inputLabel }}</mat-label>
+        <textarea
+          matInput
+          formControlName="inputValue"
+          placeholder="Enter {{ title }}"
+        ></textarea>
+        @if (!form.get('inputValue').valid && form.get('inputValue').touched) {
+          <mat-error
+            >
+            {{ inputLabel }} is required
+          </mat-error>
+        }
+      </mat-form-field>
+    </form>
+  }
+</div>
+<div mat-dialog-actions class="flex justify-end w-full">
+  @if (cancelButtonText) {
+    <button mat-button mat-dialog-close>
+      {{ cancelButtonText }}
+    </button>
+  }
+  <button [disabled]="!form.valid" (click)="confirm()" mat-button>
+    {{ confirmButtonText }}
+  </button>
+</div>

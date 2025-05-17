@@ -1,0 +1,137 @@
+<div
+  [class]="'border  w-full bg-white rounded-2xl drop-shadow-sm '+(to == '' ? 'h-[588px]' : subject == 'clarification' ? 'h-[588px]' : 'h-[300px]')"
+  >
+  <div class="h-[130px] pb-1 pt-3">
+    @if (to == '' && subject != 'clarification') {
+      <div class="to-area">
+        <app-to-area
+          (selectedEmailList)="selectedEmail($event)"
+          (closeBtnToArea)="closeBtn()"
+        ></app-to-area>
+      </div>
+    }
+    @if (to != '' && subject == 'clarification') {
+      <div class="to-area">
+        <div class="pl-6">
+          <div class="grid grid-cols-12 space-x-8 md:space-x-8 content-center">
+            <div class="col-span-9 pl">
+              <div class="email-area" class="w-[85%]">
+                <h3 class="!text-black pt-3 !text-md !leading-none !font-medium text-start">
+                  {{ subStringSubjectTitle(clarificationHeadSubject) | uppercase }}
+                </h3>
+              </div>
+            </div>
+            <div class="col-span-3 pl-24">
+              <div class="flex">
+                <div class="send-menu relative"></div>
+                <div class="pl-16 pt-1">
+                  <mat-icon
+                    (click)="closeBtn()"
+                    class="align-items-center font-bold text-black pt-1 cursor-pointer"
+                    >close</mat-icon
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+      @if (subject == '') {
+        <div class="subject-area">
+          <app-subject-section
+            (selectedSubjectTitleUuid)="selectedSubjectTitleUuid($event)"
+          ></app-subject-section>
+        </div>
+      }
+      @if (subject != '' && subject == 'clarification') {
+        <div class="subject-area" @fadeIn>
+          <mat-form-field class="p-2" appearance="outline">
+            <mat-label>Subject</mat-label>
+            <input matInput userSubject [(ngModel)]="userSubject" placeholder="Enter your subject" />
+          </mat-form-field>
+        </div>
+      }
+    </div>
+    <div class="text-edtitor-area pt-3 w-[973px]">
+      <word-processor
+        [selectedToolBarButtons]="selectedToolBarButtons"
+      [additionalOptions]="{
+      toolBarPosition: toolBarPosition,
+      editAreaBorder:false
+    }"
+        [content]="editorContent"
+        (onContentChange)="onEditorChanged($event)"
+      ></word-processor>
+    </div>
+    <br />
+    @if (loadmenu) {
+      <div class="p-3">
+        <app-loader @fadeIn [message]="'Preparing menu please wait...'"></app-loader>
+      </div>
+    }
+    @if (!loadmenu) {
+      <div class="control-area mt-[1.5rem]">
+        @if (!sendMessageBtn) {
+          <div class="send-button" (click)="sendMessage()">
+            <span class="align-middle font-bold">Send</span>
+          </div>
+        }
+        @if (sendMessageBtn) {
+          <div class="h-[20px] w-[40px] inline-block">
+            <svg
+              aria-hidden="true"
+              class="mr-2 w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 !fill-primary"
+              viewBox="0 0 100 101"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              >
+              <path
+                d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                fill="currentColor"
+                />
+              <path
+                d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                fill="currentFill"
+                />
+            </svg>
+          </div>
+        }
+        &nbsp; &nbsp;
+        @if (itemData.data.tenderer == null  && subject != '' && subject == 'clarification') {
+          <div
+            class="send-button bg-black"
+            (click)="saveDraft()"
+            >
+            <span class="align-middle font-normal">Save Draft</span>
+          </div>
+        }
+        <input
+          type="file"
+          #attachment
+          style="display: none;"
+          (change)="attachFile($event)"
+          accept="application/pdf,image/*"
+          />
+        <div class="file-attachment-button">
+          @if (!selectedFile) {
+            <mat-icon
+              [svgIcon]="'paperclip'"
+              class="align-middle font-bold"
+              (click)="attachment.click()"
+            ></mat-icon>
+          }
+          @if (selectedFile) {
+            <mat-icon
+              [svgIcon]="'pdf'"
+              class="align-middle font-bold"
+              (click)="attachment.click()"
+            ></mat-icon>
+          }
+        </div>
+        <!-- <div class="image-attachment-button" (click)="selectImage()">
+        <mat-icon [svgIcon]="'image'" class="align-middle font-bold"></mat-icon>
+      </div> -->
+    </div>
+  }
+</div>

@@ -1,0 +1,8 @@
+@if (loading) {
+  <span> Getting time... </span>
+}
+@if (!loading) {
+  <span>
+    {{ formattedRealTime }}
+  </span>
+}

@@ -1,0 +1,8 @@
+.bottom__sheet {
+    width: 500vw !important;
+    /* Make it span the entire viewport width */
+    max-width: 500vw !important;
+    /* Prevent restrictions */
+    border-radius: 0 !important;
+    /* Optional: Remove rounded corners */
+}

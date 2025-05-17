@@ -1,0 +1,67 @@
+<div class="h-full" @fadeIn>
+  <div class="flex flex-wrap justify-content-between items-center mb-4">
+    <h2>Business Lines</h2>
+
+    @if (user?.rolesListStrings?.includes('TENDERER_ADMIN')) {
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="updateCompanyBusinessLines()"
+      class="!m-0 py-1 pb-1 pl-3 cursor-pointer items-center flex flex-wrap gen__button btn__primary"
+    >
+      <mat-icon>edit</mat-icon> Update Business Lines
+    </button>
+    }
+  </div>
+
+  <app-loader *ngIf="loading" [message]="'Loading company business line...'"></app-loader>
+
+  <!-- @if (user?.rolesListStrings?.includes('TENDERER_ADMIN')) {
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="updateCompanyBusinessLines()"
+    class="!m-0 py-1 pb-1 pl-3 pr-3 cursor-pointer items-center flex flex-wrap gen__button btn__primary"
+  >
+    <mat-icon>edit</mat-icon> Update Business Lines
+  </button>
+  }  -->
+  @if (loading) {
+  <app-loader [message]="'Loading company business line...'"></app-loader>
+  } @if (!loading && businessLineList.length !== 0) {
+  <div class="grid md:grid-cols-3 gap-4">
+    @for(item of businessLineList; track item){
+    <div class="flex flex-row" @fadeIn>
+      <app-item-detail-with-icon
+        [iconClass]="((item.approvalStatus == 'APPROVED') ? 'text-accent' : (item.approvalStatus == 'SUBMITTED') ? '' :  'text-danger')"
+        [icon]="((item.approvalStatus == 'APPROVED') ? 'check_circle' : (item.approvalStatus == 'SUBMITTED') ? 'access_time' :  'cancel')"
+        [titleClass]="((item.approvalStatus == 'APPROVED') ? '' : (item.approvalStatus !== 'APPROVED'  && item.approvalStatus == 'SUBMITTED') ? '' :  'text-danger')"
+        [label]="item.businessLine.tenderCategory.name"
+        [title]="item.businessLine.name"
+      >
+      </app-item-detail-with-icon>
+      @if (user?.tenderer?.tendererType == 'COMPANY_LOCAL') {
+      <div class="pl-3.5">
+        @for( data of item.tendererCertificateList; track data){
+        <ng-container>
+          @if (data?.description?.includes('Contractors')) {
+          <button
+            (click)="updateBusinessLineCrb(item, data)"
+            mat-flat-button
+            color="primary"
+            class="!m-0 py-1 pb-1 pl-3 pr-3 cursor-pointer items-center flex flex-wrap gen__button btn__primary rounded-full"
+          >
+            <mat-icon>update</mat-icon> Update
+          </button>
+          }
+        </ng-container>
+        }
+      </div>
+      }
+    </div>
+    }
+  </div>
+  } @if (!loading && businessLineList.length === 0) {
+  <div>No business line found</div>
+  }
+</div>

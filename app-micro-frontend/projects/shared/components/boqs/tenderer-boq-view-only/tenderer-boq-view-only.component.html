@@ -1,0 +1,38 @@
+@if (showBOQFetcher) {
+<div class="grid place-content-center">
+  <app-boq-fetcher
+    [fetchingConfiguration]="fetchingConfiguration"
+    [onBOQFinishedLoading]="onBOQFinishedLoading"
+    [forPPRAAdmin]="forPPRAAdmin"
+  >
+  </app-boq-fetcher>
+</div>
+} @if ( flatNestedSpecificationItemsView.length > 0 && !showBOQFetcher && exchangeRateIsSet ) {
+<app-flat-nested-specifications
+  #flatNestedSpecificationsComponent
+  [initialMode]="viewMode"
+  [requisitionDate]="requisitionDate()"
+  [viewMode]="viewMode"
+  [onBOQsCompletionStatusChange]="onCompleteFunction"
+  [showValueColumn]="true"
+  [showUnitRateColumn]="false"
+  [showTotalColumn]="false"
+  [canAddSpecs]="false"
+  [showCodeOrSNColumn]="false"
+  [showBoqSummary]="false"
+  [provisionSumPhysicalContingencyPercent]="
+		provisionSumPhysicalContingencyPercent
+	"
+  [vatRequired]="vatRequired"
+  [provisionSumVariationOfPricesPercent]="provisionSumVariationOfPricesPercent"
+  [onItemChange]="onItemChange"
+  [currencyCode]="currencyCode"
+  [exchangeRate]="exchangeRate"
+  [flatNestedSpecificationItemsView]="flatNestedSpecificationItemsView"
+  (onBoqSummarySumsChange)="_onBoqSummarySumsChange($event)"
+></app-flat-nested-specifications>
+} @if ( flatNestedSpecificationItemsView.length > 0 && !showBOQFetcher && !exchangeRateIsSet ) {
+<div class="text-center text-red-500 bg-red-100 p-3 !border-red-500">
+  Please set the bid exchange rate so that you can view/update the BOQs
+</div>
+}

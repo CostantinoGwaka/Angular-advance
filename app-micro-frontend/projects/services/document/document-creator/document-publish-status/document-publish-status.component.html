@@ -1,0 +1,140 @@
+<div class="flex justify-center">
+  <ng-container>
+    <div class="grid place-content-center p-8 text-center">
+      <div class="space-y-4">
+        @if (isGettingDocument) {
+          <div
+            class="p-3 bg-black/5 rounded flex space-x-2"
+            >
+            <div>
+              <mat-spinner
+                [diameter]="20"
+                [strokeWidth]="3"
+                [color]="'primary'"
+              ></mat-spinner>
+            </div>
+            <div>Getting document...</div>
+          </div>
+        }
+        @if (isCreatingDocument) {
+          <div
+            class="p-3 bg-black/5 rounded flex space-x-2"
+            >
+            <div class="" g>
+              <mat-spinner
+                [diameter]="20"
+                [strokeWidth]="3"
+                [color]="'primary'"
+              ></mat-spinner>
+            </div>
+            <div>This Document is being created. Please wait...</div>
+          </div>
+        }
+        @if (documentUuid && !isGettingDocument && !isCreatingDocument) {
+          <div
+            class="p-3 bg-accent/10 rounded"
+            >
+            This document was created on
+            <b>{{ documentCreationDate | date : "medium" }}</b>
+          </div>
+        }
+        @if (!isGettingDocument && !isCreatingDocument) {
+          <div
+            class="rounded border overflow-hidden divide-y"
+            >
+            @if (!documentUuid) {
+              <div
+                class="px-5 py-3 space-y-2 text-center hover:bg-primary/5 cursor-pointer transition-all"
+                (click)="start()"
+                >
+                <div class="text-xl !text-accent">
+                  <mat-icon>note_add</mat-icon>
+                </div>
+                <div class="text-black font-bold">Create the document</div>
+                <div class="text-gray-400 text-sm">Create a new document</div>
+              </div>
+            }
+            @if (hasHTMLDocument && documentUuid) {
+              <a
+                [routerLink]="['/document-reader']"
+            [queryParams]="{
+              item: itemUuid,
+              type: documentType
+            }"
+                class="px-5 py-3 space-y-2 text-center hover:bg-primary/5 cursor-pointer transition-all"
+                >
+                <div class="text-lg !text-primary">
+                  <mat-icon>description</mat-icon>
+                </div>
+                <div class="text-black font-bold">View Created Document</div>
+                <div class="text-gray-400 text-sm">
+                  View the created document in HTML format
+                </div>
+              </a>
+            }
+            @if (!gettingFile && documentUuid) {
+              <div
+                class="px-5 py-3 space-y-2 text-center hover:bg-primary/5 cursor-pointer transition-all"
+                (click)="downloadDocument()"
+                >
+                <div class="text-lg !text-primary">
+                  <mat-icon>picture_as_pdf</mat-icon>
+                </div>
+                <div class="text-black font-bold">View Created Document as PDF</div>
+                <div class="text-gray-400 text-sm">
+                  View the created document in a PDF format
+                </div>
+              </div>
+            }
+            @if (gettingFile && documentUuid) {
+              <div
+                class="px-5 py-3 space-y-2 text-center"
+                >
+                <div class="text-lg !text-primary grid place-content-center">
+                  <mat-spinner
+                    [diameter]="20"
+                    [strokeWidth]="3"
+                    [color]="'primary'"
+                  ></mat-spinner>
+                </div>
+                <div class="text-black font-bold">View Document</div>
+                <div class="text-gray-400 text-sm">
+                  Getting the document, please wait
+                </div>
+              </div>
+            }
+            @if (documentUuid) {
+              <div
+                class="px-5 py-3 space-y-2 text-center hover:bg-primary/5 cursor-pointer transition-all"
+                (click)="start()"
+                >
+                <div class="text-xl !text-accent">
+                  <mat-icon>replay</mat-icon>
+                </div>
+                <div class="text-black font-bold">Recreate the document</div>
+                <div class="text-gray-400 text-sm">
+                  Recreate the document if you have made some changes
+                </div>
+              </div>
+            }
+          </div>
+        }
+        <div class="grid place-content-center">
+          @if (documentUuid && !isGettingDocument && !isCreatingDocument && !hideContinueButton) {
+            <button
+              mat-stroked-button
+              (click)="onContinue()"
+              color="primary"
+              mat-flat-button
+              >
+              <div class="flex space-x-2 items-center">
+                <div>Continue</div>
+                <mat-icon>arrow_forward</mat-icon>
+              </div>
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>

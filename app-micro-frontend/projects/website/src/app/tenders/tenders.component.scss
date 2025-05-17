@@ -1,0 +1,17 @@
+::ng-deep {
+  .home-search-area {
+    .mat-mdc-form-field-wrapper {
+      padding-bottom: 0px !important
+    }
+  }
+  .mat-mdc-form-field-appearance-outline .mat-mdc-form-field-outline {
+    background-color: white;
+    border-radius: 5px;
+  }
+  .mat-mdc-form-field-appearance-outline .mat-mdc-form-field-outline {
+    color: rgb(152, 152, 152);
+  }
+  .mat-mdc-form-field-wrapper {
+    padding-bottom: 5px !important
+  }
+}

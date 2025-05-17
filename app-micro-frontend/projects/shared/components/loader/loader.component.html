@@ -1,0 +1,14 @@
+@if (progressMode == 'determinate') {
+  <mat-progress-bar
+    [mode]="progressMode"
+    [value]="progressValue"
+  ></mat-progress-bar>
+}
+@if (progressMode == 'indeterminate') {
+  <mat-progress-bar
+    [mode]="progressMode"
+  ></mat-progress-bar>
+}
+@if (showMessage) {
+  <div>{{ message || "Updating Information..." }}</div>
+}

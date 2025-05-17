@@ -1,0 +1,30 @@
+ :host {
+     display: flex;
+ }
+
+.custom-snackbar {
+    background-color: initial !important;
+    background: initial !important;
+    padding: 0 !important;
+    min-width: 350px;
+    color: transparent !important;
+    white-space: pre-wrap;
+    box-shadow: none !important;
+    --mdc-snackbar-container-color: initial !important;
+    --mat-mdc-snack-bar-button-color: initial !important;
+}
+
+.progress-container {
+    height: 4px;
+    background-color: #d4c2c2;
+    border-radius: 2px;
+    width: 100%;
+    margin-top: 15px;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: #e0e0e0;
+    transition: width 0.1s ease;
+    border-radius: 2px;
+}

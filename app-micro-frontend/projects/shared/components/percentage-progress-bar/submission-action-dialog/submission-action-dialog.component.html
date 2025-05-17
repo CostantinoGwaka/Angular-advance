@@ -1,0 +1,41 @@
+<app-modal-header
+  (closeModal)="closeModal(null)"
+  [title]="'Confirm Bid Modification Request Cancellation'">
+</app-modal-header>
+
+<div class="form-holder">
+  <div class="row">
+
+    <app-custom-alert-box
+      [alertClass]="alertClass"
+      [alertTextClass]="alertTextClass"
+      [alertInfo]="cancellationAlert">
+    </app-custom-alert-box>
+
+    <div class="col-sm-12 mt-4 mb-3" @fadeIn>
+      <mat-form-field appearance="outline">
+        <mat-label>Please type {{entityNumber}} to confirm</mat-label>
+        <input matInput [(ngModel)]="confirmKey" placeholder="" [type]="'text'"/>
+        <mat-hint class="!text-[#e60000]">
+          Please type {{entityNumber}} to confirm this action
+        </mat-hint>
+      </mat-form-field>
+    </div>
+
+    @if (confirmKey == entityNumber) {
+      <div class="col-sm-12"  @fadeIn>
+        <app-save-area
+          [confirmFirst]="true"
+          [loadingMessage]="savingMessage"
+          [savingData]="isLoading"
+          (save)="cancelSubmissionModification()"
+          [confirmText]="confirmMessage"
+          [showCancel]="false"
+          [saveText]="'Cancel Request'"
+          [saveColor]="'warn'"
+          (cancel)="closeModal(false)">
+        </app-save-area>
+      </div>
+    }
+  </div>
+</div>

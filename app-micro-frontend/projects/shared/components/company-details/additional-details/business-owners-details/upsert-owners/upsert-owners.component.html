@@ -1,0 +1,15 @@
+<div class="form-stepper-holder">
+    <ng-template matStepLabel>General Information</ng-template>
+    <main-dynamic-form
+      class="py-5"
+      [fields]="fields"
+      [form]="form"
+      [confirmFirst]="true"
+      [loading]="loading"
+      [loadingMessage]="'Saving data. Please wait...'"
+      confirmMessage="You are about to add business owner. Do you want to continue?"
+      (closeForm)="close(false)"
+      (submit)="submitForm()">
+    </main-dynamic-form>
+  </div>
+  

@@ -1,0 +1,97 @@
+<div class="grid grid-cols-12 gap-1">
+  <div class="col-span-5">
+    <div class="py-2 font-medium">Available Users {{label}} ({{available?.length}})</div>
+    <div>
+      <mat-form-field appearance="outline">
+        <mat-label>Search</mat-label>
+        <input matInput placeholder="Search" [(ngModel)]="availableSearchString">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </div>
+    <div>
+      <div class="border !border-black border-2 rounded-md p-[0.19rem] h-[400px] overflow-auto bg-[#F8F8F8]"
+        style="border-color: #d0d0d0!important;">
+        @if (loading) {
+          <div @fadeIn>
+            <div class="animate-pulse bg-gray-200 rounded-md p-2 mb-1 h-[70px]"></div>
+            <div class="animate-pulse bg-gray-200 rounded-md p-2 mb-1 h-[70px]"></div>
+            <div class="animate-pulse bg-gray-200 rounded-md p-2 mb-1 h-[70px]"></div>
+            <div class="animate-pulse bg-gray-200 rounded-md p-2 mb-1 h-[70px]"></div>
+          </div>
+        }
+        @for (item of available|search:'firstName,middleName,lastName,fullName,departmentName,position':availableSearchString; track item) {
+          <app-select-item @fadeIn (onSelected)="pickAvailable($event)" (onInterested)="interestAvailable($event)"
+          [userItem]="item"></app-select-item>
+        }
+        @if (available?.length == 0 && loading == false) {
+          <div class="mt-[200px] text-center">
+            <div class="text-gray-300 text-lg">List Empty</div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+  <div class="col-span-2 text-center ">
+    <div class="inline-block w-[100px] mt-[200px]">
+      <div (click)="commitToLeft()"
+        class="rounded  m-1 p-2 text-center cursor-pointer" [ngClass]="{'active-item':interestedSelectedItems.length>0,'inactive-item':interestedSelectedItems.length==0}">
+        <div class="inline-block  flex justify-between" >
+          <div class="inline-block align-middle"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+            stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+          </svg></div>
+          <div class="inline-block align-middle">Remove</div>
+
+        </div>
+      </div>
+      <div (click)="commitToRight()"
+        class="rounded  m-1 p-2 text-center cursor-pointer" [ngClass]="{'active-item':interestedAvailableItems.length>0,'inactive-item':interestedAvailableItems.length==0}">
+        <div class="inline-block flex justify-between" >
+          <div class="inline-block align-middle">Add</div>
+          <div class="inline-block align-middle">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+              stroke="currentColor" class="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-span-5">
+    <div class="py-2 font-medium">Selected Team Members{{label}} ({{selected?.length}})</div>
+    <div>
+      <mat-form-field appearance="outline">
+        <mat-label>Search</mat-label>
+        <input matInput placeholder="Search" [(ngModel)]="selectedSearchString">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </div>
+    <div>
+      <div class="border  border-2 rounded-md p-[0.19rem] h-[400px] overflow-auto bg-[#F8F8F8]"
+        style="border-color: #d0d0d0!important;">
+        @if (loading) {
+          <div @fadeIn>
+            <div class="animate-pulse bg-gray-200 rounded-md p-2 mb-1 h-[70px]"></div>
+            <div class="animate-pulse bg-gray-200 rounded-md p-2 mb-1 h-[70px]"></div>
+            <div class="animate-pulse bg-gray-200 rounded-md p-2 mb-1 h-[70px]"></div>
+            <div class="animate-pulse bg-gray-200 rounded-md p-2 mb-1 h-[70px]"></div>
+          </div>
+        }
+        @if (!loading) {
+          @for (item of selected|search:'firstName,middleName,lastName,fullName,departmentName,position':selectedSearchString; track item) {
+            <app-select-item @fadeIn [origin]="'selected'" [hasChairman]="hasChairman"
+              (onTeamMemberPositionChanged)="itemPositionChanged($event)" (onSelected)="pickSelected($event)"
+              (onInterested)="interestSelected($event)" [userItem]="item">
+            </app-select-item>
+          }
+        }
+        @if (selected?.length == 0 && loading == false) {
+          <div class="mt-[200px] text-center">
+            <div class="text-gray-300 text-lg">List Empty</div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>

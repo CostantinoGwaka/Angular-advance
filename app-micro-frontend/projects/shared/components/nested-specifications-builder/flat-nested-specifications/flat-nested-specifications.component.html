@@ -1,0 +1,285 @@
+<div id="flat-nested-specification">
+  @if (viewMode == 'edit' || viewMode == 'manage') {
+  <div class="flex justify-end mb-4">
+    <div class="space-x-3 flex">
+      <button
+        (click)="addParentItem(-1, 'after')"
+        class="flex items-center !border !border-primary p-2 space-x-1 rounded"
+      >
+        <mat-icon inline>add</mat-icon> <span>Add Parent Item</span>
+      </button>
+      @if (flatNestedSpecificationItemsView.length > 0) {
+      <button
+        (click)="sortParents()"
+        class="flex items-center !border !border-gray-800 p-2 space-x-1 rounded"
+      >
+        <mat-icon inline>sort</mat-icon> <span>Sort Parent Items</span>
+      </button>
+      }
+    </div>
+  </div>
+  }
+  <div class="relative bg-gray-200 rounded border w-full h-full overflow-hidden">
+    @if (isSorting) {
+    <div class="absolute inset-0 z-10 bg-white grid place-content-center">
+      <div class="text-center">
+        <div class="grid place-content-center">
+          <mat-progress-spinner [diameter]="20" mode="indeterminate"></mat-progress-spinner>
+        </div>
+        <div>Sorting Items</div>
+      </div>
+    </div>
+    } @if ( (viewMode == 'initiation' || viewMode == 'tendererEditing' || viewMode == 'manage' ||
+    viewMode == 'readOnly') && flatNestedSpecificationItemsView.length > 0 ) {
+    <div class="border-b">
+      <app-nested-specifications-info-bar
+        #infoBar
+        [items]="flatNestedSpecificationItemsView"
+        (onGoToItem)="goToIncompleteItem($event)"
+        [showUnitRateColumn]="showUnitRateColumn"
+        (exportData)="exportData()"
+        [onBOQsCompletionStatusChange]="onBOQsCompletionStatusChange"
+        [getPercentItemSource]="getPercentItemSource"
+        [viewMode]="viewMode"
+      ></app-nested-specifications-info-bar>
+    </div>
+    }
+    <div class="w-full h-full z-10">
+      <div [style.height.px]="height" [style.width.%]="100">
+        <cdk-virtual-scroll-viewport
+          #itemsListViewPort
+          [itemSize]="20"
+          [style.height.px]="height"
+          [style.height.%]="100"
+          [maxBufferPx]="height / 2"
+          [minBufferPx]="height / 2"
+          (scroll)="onViewportScroll($event)"
+          class=""
+        >
+          <div
+            #itemElement
+            id="v-item-{{ flatNestedSpecificationItem?.uuid }}"
+            *cdkVirtualFor="
+							let flatNestedSpecificationItem of filterItemsToShow(
+								flatNestedSpecificationItemsView
+							)
+						"
+            [style.padding-left.px]="flatNestedSpecificationItem.level * 25"
+            class="mb-0.5  group-{{ flatNestedSpecificationItem?.groupId }}"
+          >
+            @if (flatNestedSpecificationItem.type == 'GroupItem') {
+            <div
+              class="flex group relative rounded text-white p-2 justify-between gap-0.5 overflow-hidden space-x-4 bg-gray-800
+               item-group-{{ flatNestedSpecificationItem?.groupId }}"
+              id="group-item-{{ flatNestedSpecificationItem?.uuid }}"
+            >
+              <div class="flex items-center">
+                <div>
+                  {{ flatNestedSpecificationItem?.nestedSpecificationGroupItem ?.name }}
+                </div>
+              </div>
+              <div>
+                @if (viewMode == 'initiation') {
+                <button
+                  (click)="selectBOQItems(flatNestedSpecificationItem)"
+                  class="bg-white text-black p-2 rounded-sm whitespace-nowrap"
+                >
+                  Select BOQ Items
+                </button>
+                }
+              </div>
+            </div>
+            } @if (flatNestedSpecificationItem.type == 'GroupItemFooter') {
+            <div
+              class="flex group relative rounded text-white p-2 font-bold justify-between gap-0.5 overflow-hidden space-x-4 bg-gray-500
+               item-group-footer{{ flatNestedSpecificationItem?.groupId }}"
+              id="group-item-footer{{ flatNestedSpecificationItem?.uuid }}"
+            >
+              <div class="flex items-center">
+                <div>
+                  Total: {{ flatNestedSpecificationItem ?.nestedSpecificationGroupItemFooter?.name
+                  }}
+                </div>
+              </div>
+              <div>
+                {{ flatNestedSpecificationItem ?.nestedSpecificationGroupItemFooter?.total }}
+              </div>
+            </div>
+            }
+            <!--SPECS ITEM DESCRIPTION-->
+            @if (flatNestedSpecificationItem.type == 'ItemDescription') {
+            <specification-group-item
+              [initialMode]="viewMode"
+              [onItemSelection]="onDescriptionItemSelection"
+              [expandedItemId]="expandedItemId"
+              [showUnitRateColumn]="showUnitRateColumn"
+              [addSpecificationText]="addSpecificationText"
+              [saveFunction]="saveFunction"
+              [deleteFunction]="deleteFunction"
+              [currentEditingItem]="currentEditingItem"
+              [currentGroupEditingGroupId]="currentGroupEditingGroupId"
+              [onItemRemove]="onItemRemove"
+              (onExpand)="onExpand($event, flatNestedSpecificationItem.groupId)"
+              [level]="flatNestedSpecificationItem.level"
+              [groupId]="flatNestedSpecificationItem.groupId"
+              [item]="flatNestedSpecificationItem.nestedSpecificationItem"
+              [onItemEditing]="onItemEditing"
+              [onItemSaved]="onItemSaved"
+              [onMenuAction]="onMenuAction"
+              [onViewItemsFilter]="onViewItemsFilter"
+              [isExpandable]="isExpandable"
+              [canModifyChildItem]="canModifyChildItem"
+              [isExpanded]="flatNestedSpecificationItem.parentIsExpanded"
+              (onSortChildren)="sortItems($event)"
+              (onEdit)="editParentItem($event)"
+            ></specification-group-item>
+            }
+            <!--SPECS ITEM DESCRIPTION END-->
+            <!--SPECS TABLE HEADER-->
+            @if ( flatNestedSpecificationItem.type == 'NestedSpecificationTableHeader' ) {
+            <div class="flex group relative rounded text-white gap-0.5 overflow-hidden">
+              @if (showCodeOrSNColumn) {
+              <div
+                class="bg-gray-600 p-[10px] np {{
+									editableSpecsItemSizes.codeWidth
+								}}"
+              >
+                Code/SN
+              </div>
+              }
+              <div class="flex-1 bg-gray-600 p-[10px] np">Description</div>
+              @if (showUnitOfMeasureColumn) {
+              <div
+                class="col-span-3 bg-gray-600 p-[10px] np  {{
+									editableSpecsItemSizes.unitOfMeasureWidth
+								}}"
+              >
+                Unit of measure
+              </div>
+              } @if (showValueColumn) {
+              <div
+                [class]="
+									'col-span-3 bg-gray-600 p-[10px] np ' +
+									(showTotalColumn
+										? editableSpecsItemSizes.quantityWidth
+										: ' flex-1 ')
+								"
+              >
+                Quantity/Value
+              </div>
+              } @if (showUnitRateColumn) {
+              <div
+                class="col-span-3 bg-gray-600 p-[10px] np {{
+									editableSpecsItemSizes.unitRateWidth
+								}}"
+              >
+                Unit Rate ({{ currencyCode }})
+              </div>
+              } @if (showTotalColumn) {
+              <div
+                class="col-span-3 bg-gray-600 p-[10px] np {{
+									editableSpecsItemSizes.totalWidth
+								}} pr-10"
+              >
+                Total ({{ currencyCode }})
+              </div>
+              }
+            </div>
+            }
+            <!--SPECS TABLE HEADER END-->
+            <!--SPECS TABLE ITEMS-->
+            @if ( flatNestedSpecificationItem.type == 'NestedSpecificationItem' ) {
+            <app-editable-specs-item
+              [initialMode]="viewMode"
+              [specification]="
+								flatNestedSpecificationItem.editableSpecificationItem
+							"
+              [groupId]="flatNestedSpecificationItem.groupId"
+              [onItemEdit]="editSpecificationItem"
+              [showValueColumn]="showValueColumn"
+              [editableSpecsItemSizes]="editableSpecsItemSizes"
+              [saveFunction]="saveSpecificationFunction"
+              [currentFocusedEditingItem]="currentFocusedEditingItem"
+              [showUnitRateColumn]="showUnitRateColumn"
+              [currentGroupEditingGroupId]="currentGroupEditingGroupId"
+              [showTotalColumn]="showTotalColumn"
+              [showCodeOrSNColumn]="showCodeOrSNColumn"
+              [saveCustomSubBOQItemFunction]="saveCustomSubBOQItemFunction"
+              [onItemRemove]="onItemRemove"
+              [onItemEditing]="onSpecificationItemEditing"
+              [currentEditingItem]="currentEditingSpecificationItem"
+              [deleteFunction]="deleteSpecificationFunction"
+              [onViewItemsFilter]="onViewItemsFilter"
+              [allItemsView]="flatNestedSpecificationItemsView"
+              [onItemSaved]="onEditableSpecificationItemSaved"
+              [onTotalCalculated]="calculateTotal"
+              [getPercentItemSource]="getPercentItemSource"
+              [collapseDescriptionFunction]="collapseDescriptionFunction"
+              [onItemSelection]="onEditableItemSelection"
+            ></app-editable-specs-item>
+            } @if ( canAddSpecs && flatNestedSpecificationItem.type == 'NestedSpecificationFooter' )
+            {
+            <div class="mt-1 flex mb-4 space-x-2">
+              @if (viewMode == 'initiation') {
+              <button
+                mat-stroked-button
+                color="primary"
+                (click)="addCustomDescription(flatNestedSpecificationItem)"
+                class="text-xs add-buton"
+              >
+                <mat-icon>add</mat-icon> Add custom description
+              </button>
+              } @if (viewMode == 'manage') {
+              <button
+                mat-stroked-button
+                color="primary"
+                (click)="addSpecsFromFooter(flatNestedSpecificationItem)"
+                class="text-xs add-buton"
+              >
+                <mat-icon>add</mat-icon> {{ addSpecificationText }}
+              </button>
+              } @if (viewMode == 'manage') {
+              <button
+                mat-stroked-button
+                color="primary"
+                (click)="import(flatNestedSpecificationItem.parentId)"
+                class="text-xs"
+              >
+                <mat-icon>publish</mat-icon> Import Descriptions
+              </button>
+              }
+            </div>
+            }
+            <!--SPECS TABLE FOOTER END-->
+          </div>
+        </cdk-virtual-scroll-viewport>
+      </div>
+    </div>
+  </div>
+  @if (viewMode == 'edit' || viewMode == 'manage') {
+  <div
+    mat-ripple
+    (click)="addParentItem(-1, 'after')"
+    class="w-full grid place-content-center mt-3 !border-2 font-bold border-gray-800 p-2 rounded cursor-pointer"
+  >
+    <div class="flex">
+      <mat-icon inline>add</mat-icon>
+      Add Parent Item
+    </div>
+  </div>
+  } @if (showBoqSummary && flatNestedSpecificationItemsView?.length > 0 && showUnitRateColumn) {
+  <app-boq-summary
+    #boqSummaryComponent
+    [viewMode]="initialMode == 'initiation' ? 'edit' : viewMode"
+    [provisionSumPhysicalContingencyPercent]="
+			provisionSumPhysicalContingencyPercent
+		"
+    [vatRequired]="vatRequired"
+    [provisionSumVariationOfPricesPercent]="
+			provisionSumVariationOfPricesPercent
+		"
+    (onBoqSummarySumsChange)="_onBoqSummarySumsChange($event)"
+    [flatNestedSpecificationItemsView]="flatNestedSpecificationItemsView"
+  ></app-boq-summary>
+  }
+</div>

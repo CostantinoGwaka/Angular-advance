@@ -1,0 +1,19 @@
+<h2 mat-dialog-title>Add/Modify Description for {{item?.title}}</h2>
+
+<mat-dialog-content class="mat-typography">
+  <div class="w-full max-w-[100%]">
+    <div>
+      <word-processor (onContentChange)="onEditorChanged($event)"
+                      [additionalOptions]="{toolBarPosition: toolBarPosition, editAreaBorder:false}"
+                      [content]="item?.existingContent || ''" [selectedToolBarButtons]="selectedToolBarButtons"
+      ></word-processor>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+
+  <button (click)="getTextData()" cdkFocusInitial mat-button>
+    Done
+  </button>
+</mat-dialog-actions>

@@ -1,0 +1,118 @@
+<div class="sharable-attachments">
+  @for (attach of attachmentList; track attach; let i = $index) {
+    <div class="attachment-list">
+      <div class="attachment-wrapper shadow-sm">
+        <div class="attachment-icon">
+          <mat-icon>attachment</mat-icon>
+        </div>
+        <!-- <div class="attachment-content">
+        <div class="top">
+          <div class="attach-title"><span class="title">Title:</span> {{attach?.title}}</div>
+          <div class="attach-type"><span class="title">Attachment Type:</span> {{attach?.attachmentType}}
+        </div>
+      </div>
+      <div class="bottom">
+        <span class="title">Description:</span>
+        {{attach?.description}}
+      </div>
+    </div> -->
+    <div class="remove-attachment">
+      <span matTooltip="Click to Delete" class="shadow-sm" (click)="removeAttachment(i)"
+        [matTooltipPosition]="'right'">
+        <mat-icon svgIcon="trash_delete"></mat-icon>
+      </span>
+    </div>
+  </div>
+</div>
+}
+
+<!-- <div class="attachment-list" *ngIf="attachmentList?.length === 0">
+<div class="attachment-wrapper shadow-sm">
+  <span>Your attachments will be shown here when added to list...</span>
+</div>
+</div> -->
+
+<form [formGroup]="attachmentForm" autocomplete="off" novalidate >
+  <div class="d-flex gap-4 mb-3" @fadeSmooth>
+
+
+    <div style="max-width: px" class="flex-1 justify-center">
+
+      @if (attachment) {
+        <div class="attachment-list">
+          <!-- <button class="add-attachment" mat-raised-button (click)="attachment.click()"
+          [disabled]="!attachmentForm.valid">
+          <mat-icon>attachment</mat-icon>
+          Add Attachment
+        </button> -->
+      </div>
+    }
+
+    @if (base64Output == '') {
+      <button
+        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" matRipple
+        matTooltip="Click to Add"
+        [matTooltipPosition]="'right'"
+        (click)="attachment.click()"
+        [disabled]="!attachmentForm.valid" style="width: 160px;">
+        <mat-icon>attachment</mat-icon>
+      </button>
+    }
+
+
+    <input type="file" class="d-none" #attachment (change)="onFileSelected($event)"
+      accept="application/pdf,image/*" style="width:100px ;" ><br>
+
+
+
+
+
+      @if (resultData) {
+        <div>
+          <table class="table-fixed" [cellPadding]="10">
+            <tbody>
+              <tr aria-rowspan="2"><p style="color:hsl(160, 34%, 56%); "><b><i>DOCUMENT VERIFICATION RESULT</i></b></p></tr>
+              @if (resultData?.name) {
+                <tr>
+                  <th>Document Name:</th><td><i>{{resultData?.name}}</i></td>
+                </tr>
+              }
+              @if (resultData?.signedDate) {
+                <tr> <th>Signed Date:</th> <td><i>{{resultData?.signedDate}}</i></td></tr>
+              }
+              @if (resultData?.status) {
+                <tr><th>Verification Status:</th><td><i>{{resultData?.status |replace: '_': ' '}}</i></td></tr>
+              }
+              <tr>
+              </tr>
+              <tr><td></td><a [routerLink]="''"><button type="button" class="btn btn-primary"  style="width: 150px;">OK</button></a><td></tr>
+            </tbody>
+          </table>
+        </div>
+      }
+
+      @if (base64Output != '' && !resultData) {
+        <div>
+          <mat-progress-bar mode="buffer"></mat-progress-bar>
+          <app-save-area
+            [saveDisabled]="!attachmentForm.valid"
+            (save)="verifyDocument(base64Output)"
+            (cancel)="close(false)"
+            [loadingMessage]="'Loading please wait..'"
+            [savingData]="isLoading"
+            [confirmText]="'Confirm Saving Information?'"
+          ></app-save-area>
+        </div>
+      }
+
+
+    </div>
+
+
+  </div>
+</form>
+
+<div class="grid grid-cols-12 gap-4" >
+
+</div>
+</div>

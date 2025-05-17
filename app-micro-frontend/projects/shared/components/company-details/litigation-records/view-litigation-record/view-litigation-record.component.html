@@ -1,0 +1,75 @@
+@if (fetchingItem) {
+  <app-loader [message]="'Getting details kindly be patient...'"></app-loader>
+}
+
+@if (litigationRecord) {
+  <div class="container-fluid" @fadeSmooth>
+    <div class="row">
+      <div class="col-sm-4">
+        <app-view-details-item key="Contract Name" [value]="litigationRecord?.contractName"></app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item key="Contract Number" [value]="litigationRecord?.contractNumber"></app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        @if (litigationRecord?.purchaserType) {
+          <app-view-details-item key="Purchase Type" [value]="(litigationRecord?.purchaserType === 'PUBLIC_INSTITUTION')? 'PUBLIC INSTITUTION': 'PUBLIC INSTITUTION'"></app-view-details-item>
+        }
+      </div>
+      @if (litigationRecord?.purchaserType === 'PUBLIC_INSTITUTION') {
+        <div class="col-sm-4">
+          <app-view-details-item key="Procuring Entity involved"   [value]="litigationRecord?.procuringEntity?.name"></app-view-details-item>
+        </div>
+      }
+      @if (litigationRecord?.purchaserType === 'PRIVATE_INSTITUTION') {
+        <div class="col-sm-4" >
+          <app-view-details-item key="Name of Purchaser" [value]="litigationRecord?.nameOfPurchaser"></app-view-details-item>
+        </div>
+      }
+      <div class="col-sm-4">
+        <app-view-details-item key="Purchaser Address"
+        [value]="litigationRecord?.addressOfPurchaser"></app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item key="Decision"
+        [value]="litigationRecord?.awardDecision"></app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item key="Amount in Dispute"
+        [value]="litigationRecord?.amountInDispute | number"></app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item key="Contract Currency"
+        [value]="(litigationRecord?.currency) || 'N/A'"></app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item key="Years of Dispute" [value]="litigationRecord?.yearOfDispute"></app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item key="Dispute Initiator"
+        [value]="litigationRecord?.disputeInitiator"></app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item key="Dispute Status"
+        [value]="litigationRecord?.disputeStatus"></app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item key="Contract Amount Sum"
+        [value]="litigationRecord?.contractSum"></app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item key="Dispute Decision Type"
+        [value]="litigationRecord?.disputeDecisionType |replace: '_': ' '"></app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item key="Dispute Resolution Method Used"
+        [value]="litigationRecord?.disputeResolutionMethod"></app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item key="Matter in Dispute"
+        [value]="litigationRecord?.matterInDispute"></app-view-details-item>
+      </div>
+    </div>
+  </div>
+}
+

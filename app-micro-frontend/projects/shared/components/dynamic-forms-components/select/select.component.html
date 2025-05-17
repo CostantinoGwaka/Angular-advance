@@ -1,0 +1,159 @@
+@if (field) {
+<!-- If we're loading -->
+@if (!loadingOptions) { @if (filteredData$ | async; as options) {
+<mat-form-field
+	[formGroup]="group"
+	[hideRequiredMarker]="field?.hideRequiredMarker"
+	appearance="outline"
+	class="demo-full-width margin-top"
+	[ngClass]="{ 'mb-2': field.hint }"
+>
+	<mat-label>
+		@if (field.useTranslation) {
+		<span>{{ field?.label | translate }}{{ selectedCountLabel }}</span>
+		} @if (!field.useTranslation) {
+		<span>{{ field?.label }}{{ selectedCountLabel }}</span>
+		}</mat-label
+	>
+	<mat-select
+		(openedChange)="openedChange($event)"
+		(selectionChange)="fieldChange($event)"
+		[formControlName]="field?.key || null"
+		[multiple]="field?.multiple"
+		[disabled]="showHelp || loading || field?.readonly || field?.disabled"
+		[placeholder]="
+			field.useTranslation
+				? (field?.placeholder || '' | translate)
+				: field?.placeholder || ''
+		"
+		#paginatedSelector
+		[required]="required"
+	>
+		@if (!showTable) {
+		<mat-option class="multiline-mat-option mb-1">
+			@if (!field?.multiple) {
+			<!--disableScrollToActiveOnOptionsChanged should be set to true-->
+			<app-select-search
+				[disableScrollToActiveOnOptionsChanged]="true"
+				[formControl]="searchCtrl"
+				[noEntriesFoundLabel]="noEntriesFoundLabel"
+			>
+			</app-select-search>
+			} @if (field?.multiple) {
+			<app-select-search
+				(toggleAll)="toggleSelectAll($event)"
+				[formControl]="searchCtrl"
+				[noEntriesFoundLabel]="noEntriesFoundLabel"
+				[showToggleAllCheckbox]="true"
+				[toggleAllCheckboxChecked]="
+					(field &&
+						field.key &&
+						(group.controls[field.key]?.value || []).length ===
+							(optionData || []).length) ||
+					false
+				"
+				[toggleAllCheckboxIndeterminate]="
+					(field &&
+						field.key &&
+						(group.controls[field.key]?.value || []).length > 0 &&
+						(group.controls[field.key]?.value || []).length <
+							(optionData || []).length) ||
+					false
+				"
+			>
+			</app-select-search>
+			}
+		</mat-option>
+		@if (!field?.multiple) {
+		<mat-option>--- Select ---</mat-option>
+		} @if (!field?.removeUnderscore) {
+		<span>
+			@for ( item of options || [] | disableDuplicate : field.duplicateCheckKey
+			| search : 'name' : searchCtrl.value ; track item) {
+			<mat-option
+				[disabled]="item.disabled"
+				[ngClass]="{
+					'multiline-mat-option': true,
+					danger: item.danger
+				}"
+				[value]="item.value"
+			>
+				@if (field.useTranslation) {
+				<span>{{
+					item.name | translate | dynamicPipes : field?.dynamicPipes || []
+				}}</span>
+				} @if (!field.useTranslation) {
+				<span>{{ item.name | dynamicPipes : field?.dynamicPipes || [] }}</span>
+				}
+			</mat-option>
+			} @if (field?.showOtherOption) {
+			<mat-option [value]="'Other'">Other</mat-option>
+			}
+		</span>
+		} }
+		<ng-container>
+			<div class="pr-3 pt-3" style="float: right">
+				<div class="w-20">
+					<button
+						mat-flat-button
+						class="flatButtonColor"
+						(click)="paginatedSelector.close()"
+					>
+						DONE
+					</button>
+				</div>
+			</div>
+		</ng-container>
+	</mat-select>
+	@if (field?.isLoading) {
+	<mat-progress-spinner
+		diameter="20"
+		matSuffix
+		mode="indeterminate"
+	></mat-progress-spinner>
+	}
+	<mat-icon
+		matSuffix
+		class="pointer text-gray-400 hover:!text-primary"
+		(click)="openHelpPage()"
+		>help_outline</mat-icon
+	>
+	@if (field?.icon) {
+	<mat-icon matPrefix>{{ field?.icon }}</mat-icon>
+	}
+	<mat-hint class="pb-2"
+		><strong>{{ field.hint | translate }}</strong></mat-hint
+	>
+	@for (validation of field?.validations; track validation) {
+	<ng-container ngProjectAs="mat-error">
+		@if ( field && field.key &&
+		group.controls[field.key]?.hasError(validation.name) ) {
+		<mat-error>{{ validation.message }}</mat-error>
+		}
+	</ng-container>
+	} @if (field.tableColumns) {
+	<mat-icon
+		matSuffix
+		class="pointer text-gray-400 hover:!text-primary"
+		(click)="showTableFn()"
+		>visibility</mat-icon
+	>
+	}
+</mat-form-field>
+} } @else {
+<mat-form-field appearance="outline">
+	<mat-label>
+		@if (field.useTranslation) {
+		<span>{{ field?.label | translate }}{{ selectedCountLabel }}</span>
+		} @if (!field.useTranslation) {
+		<span>{{ field?.label }}{{ selectedCountLabel }}</span>
+		} ...
+	</mat-label>
+	<input disabled matInput />
+	<mat-spinner
+		[diameter]="18"
+		matSuffix
+		style="float: right; margin-left: 8px"
+	></mat-spinner>
+</mat-form-field>
+} }

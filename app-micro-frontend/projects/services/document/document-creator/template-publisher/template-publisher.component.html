@@ -1,0 +1,89 @@
+<div class="space-y-3">
+  <h2>Publishing Template</h2>
+  <div class="text-[#686868]">Template: {{ templateName }}</div>
+  @if (isLoading) {
+    <div class="flex space-x-4 items-center">
+      <mat-spinner
+        [diameter]="20"
+        [strokeWidth]="3"
+        [color]="'primary'"
+      ></mat-spinner>
+      <div class="text-[#ACACAC]">
+        @if (task == publishTasks.GETTING_TEMPLATE) {
+          <div>Getting template</div>
+        }
+        @if (task == publishTasks.SCAN_PLACEHOLDERS) {
+          <div>
+            Scanning placeholders
+          </div>
+        }
+        @if (task == publishTasks.GETTING_SIMILAR_TEMPLATES) {
+          <div>
+            Checking Similar Published Templates
+          </div>
+        }
+        @if (task == publishTasks.ARCHIVING_PREVIOUS_TEMPLATES) {
+          <div>
+            Archiving Similar Templates
+          </div>
+        }
+        @if (task == publishTasks.PUBLISHING_TEMPLATE) {
+          <div>
+            Publishing Template
+          </div>
+        }
+      </div>
+    </div>
+  }
+  @if (similarTemplates.length > 0) {
+    <div
+      class="space-y-2 border border-[#FBD306] bg-[#FFF4C6] rounded p-2 text-[#89781A]"
+      >
+      <div>The following templates with similar properties will be archived:</div>
+      <div class="space-y-3 font-bold">
+        @for (similarTemplate of similarTemplates; track similarTemplate) {
+          <div>
+            {{ similarTemplate.name }}&#125;
+          </div>
+        }
+      </div>
+    </div>
+  }
+  @if (errorMessage) {
+    <div
+      class="space-y-2 border-red-500 bg-red-100 rounded p-2 text-red-500"
+      >
+      <div>{{ errorMessage }}</div>
+    </div>
+  }
+
+  @if (showPublishConfirmation) {
+    <div
+      class="flex space-x-4 items-center text-[#686868]"
+      >
+      Are you sure you want to publish this document?
+    </div>
+  }
+  @if (errorMessage || showPublishConfirmation) {
+    <div
+      class="grid items-center"
+      >
+      <div class="flex space-x-3">
+        <button mat-stroked-button (click)="cancel()" class="w-full">
+          Cancel
+        </button>
+        @if (showPublishConfirmation) {
+          <button
+            mat-flat-button
+            color="primary"
+            (click)="publishTemplate()"
+            class="w-full"
+            cdkFocusInitial
+            >
+            Yes, Publishing
+          </button>
+        }
+      </div>
+    </div>
+  }
+</div>

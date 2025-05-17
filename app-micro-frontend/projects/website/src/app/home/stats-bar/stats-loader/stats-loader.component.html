@@ -1,0 +1,17 @@
+@if (!hasError) {
+  <div class="text-center animate-pulse space-y-2">
+    <div
+      class="!text-xl font-medium mx-auto h-[20px] w-[50px] bg-slate-200 rounded"
+    ></div>
+  </div>
+}
+@if (hasError) {
+  <div class="text-center space-y-2">
+    <button
+      (click)="retryLoading($event)"
+      class="text-xs font-medium mx-auto px-1 text-red-400 rounded border !border-red-400"
+      >
+      <span>Reload</span>
+    </button>
+  </div>
+}

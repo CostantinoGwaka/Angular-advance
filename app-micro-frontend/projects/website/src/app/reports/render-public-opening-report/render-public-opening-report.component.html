@@ -1,0 +1,45 @@
+@if (newReport) {
+  <app-opening-report-generator
+    (useNormalReport)="useNormalReport($event)"
+    [tenderNumber]="tenderNumber"
+    [entityType]="entityType"
+    [isAdmin]="false"
+    [mainEntityUuid]="tenderUuid">
+  </app-opening-report-generator>
+}
+
+@if (!newReport) {
+  @if (loading) {
+    <div class="w-full">
+      <app-loader message="Fetching report details, please wait ...."></app-loader>
+    </div>
+  }
+  @if (reportFile) {
+    <div class="mt-4 rounded-xl h-[720px]">
+      <div class="flex justify-between mb-4">
+        <div>
+          <p class="lead m-0" style="padding-top: 13px">{{ reportData?.title }}</p>
+        </div>
+        <div class="flex">
+          <div class="mr-1">
+            <button [matMenuTriggerFor]="menu" mat-button>
+              <mat-icon>file_download</mat-icon>
+              Export
+            </button>
+            <mat-menu #menu="matMenu">
+              <buton (click)="exportReport('PDF')" mat-menu-item>PDF</buton>
+              <buton (click)="exportReport('XLSX')" mat-menu-item>XLSX</buton>
+              <buton (click)="exportReport('CSV')" mat-menu-item>CSV</buton>
+              <buton (click)="exportReport('RTF')" mat-menu-item>RTF</buton>
+              <buton (click)="exportReport('XML')" mat-menu-item>XML</buton>
+              <buton (click)="exportReport('DOCX')" mat-menu-item>DOCX</buton>
+            </mat-menu>
+          </div>
+        </div>
+      </div>
+      <app-render-pdf title="NeST Custom Template" width="100%" height="100%" title="HELLO TANZANIA" [url]="reportFile">
+      </app-render-pdf>
+    </div>
+  }
+}
+

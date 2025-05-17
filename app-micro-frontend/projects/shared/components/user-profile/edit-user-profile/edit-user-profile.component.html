@@ -1,0 +1,77 @@
+<app-modal-header (closeModal)="closeModal(null)" [title]="'Edit Account Information'"></app-modal-header>
+
+<div class="form-holder">
+  <div class="row">
+    <div class="col-sm-6" @fadeIn>
+      <mat-form-field appearance="outline">
+        <mat-label>Select Salutation</mat-label>
+        <mat-select [(ngModel)]="userData.salutation" placeholder="Select Salutation">
+          @for (item  of salutationTypes; track item ) {
+            <mat-option [value]="item.value">
+              {{item.name}}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="col-sm-6" @fadeIn>
+      <mat-form-field appearance="outline">
+        <mat-label>First Name</mat-label>
+        <input matInput [(ngModel)]="userData.firstName" type="text" placeholder="First Name">
+      </mat-form-field>
+    </div>
+
+    <div class="col-sm-6" @fadeIn>
+      <mat-form-field appearance="outline">
+        <mat-label>Middle Name</mat-label>
+        <input matInput [(ngModel)]="userData.middleName" type="text" placeholder="Middle Name">
+      </mat-form-field>
+    </div>
+
+    <div class="col-sm-6" @fadeIn>
+      <mat-form-field appearance="outline">
+        <mat-label>Last Name</mat-label>
+        <input matInput [(ngModel)]="userData.lastName" type="text" placeholder="Last Name">
+      </mat-form-field>
+    </div>
+
+
+    <div class="col-sm-6" @fadeIn>
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput [(ngModel)]="userData.email" type="email" readonly="readonly" placeholder="E-mail">
+      </mat-form-field>
+    </div>
+
+    <div class="col-sm-6" @fadeIn>
+      <mat-form-field appearance="outline">
+        <mat-label>Phone Number</mat-label>
+        <input matInput [(ngModel)]="userData.phone" placeholder="Phone Number">
+      </mat-form-field>
+    </div>
+
+    @if (userData.checkNumber) {
+      <div class="col-sm-6" @fadeIn>
+        <mat-form-field appearance="outline">
+          <mat-label>Check Number</mat-label>
+          <input matInput [(ngModel)]="userData.checkNumber" readonly="readonly" placeholder="Phone Number">
+        </mat-form-field>
+      </div>
+    }
+
+    @if (userData.phone && userData.lastName && userData.firstName) {
+      <div class="col-sm-12"  @fadeIn>
+        <app-save-area
+          [confirmFirst]="true"
+          loadingMessage="trying to update your profile, please be patient..."
+          [savingData]="loading"
+          (save)="saveData(userData)"
+          [confirmText]="'You are about to update account information. Do you want to continue?'"
+          [showCancel]="false"
+          (cancel)="closeModal(false)"
+        ></app-save-area>
+      </div>
+    }
+  </div>
+</div>

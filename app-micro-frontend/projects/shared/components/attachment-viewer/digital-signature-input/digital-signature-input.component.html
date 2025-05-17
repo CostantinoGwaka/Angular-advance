@@ -1,0 +1,154 @@
+<div class="h-full flex flex-col">
+  <div class="">
+    <app-modal-header
+      [title]="showDocumentPreview ? 'Document Preview' : 'Sign document'"
+      (closeModal)="close()"
+    ></app-modal-header>
+  </div>
+  <div class="flex-1">
+    @if (!showDocumentPreview) {
+      <div class="h-full">
+        <div class="flex h-full flex-col">
+          <div class="flex-1">
+            <ng-container [ngTemplateOutlet]="loaders"> </ng-container>
+            @if (showPDFDocument) {
+              <div
+                id="pdf-container"
+                class="flex-1"
+                style="height: 100%"
+              ></div>
+            }
+            @if (!showPDFDocument) {
+              <div
+                class="flex-1 bg-gray-300 text-center flex justify-center h-full p-4 overflow-auto"
+                >
+                @if (showHTMLDocument) {
+                  <app-html-viewer-content
+                    [html]="htmlData"
+                  ></app-html-viewer-content>
+                }
+              </div>
+            }
+          </div>
+          @if (!data.previewOnly) {
+            <div class="">
+              @if (errorMessage) {
+                <div
+                  class="rounded bg-red-400/20 border-2 !border-red-400 cursor-pointer !text-red-500 text-center p-2 mb-3"
+                  >
+                  {{ errorMessage }}
+                </div>
+              }
+              @if (!canSign) {
+                <div class="animate-pulse">
+                  <div class="h-6 bg-gray-200 rounded w-3/4"></div>
+                  <div class="h-10 bg-gray-200 rounded mt-2"></div>
+                </div>
+              }
+              @if (canSign) {
+                <div>
+                  <ng-container [ngTemplateOutlet]="keyPhraseInput"> </ng-container>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    }
+    @if (showDocumentPreview) {
+      <div class="space-y-3">
+        <div class="flex items-center mb-4 space-x-3">
+          <div class="text-xl font-bold flex-1">Sign document</div>
+          <button mat-icon-button class="flex items-center" (click)="close()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+        <ng-container [ngTemplateOutlet]="keyPhraseInput"> </ng-container>
+      </div>
+    }
+  </div>
+</div>
+
+<ng-template #loaders>
+  @if (populatingData) {
+    <div
+      class="w-full bg-gray-300 text-center grid place-content-center h-full p-4 overflow-auto"
+      >
+      <div class="flex space-x-2 items-center">
+        <mat-spinner diameter="30"></mat-spinner>
+        <div>Populating data...</div>
+      </div>
+    </div>
+  }
+
+  @if (creatingPDF) {
+    <div
+      class="w-full bg-gray-300 text-center grid place-content-center h-full p-4 overflow-auto"
+      >
+      <div class="flex space-x-2 items-center">
+        <mat-spinner diameter="30"></mat-spinner>
+        <div>Creating PDF...</div>
+      </div>
+    </div>
+  }
+
+  @if (fetchingDocument) {
+    <div
+      class="w-full bg-gray-300 text-center grid place-content-center h-full p-4 overflow-auto"
+      >
+      @if (fetchingDocument) {
+        <div class="flex space-x-2 items-center">
+          <mat-spinner diameter="30"></mat-spinner>
+          <div>Fetching document...</div>
+        </div>
+      }
+    </div>
+  }
+</ng-template>
+
+<ng-template #keyPhraseInput>
+  <div class="w-full p-2 bg-gray-100 rounded-b border">
+    @if (isLoading) {
+      <div>
+        <app-loader [message]="'Signing, please wait...'"></app-loader>
+      </div>
+    }
+    <form [formGroup]="form" autocomplete="off">
+      <ng-container [ngTemplateOutlet]="loaders"> </ng-container>
+      <div class="grid place-content-center">
+        <div class="flex space-x-4">
+          <div class="w-[250px]">
+            <mat-form-field appearance="outline" class="material-form">
+              <mat-label>Enter your key phrase to sign</mat-label>
+              <input
+                matInput
+                [type]="showPasswordInput ? 'password' : 'text'"
+                formControlName="keyPhrase"
+                autocomplete="off"
+                placeholder="Enter your key phrase to sign"
+                />
+              @if (
+                !form.get('keyPhrase').valid && form.get('keyPhrase').touched
+                ) {
+                <mat-error
+                  >
+                  Key phrase is required
+                </mat-error>
+              }
+            </mat-form-field>
+          </div>
+          <button
+            [disabled]="!form.valid || isLoading"
+            mat-flat-button
+            color="primary"
+            class="flex items-center text-white"
+            style="padding: 28px 20px"
+            (click)="onSign()"
+            >
+            <mat-icon>check</mat-icon> Sign
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-template>

@@ -1,0 +1,97 @@
+<div >
+  @if (loadingShortilisted) {
+    <app-loader @fadeIn [message]="'Loading shortlisted candidates please wait ...'"></app-loader>
+  }
+  @if (applicants.length > 0) {
+    <div  @fadeIn class="flex items-center justify-center bg-[#0D6752]">
+      <div class="h-[200px] mt-4">
+        <div class="flex justify-center items-center">
+          <div class="grid grid-cols-7 gap-2">
+            @for (i of [1,2,3]; track i) {
+              <div class="col-span-1  flex items-center justify-center">
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M21.9645 8.34613C21.8826 8.1017 21.6709 7.92362 21.4162 7.88443L14.6529 6.851L11.6226 0.395356C11.5092 0.154017 11.2665 0 11 0C10.7336 0 10.4913 0.154017 10.3775 0.395356L7.34718 6.851L0.583927 7.88477C0.329196 7.92362 0.11778 8.10204 0.0356197 8.34648C-0.0461967 8.59056 0.0153375 8.86009 0.195471 9.04471L5.10926 14.0836L3.94802 21.2014C3.90539 21.4613 4.01506 21.7229 4.2306 21.8742C4.34885 21.9577 4.48739 22 4.62627 22C4.7404 22 4.85522 21.9711 4.95904 21.9141L10.9997 18.5728L17.0404 21.9141C17.1442 21.9711 17.259 22 17.3731 22C17.512 22 17.6509 21.9577 17.7688 21.8742C17.9843 21.7229 18.094 21.4613 18.0514 21.2014L16.8901 14.0836L21.8039 9.04471C21.9844 8.85975 22.0463 8.59022 21.9645 8.34613Z" fill="#F1BC54"/>
+                </svg>
+              </div>
+            }
+            <div class="col-span-1 flex items-center justify-center" >
+              <svg width="61" height="52" viewBox="0 0 61 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M58.2204 2.19722C56.8683 0.842663 54.9822 -0.0011788 52.9159 1.23601e-06H49.488H47.7491H12.6686H10.9309H7.50183C5.43653 -0.0011788 3.54942 0.842781 2.19734 2.19722C0.842781 3.54931 -0.0011788 5.43641 1.23584e-06 7.50171V11.4309C1.23584e-06 16.2665 2.94407 20.6148 7.4335 22.4105L7.50065 22.437L15.2965 24.8254C15.6843 25.3279 16.0931 25.8198 16.5491 26.2898C19.4446 29.2674 22.2589 31.2669 24.1981 32.8899C25.1682 33.698 25.9069 34.4099 26.3399 35.0155C26.5587 35.3177 26.7033 35.5873 26.7949 35.8363C26.8853 36.0864 26.928 36.3155 26.928 36.5829C26.928 40.357 26.928 38.176 26.928 41.9501C26.928 42.7303 26.818 43.4006 26.6351 43.954C26.3562 44.7864 25.9325 45.3501 25.4114 45.7346C24.8857 46.1143 24.2306 46.3412 23.3553 46.3446C20.2343 46.3446 20.2042 46.3446 20.2018 46.3446H18.4629V51.7337H41.9548V46.3446H40.2159C40.2159 46.3446 40.1846 46.3446 37.0634 46.3446C36.4799 46.3446 35.9926 46.2393 35.5793 46.0611C34.9621 45.789 34.484 45.363 34.1078 44.7007C33.7374 44.0397 33.4897 43.1228 33.4897 41.9501C33.4897 38.176 33.4897 40.357 33.4897 36.5829C33.4908 36.3155 33.5337 36.0864 33.6228 35.8363C33.779 35.4044 34.1159 34.8904 34.6903 34.2896C35.5434 33.3866 36.891 32.3378 38.4979 31.0585C40.1046 29.7746 41.9674 28.2453 43.8683 26.29C44.3245 25.82 44.7342 25.328 45.1211 24.8255L52.918 22.4372L52.9841 22.4106C57.4748 20.6149 60.4177 16.2665 60.4177 11.4309V7.50171C60.4189 5.43641 59.576 3.54931 58.2204 2.19722ZM8.67915 19.1632C5.53483 17.8839 3.4765 14.8287 3.4765 11.4309V7.50171C3.47768 6.38563 3.92456 5.38898 4.655 4.65606C5.39016 3.92432 6.38457 3.47756 7.50183 3.47638H10.9251C10.9216 4.28565 10.9168 5.09598 10.9168 5.90182C10.9192 9.62955 11.0037 13.3064 11.7377 16.7841C12.0016 18.0297 12.3547 19.2488 12.8179 20.4307L8.67915 19.1632ZM21.4451 22.2206C21.4451 22.2206 16.4068 17.4787 16.4068 12.7368C16.4068 7.99496 16.4068 3.54931 16.4068 3.54931H21.4451V22.2206ZM56.9423 11.4309C56.9423 14.8287 54.8828 17.8839 51.7384 19.1632L47.5974 20.4307C48.3847 18.4256 48.8477 16.3105 49.1175 14.141C49.4497 11.4645 49.4994 8.69756 49.5006 5.9017C49.5006 5.09598 49.4959 4.28553 49.4925 3.47626H52.9158C54.033 3.47744 55.0285 3.9242 55.7625 4.65594C56.493 5.38874 56.9411 6.38434 56.9423 7.50159V11.4309Z" fill="#F1BC54"/>
+              </svg>
+            </div>
+            @for (i of [1,2,3]; track i) {
+              <div class="col-span-1  flex items-center justify-center" >
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M21.9645 8.34613C21.8826 8.1017 21.6709 7.92362 21.4162 7.88443L14.6529 6.851L11.6226 0.395356C11.5092 0.154017 11.2665 0 11 0C10.7336 0 10.4913 0.154017 10.3775 0.395356L7.34718 6.851L0.583927 7.88477C0.329196 7.92362 0.11778 8.10204 0.0356197 8.34648C-0.0461967 8.59056 0.0153375 8.86009 0.195471 9.04471L5.10926 14.0836L3.94802 21.2014C3.90539 21.4613 4.01506 21.7229 4.2306 21.8742C4.34885 21.9577 4.48739 22 4.62627 22C4.7404 22 4.85522 21.9711 4.95904 21.9141L10.9997 18.5728L17.0404 21.9141C17.1442 21.9711 17.259 22 17.3731 22C17.512 22 17.6509 21.9577 17.7688 21.8742C17.9843 21.7229 18.094 21.4613 18.0514 21.2014L16.8901 14.0836L21.8039 9.04471C21.9844 8.85975 22.0463 8.59022 21.9645 8.34613Z" fill="#F1BC54"/>
+                </svg>
+              </div>
+            }
+          </div>
+        </div>
+        <div class="liner my-10"></div>
+        <div  class="flex justify-center items-center mt-4" >
+          <div class="report-title flex items-center justify-center">
+            Pre Qualification Shortlisted Applicant(s)
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+  <div class="p-[26px]">
+    @if (applicants.length > 0) {
+      <div  @fadeIn class="top-label flex items-center justify-start gap-4">
+        <div class="tender-number">{{preQualification?.identificationNumber}}</div>
+        <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3.24933 4.99716C2.81965 4.99716 2.42725 4.8924 2.07213 4.68288C1.71702 4.46982 1.43293 4.18572 1.21986 3.83061C1.01034 3.4755 0.905584 3.0831 0.905584 2.65341C0.905584 2.22017 1.01034 1.82777 1.21986 1.47621C1.43293 1.12109 1.71702 0.838778 2.07213 0.629261C2.42725 0.416193 2.81965 0.309659 3.24933 0.309659C3.68257 0.309659 4.07497 0.416193 4.42654 0.629261C4.78165 0.838778 5.06396 1.12109 5.27348 1.47621C5.48655 1.82777 5.59308 2.22017 5.59308 2.65341C5.59308 3.0831 5.48655 3.4755 5.27348 3.83061C5.06396 4.18572 4.78165 4.46982 4.42654 4.68288C4.07497 4.8924 3.68257 4.99716 3.24933 4.99716Z" fill="black"/>
+        </svg>
+        <div class="tender-description">{{preQualification?.tender?.descriptionOfTheProcurement}}</div>
+        <svg width="6" height="5" viewBox="0 0 6 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3.24933 4.99716C2.81965 4.99716 2.42725 4.8924 2.07213 4.68288C1.71702 4.46982 1.43293 4.18572 1.21986 3.83061C1.01034 3.4755 0.905584 3.0831 0.905584 2.65341C0.905584 2.22017 1.01034 1.82777 1.21986 1.47621C1.43293 1.12109 1.71702 0.838778 2.07213 0.629261C2.42725 0.416193 2.81965 0.309659 3.24933 0.309659C3.68257 0.309659 4.07497 0.416193 4.42654 0.629261C4.78165 0.838778 5.06396 1.12109 5.27348 1.47621C5.48655 1.82777 5.59308 2.22017 5.59308 2.65341C5.59308 3.0831 5.48655 3.4755 5.27348 3.83061C5.06396 4.18572 4.78165 4.46982 4.42654 4.68288C4.07497 4.8924 3.68257 4.99716 3.24933 4.99716Z" fill="black"/>
+        </svg>
+        <div class="tender-category">{{preQualification?.tender?.procurementCategoryName}}</div>
+      </div>
+    }
+
+    @if (applicants.length > 0) {
+      <div @fadeIn class="evaluation-details mt-[36px] mb-10">
+        <div class="label">Evaluation Details:</div>
+        <div class="mode my-3"><span class="mode-label">Mode:</span> &nbsp;<span class="mode-value">{{applicants[0]?.team?.evaluationMode.name}}</span></div>
+        <div class="stages"><span class="stage-label">Stages:</span> &nbsp; @for (item of applicants[0]?.team?.evaluationMode?.evaluationModeItems; track item) {
+        <span class="stage-value">{{item.name}},  </span>
+      }&nbsp;</div>
+    </div>
+  }
+  @if (applicants.length > 0) {
+    <div class="my-4"  ><hr/></div>
+  }
+  @if (applicants.length > 0) {
+    <div class="list-title" >Shortlisted Applicants</div>
+  }
+  <div class="applicants">
+    @if (applicants.length > 0) {
+      <div class="search my-[22px]"  >
+        <input class="search-field px-4 py-2" [(ngModel)]="searchItem" placeholder="Search"/>
+      </div>
+    }
+    <div class="list-items">
+      @for (applicant of applicants|search:'tendererName,selectionDate,createdBy':searchItem; track applicant) {
+        <div class="list-item-card">
+          <div class="list-item-title flex items-center gap-2">
+            <mat-icon svgIcon="winner_badge" ></mat-icon>
+          {{applicant?.tendererName}}</div>
+          <div class="list-item-date">
+            <span class="date-label">Shortlisted On:</span>
+            <span class="date-value">  {{applicant?.selectionDate|datetime}}</span>
+          </div>
+        </div>
+      }
+      @if (applicants.length == 0 && !loadingShortilisted) {
+        <div @fadeIn  class="p-12 text-slate-400 font-[700] text-[32px] text-center">
+          No Shortlisted Applicants
+        </div>
+      }
+    </div>
+    <div class="pagination"></div>
+  </div>
+</div>
+</div>

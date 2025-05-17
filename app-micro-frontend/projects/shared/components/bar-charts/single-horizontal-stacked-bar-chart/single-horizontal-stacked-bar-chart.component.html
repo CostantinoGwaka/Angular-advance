@@ -1,0 +1,20 @@
+<div
+  class="flex overflow-hidden  {{ wrapperClass }} {{
+    isClickable ? ' cursor-pointer ' : ''
+  }}"
+>
+  @for(item of items; track item){ @if(item.value > 0){
+  <div
+    class="text-right px-2 py-1 items-center"
+    [style.backgroundColor]="item.color"
+    [style.width.%]="getBarItemWidth(item.value)"
+    [style.height.px]="barHeight ? barHeight : 'auto'"
+    [style.paddingTop.px]="barHeight ? 5 : 'auto'"
+    [style.paddingBottom.px]="barHeight ? 5 : 'auto'"
+    [style.color]="item.textColor ? item.textColor : 'white'"
+    (click)="onStatValueClick(item.id)"
+  >
+    {{ commaSeparate(item.value) }}
+  </div>
+  } }
+</div>

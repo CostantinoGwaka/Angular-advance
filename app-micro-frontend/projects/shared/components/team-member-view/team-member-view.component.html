@@ -1,0 +1,16 @@
+@if (savingData) {
+  <div class="text-sm m-2">
+    <app-loader [message]="'Preparing appointment letter, please wait...'"></app-loader>
+  </div>
+}
+
+<app-full-data-table
+  [tableList]="members|sortBy:'asc':'position'"
+  [tableConfigurations]="tableConfigurations"
+  [actionButtons]="[]"
+  [loading]="loading"
+  [loadingMessage]="'Loading committee members please wait...'"
+  [mapFunction]="mapFunction"
+  (rowCustomPrimary)="buttonSelected($event)"
+  [title]="'List of members'">
+</app-full-data-table>

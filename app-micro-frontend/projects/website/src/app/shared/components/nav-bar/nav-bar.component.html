@@ -1,0 +1,478 @@
+<div
+  class="flex justify-between items-center bg-white rounded-[8px] xl:rounded-[11px] 3xl:rounded-[15px] h-[50px] xl:h-[60px] 3xl:h-[85px]"
+>
+  <a [routerLink]="['/']">
+    <img
+      alt="NeST Logo"
+      class="!h-[28px] xl:!h-[45px] 3xl:!h-[60px]"
+      src="/assets/images/logo.png"
+      title="Nest Logo"
+      loading="lazy"
+    />
+  </a>
+  <div
+    class="hidden md:flex leading-3 space-x-4 items-center text-[10px] lg:text-[12px] 3xl:text-[14px]"
+  >
+    @for (navBarMenuItem of navBarMenu; track navBarMenuItem) { @if (!navBarMenuItem?.children) {
+    <a
+      [routerLink]="navBarMenuItem.link"
+      [queryParams]="navBarMenuItem.queryParams"
+      class="flex-nowrap cursor-pointer text-gray-600 hover:!text-primary"
+    >
+      {{ navBarMenuItem.translation_key | translate }}
+    </a>
+    @if (navBarMenuItem.href) {
+    <a
+      target="_blank"
+      href="navBarMenuItem.href"
+      class="flex-nowrap cursor-pointer text-gray-600 hover:!text-primary"
+    >
+      {{ navBarMenuItem.translation_key | translate }}
+    </a>
+    } } @if (navBarMenuItem?.children?.length > 0) {
+    <div
+      #childMenuTrigger="matMenuTrigger"
+      [matMenuTriggerFor]="childMenu"
+      class="text-gray-600 cursor-pointer flex hover:!text-primary"
+    >
+      {{ navBarMenuItem.translation_key | translate }}
+      <mat-icon inline>arrow_drop_down</mat-icon>
+    </div>
+    <mat-menu #childMenu class="custom-mat-menu">
+      @for (navBarMenuChildItem of navBarMenuItem.children; track navBarMenuChildItem) { @if
+      (navBarMenuChildItem.id == 'DIVIDER') {
+      <mat-divider></mat-divider>
+      } @if (navBarMenuChildItem.link) {
+      <a
+        [routerLink]="navBarMenuChildItem.link"
+        [queryParams]="navBarMenuChildItem.queryParams"
+        (mouseenter)="showIcon[navBarMenuChildItem.id] = true"
+        (mouseleave)="showIcon[navBarMenuChildItem.id] = false"
+        mat-menu-item
+      >
+        <span
+          [class.opacity-0]="!showIcon[navBarMenuChildItem.id]"
+          [class.opacity-100]="showIcon[navBarMenuChildItem.id]"
+          class="transition-opacity duration-200 absolute left-0 top-1/2 -translate-y-1/2 mr-2"
+        >
+          <mat-icon> keyboard_arrow_right </mat-icon>
+        </span>
+        <span class="ml-2 text-[13px]">
+          {{ navBarMenuChildItem.translation_key | translate }}
+        </span>
+      </a>
+      } @if (navBarMenuChildItem.href) {
+      <a
+        [href]="navBarMenuChildItem.href"
+        (mouseenter)="showIcon[navBarMenuChildItem.id] = true"
+        (mouseleave)="showIcon[navBarMenuChildItem.id] = false"
+        target="_blank"
+        mat-menu-item
+        class="group flex items-center px-2"
+      >
+        <span
+          [class.opacity-0]="!showIcon[navBarMenuChildItem.id]"
+          [class.opacity-100]="showIcon[navBarMenuChildItem.id]"
+          class="transition-opacity duration-200 absolute left-0 top-1/2 -translate-y-1/2 mr-2"
+        >
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </span>
+        <span class="ml-2 text-[13px]">
+          {{ navBarMenuChildItem.translation_key | translate }}
+        </span>
+      </a>
+      } }
+    </mat-menu>
+    } }
+    <div [matMenuTriggerFor]="translateMenu" class="items-center cursor-pointer flex">
+      <mat-icon>language</mat-icon>
+      <div class="ml-1">
+        {{ currentLabel | translate }}
+      </div>
+      <mat-icon inline>arrow_drop_down</mat-icon>
+    </div>
+    <mat-menu #translateMenu="matMenu">
+      @for (language of languages; track language) {
+      <button (click)="changeLanguage(language.code)" mat-menu-item class="flex">
+        {{ language.key | translate }}
+      </button>
+      }
+    </mat-menu>
+    @if (!isLoggedin) {
+    <a
+      [routerLink]="['/login']"
+      class="items-center flex md:py-1 lg:py-2 3xl:py-3 cursor-pointer md:px-2 3xl:px-3 !border-primary !text-primary !border space-x-2 md:rounded-md 3xl:rounded-lg"
+    >
+      <mat-icon inline>lock</mat-icon>
+      <span>
+        {{ "LOGIN" | translate }}
+      </span>
+    </a>
+    } @if (!isLoggedin) {
+    <a
+      [routerLink]="['/register']"
+      class="items-center flex md:py-1 lg:py-2 3xl:py-3 md:px-2 3xl:px-3 cursor-pointer !border-accent !text-white !bg-accent !border space-x-2 md:rounded-md 3xl:rounded-lg"
+    >
+      <mat-icon inline>person</mat-icon>
+      <span>
+        {{ "REGISTER" | translate }}
+      </span>
+    </a>
+    } @if (isLoggedin && hideUserDiv) {
+    <div class="flex items-center !text-[12px] space-x-2">
+      <div [matMenuTriggerFor]="profile" matRipple class="pointer py-2 px-2">
+        <div class="flex space-x-3 items-center pr-2">
+          <img src="/assets/images/avatar.svg" />
+          <div class="hidden md:block">
+            <div>
+              <b>
+                {{ (user$ | async)?.email }}
+              </b>
+            </div>
+            @if (users?.embassy != null) {
+            <small>
+              <span>
+                {{ users?.embassy?.name }}
+              </span>
+            </small>
+            } @if (user$ | async; as user) {
+            <small class="text-muted" style="font-size: 10px;">
+              @if (user.procuringEntity) {
+              <span>
+                {{ subStringSubjectTitle(user.procuringEntity?.name) }}
+              </span>
+              } @else {
+              <span *ngeIf="user.tenderer && user.tenderer?.name">
+                {{ user.tenderer?.name }}
+              </span>
+              <span *ngeIf="user.tenderer && user.tenderer?.name == null">
+                {{ user.tenderer?.email }}
+              </span>
+              }
+            </small>
+            }
+          </div>
+          <mat-icon>expand_more</mat-icon>
+        </div>
+      </div>
+    </div>
+    }
+
+    <mat-menu
+      #profile="matMenu"
+      id="top-menu-user-profile-menu"
+      class="menu-user-profile w-[350px]"
+    >
+      <div class="flex">
+        <div class="card" style="border: none;">
+          @if (user$ | async; as user) {
+          <div class="top-container px-4">
+            <img
+              src="/assets/images/avatar.svg"
+              class="img-fluid profile-image"
+              width="80"
+              alt="NeST profile image"
+            />
+            @if (user.procuringEntity) {
+            <div class="position py-2">
+              <div class="name">{{ user.firstName }} {{ user.lastName }}</div>
+              <div class="text-muted text-[12px]">
+                {{ user.rolesListStrings[0] | replace : "_" : " " }}
+              </div>
+              <div class="font-size-11">
+                {{ user.department?.name }}
+              </div>
+            </div>
+            } @if (user.tenderer) {
+            <div class="ml-3">
+              <h5 class="name">
+                {{ subStringSubjectT(user.tenderer?.name) }}
+              </h5>
+              <p class="mail">
+                {{ "TENDERER" | translate }}
+              </p>
+            </div>
+            } @if (users?.embassy != null) {
+            <div class="ml-3">
+              <h5 class="name">
+                {{ subStringSubjectT(users?.embassy?.name) }}
+              </h5>
+              <p class="mail">
+                {{ "EMBASSY_USER" | translate }}
+              </p>
+            </div>
+            }
+            <!-- </small> -->
+          </div>
+          }
+          <mat-divider></mat-divider>
+          @if (user$ | async; as user) { @if (user?.procuringEntity && this.user?.hasSignature) {
+          <button [routerLink]="['/landing']" mat-menu-item>
+            <mat-icon>account_circle</mat-icon>
+            <span>
+              {{ "DASHBOARD" | translate }}
+            </span>
+          </button>
+          } @if (user?.tenderer && this.user?.hasSignature) {
+          <button [routerLink]="['/nest-tenderer/dashboard']" mat-menu-item>
+            <mat-icon>account_circle</mat-icon>
+            <span>
+              {{ "ACCOUNT" | translate }}
+            </span>
+          </button>
+          } @if (user?.userTypeEnum == 'TENDERER' && !this.user?.tenderer) {
+          <button [routerLink]="['/tenderer_registration/dashboard']" mat-menu-item>
+            <mat-icon>account_circle</mat-icon>
+            <span>
+              {{ "CONTINUE_REGISTRATION" | translate }}
+            </span>
+          </button>
+          }
+          <!-- {{this.user | json}}sign -->
+          }
+          <mat-divider></mat-divider>
+          <ng-container>
+            <button (click)="logOut()" class="pl-6" mat-menu-item>
+              <mat-icon>logout</mat-icon>
+              <span>
+                {{ "LOGOUT" | translate }}
+              </span>
+            </button>
+          </ng-container>
+          <mat-divider></mat-divider>
+        </div>
+      </div>
+    </mat-menu>
+  </div>
+  <div class="flex md:hidden items-center">
+    @if (!isLoggedin) {
+    <div class="flex items-center !text-[12px] space-x-2">
+      <a
+        [routerLink]="['/login']"
+        class="items-center flex py-[2px] px-[4px] cursor-pointer !border-primary !text-primary !border space-x-2 rounded-[4px]"
+      >
+        <mat-icon inline>lock</mat-icon>
+        <span>
+          {{ "LOGIN" | translate }}
+        </span>
+      </a>
+      <a
+        [routerLink]="['/register']"
+        class="items-center flex py-[2px] px-[4px] cursor-pointer !border-accent !text-white !bg-accent !border space-x-2 rounded-[4px]"
+      >
+        <mat-icon inline>person</mat-icon>
+        <span>
+          {{ "REGISTER" | translate }}
+        </span>
+      </a>
+    </div>
+    } @if (isLoggedin) {
+    <div class="flex items-center !text-[12px] space-x-2">
+      <div [matMenuTriggerFor]="profile" matRipple class="pointer py-2 px-2">
+        <div class="flex space-x-3 items-center pr-2">
+          <img src="/assets/images/avatar.svg" />
+          <div class="hidden md:block">
+            <div>
+              <b>
+                {{ (user$ | async)?.email }}
+              </b>
+            </div>
+            @if (users?.embassy != null) {
+            <small>
+              <span>
+                {{ users?.embassy?.name }}
+              </span>
+            </small>
+            } @if (user$ | async; as user) {
+            <small class="text-muted" style="font-size: 10px;">
+              @if (user.procuringEntity) {
+              <span>
+                {{ subStringSubjectTitle(user.procuringEntity?.name) }}
+              </span>
+              } @else {
+              <span *ngeIf="user.tenderer">
+                {{ user.tenderer?.name }}
+              </span>
+              }
+            </small>
+            }
+          </div>
+          <mat-icon>expand_more</mat-icon>
+        </div>
+      </div>
+    </div>
+    }
+    <mat-menu
+      #profile="matMenu"
+      id="top-menu-user-profile-menu"
+      class="menu-user-profile w-[350px]"
+    >
+      <div class="flex">
+        <div class="card" style="border: none;">
+          @if (user$ | async; as user) {
+          <div class="top-container px-4">
+            <img src="/assets/images/avatar.svg" class="img-fluid profile-image" width="80" />
+            @if (user.procuringEntity) {
+            <div class="position py-2">
+              <div class="name">{{ user.firstName }} {{ user.lastName }}</div>
+              <div class="text-muted text-[12px]">
+                {{ user.rolesListStrings[0] | replace : "_" : " " }}
+              </div>
+              <div class="font-size-11">
+                {{ user.department?.name }}
+              </div>
+            </div>
+            } @if (user.tenderer) {
+            <div class="ml-3">
+              <h5 class="name">
+                {{ subStringSubjectT(user.tenderer?.name) }}
+              </h5>
+              <p class="mail">
+                {{ "TENDERER" | translate }}
+              </p>
+            </div>
+            } @if (users?.embassy != null) {
+            <div class="ml-3">
+              <h5 class="name">
+                {{ subStringSubjectT(users?.embassy?.name) }}
+              </h5>
+              <p class="mail">
+                {{ "EMBASSY_USER" | translate }}
+              </p>
+            </div>
+            }
+            <!-- </small> -->
+          </div>
+          } @if (user$ | async; as user) {
+          <div class="top-container px-4">
+            @if (user.procuringEntity) {
+            <div class="position py-2">
+              <div class="name text-[12px]">
+                {{ user.firstName }} {{ user.lastName }}
+              </div>
+              <div class="text-muted text-[12px]">
+                {{ user.rolesListStrings[0] | replace : "_" : " " }}
+              </div>
+              <div class="font-size-11">
+                {{ user.department?.name }}
+              </div>
+            </div>
+            }
+          </div>
+          }
+          <mat-divider></mat-divider>
+          <ng-container>
+            <button
+              [routerLink]="[
+                user?.procuringEntity ? '/landing' : '/nest-tenderer/dashboard'
+              ]"
+              mat-menu-item
+            >
+              <mat-icon>account_circle</mat-icon>
+              <span>
+                {{ "ACCOUNT" | translate }}
+              </span>
+            </button>
+          </ng-container>
+          <mat-divider></mat-divider>
+          <ng-container>
+            <button (click)="logOut()" class="pl-6" mat-menu-item>
+              <mat-icon>logout</mat-icon>
+              <span>
+                {{ "LOGOUT" | translate }}
+              </span>
+            </button>
+          </ng-container>
+          <mat-divider></mat-divider>
+        </div>
+      </div>
+    </mat-menu>
+    <button (click)="toggleSideMenu()" class="!-mr-[10px] !ml-2" mat-icon-button color="accent">
+      <mat-icon>menu</mat-icon>
+    </button>
+  </div>
+</div>
+<div
+  #sideMenu
+  [class]="
+    'fixed z-[10000] left-0 top-[50px] bottom-0 right-0 bg-black/20' +
+    (showSideMenu ? '' : ' hidden')
+  "
+  (click)="toggleSideMenu()"
+>
+  <div
+    (click)="preventSideMenuFromHiding($event)"
+    class="ml-20 bg-white h-full overflow-y-auto shadow pt-[10px] pb-[100px]"
+  >
+    @for (navBarMenuItem of navBarMenu; track navBarMenuItem) {
+    <ng-container>
+      @if (!navBarMenuItem?.children) {
+      <a
+        [routerLink]="navBarMenuItem.link"
+        [queryParams]="navBarMenuItem.queryParams"
+        (click)="toggleSideMenu()"
+        mat-ripple
+        class="flex-nowrap space-x-2 flex-1 flex items-center cursor-pointer py-2 px-4 text-gray-600 hover:!text-primary"
+      >
+        <span>
+          {{ navBarMenuItem.translation_key | translate }}
+        </span>
+      </a>
+      } @if (navBarMenuItem?.children?.length > 0) {
+      <button
+        (click)="expandMenu(navBarMenuItem)"
+        mat-ripple
+        class="flex-nowrap space-x-2 w-full flex-1 text-left flex items-center cursor-pointer py-2 px-4 text-gray-600 hover:!text-primary"
+      >
+        <div class="flex-1">
+          {{ navBarMenuItem.translation_key | translate }}
+        </div>
+        @if (navBarMenuItem?.children?.length > 0) {
+        <div
+          [class]="
+              (navBarMenuItem.isExpanded ? '' : '-rotate-90') +
+              ' transition-all duration-200'
+            "
+        >
+          <mat-icon>expand_more</mat-icon>
+        </div>
+        }
+      </button>
+      }
+      <div
+        [class]="
+            'px-3 overflow-hidden ' +
+            (navBarMenuItem.isExpanded ? 'h-auto' : 'h-0')
+          "
+      >
+        @for (navBarMenuChildItem of navBarMenuItem.children; track navBarMenuChildItem) { @if
+        (navBarMenuChildItem.id == 'DIVIDER') {
+        <div class="px-4">
+          <mat-divider></mat-divider>
+        </div>
+        } @if (navBarMenuChildItem.link) {
+        <a
+          [routerLink]="navBarMenuChildItem.link"
+          [queryParams]="navBarMenuChildItem.queryParams"
+          (click)="toggleSideMenu()"
+          mat-ripple
+          class="flex-nowrap flex cursor-pointer py-2 px-4 text-gray-600 hover:!text-primary"
+        >
+          {{ navBarMenuChildItem.translation_key | translate }}
+        </a>
+        } @if (navBarMenuChildItem.href) {
+        <a
+          [href]="navBarMenuChildItem.href"
+          (click)="toggleSideMenu()"
+          target="_blank"
+          mat-ripple
+          class="flex-nowrap flex cursor-pointer py-2 px-4 text-gray-600 hover:!text-primary"
+        >
+          {{ navBarMenuChildItem.translation_key | translate }}
+        </a>
+        } }
+      </div>
+    </ng-container>
+    }
+  </div>
+</div>

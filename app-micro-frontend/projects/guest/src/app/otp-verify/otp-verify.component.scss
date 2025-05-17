@@ -1,0 +1,47 @@
+/* Additionally, you can remove the input arrows */
+input[type="number"]::-webkit-outer-spin-button, 
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Required */
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+.bg-image {
+    background-image: url("/assets/images/login-bg-2.jpg");
+    // background-size: cover; /* adjust the size of the image to cover the entire div */
+    // background-position: center; /* center the image within the div */
+}
+
+.bg-image {
+    animation: zoom 20s ease-in-out infinite alternate;
+}
+  
+  @keyframes zoom {
+    0% {
+      transform: scale(1.8);
+    }
+  
+    100% {
+      transform: scale(2);
+    }
+  }
+
+
+  .countdown {
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 50px;
+  }
+
+  .message {
+    font-size: 16px;
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  

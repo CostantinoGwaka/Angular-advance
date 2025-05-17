@@ -1,0 +1,20 @@
+<div>
+  <div class="form-holder max-w-[800px] mx-auto bg-white rounded p-3">
+    @if (fetchingItem) {
+      <app-loader></app-loader>
+    }
+    <main-dynamic-form
+      class="py-5"
+      [fields]="fields"
+      [form]="supportForm"
+      [confirmFirst]="true"
+      [loading]="loading"
+      [loadingMessage]="'Saving data please wait...'"
+      [confirmMessage]="confirmTitle"
+      (closeForm)="close(false)"
+      (submit)="submitForm($event)" >
+    </main-dynamic-form>
+  </div>
+</div>
+
+

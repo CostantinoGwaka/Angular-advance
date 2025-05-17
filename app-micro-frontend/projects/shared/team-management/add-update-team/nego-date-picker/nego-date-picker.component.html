@@ -1,0 +1,13 @@
+<mat-form-field appearance="outline" @fadeInOut>
+  <mat-label>{{ label }}</mat-label>
+  <input
+    (dateInput)="onDateUpdate.emit({value:$event.value, type:dateType})"
+    matInput
+    [min]="minDate"
+    [matDatepicker]="picker"
+    [(ngModel)]="model"
+  />
+  <mat-hint>DD/MM/YYYY</mat-hint>
+  <mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
+  <mat-datepicker #picker></mat-datepicker>
+</mat-form-field>

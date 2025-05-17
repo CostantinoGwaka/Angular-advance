@@ -1,0 +1,37 @@
+<app-shared-layout
+  [Analysis]="entityName+' Team Tasks'"
+  [viewDetails]="viewDetails"
+  [title]="entityName+' Team Tasks'"
+  [addPermission]="[]"
+  [smallForm]="false"
+  animationSize="full"
+  [hideAdd]="true"
+  [formTitle]="viewDetailsTitle"
+  (closeDetails)="closeDetails()">
+  <div ngProjectAs="table">
+    <app-normal-table-expandable-row
+      [tableList]="tableList"
+      [mapFunction]="mapFunction"
+      [tableConfigurations]="tableConfigurations">
+      <ng-template #actions let-data="data">
+        <app-work-flow-main
+         [type]="teamType"
+         [modelUuid]="data?.uuid" [loading]="toggleLoader"
+         [possibleActions]="data?.possibleActions?.split(',')" [comments]="data?.approvals"
+        (onTaskComplete)="taskIsCompleted()">
+        <ng-container ngProjectAs="work-flow-content">
+          <app-team-detail
+            [readOnly]="true"
+            [entityType]="entityType"
+            [teamType]="teamType"
+            [selectedUuid]="data.uuid"
+          ></app-team-detail>
+        </ng-container>
+      </app-work-flow-main>
+      </ng-template>
+    </app-normal-table-expandable-row>
+  </div>
+  <div ngProjectAs="form">
+
+  </div>
+</app-shared-layout>

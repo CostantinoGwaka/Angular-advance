@@ -1,0 +1,12 @@
+
+
+<div mat-dialog-content class="p-2">
+    <app-progress-circular-loader
+    [mainLoaderMessage]="mainLoaderMessage"
+    [mainLoaderProgress]="currentPercentage"
+    [useLargeTextDisplay]="true">
+    </app-progress-circular-loader>
+</div>
+<div class="flex mt-4 justify-items-end">
+    <button class="mx-auto" mat-flat-button (click)="cancel()">Cancel</button>
+  </div>

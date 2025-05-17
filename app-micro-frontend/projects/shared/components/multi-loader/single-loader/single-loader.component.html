@@ -1,0 +1,24 @@
+<div>
+  <div
+    class="flex space-x-3"
+    [style.font-weight]="singleLoaderItem?.bold ? 'bold' : 'normal'"
+  >
+    <div class="flex-1">
+      {{ singleLoaderItem.title }}
+    </div>
+    <div>{{ singleLoaderItem.progress?.toFixed(2) }}%</div>
+  </div>
+  <div class="h-1 w-full rounded-full overflow-hidden bg-white">
+    <div
+      [class]="'h-full rounded-full transition-all'"
+      [style.background-color]="
+        singleLoaderItem.hasError
+          ? 'red'
+          : singleLoaderItem.progressColor
+          ? singleLoaderItem.progressColor
+          : '#089e26'
+      "
+      [style.width.%]="singleLoaderItem.progress"
+    ></div>
+  </div>
+</div>

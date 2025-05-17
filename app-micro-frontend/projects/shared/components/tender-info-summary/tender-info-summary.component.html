@@ -1,0 +1,88 @@
+@if (loading) {
+<app-loader [message]="'Getting details, Please wait.....'"> </app-loader>
+} @if (displayInfoList.length) {
+<div class="w-full overflow-y-auto text-sm mb-2">
+  <div class="flex flex-col overflow-hidden rounded border">
+    <table class="w-full">
+      <tbody class="flex-1 sm:flex-none text-gray-700">
+        @for (displayInfo of displayInfoList; track displayInfo; let i = $index) { @if
+        (displayInfo.info) {
+        <ng-container
+          [ngTemplateOutletContext]="{
+          data : {
+            title: displayInfo.title,
+            info: displayInfo.info,
+            useBackground: (i / 2 !== 0)
+          }}"
+          [ngTemplateOutlet]="infoRow"
+        >
+        </ng-container>
+        } } @if (businessLinesTenderLabels) {
+        <tr
+          class="flex flex-col flex-no wrap sm:table-row mb-2 sm:mb-0 even:bg-white odd:bg-gray-100 border-b"
+        >
+          <td class="text-left p-3 font-bold">Business lines</td>
+          <td class="text-left p-3 border-l">
+            {{ businessLinesTenderLabels }}
+          </td>
+        </tr>
+        } @if (contractorClassesLabels) {
+        <tr
+          class="flex flex-col flex-no wrap sm:table-row mb-2 sm:mb-0 even:bg-white odd:bg-gray-100 border-b"
+        >
+          <td class="text-left p-3 font-bold">Contractor Classes</td>
+          <td class="text-left p-3 border-l">
+            {{ contractorClassesLabels }}
+          </td>
+        </tr>
+        }
+        <tr>
+          <td colspan="2">
+            <div class="flex justify-end gap-2 p-3">
+              @if (showClarification) {
+              <a
+                (click)="goToClarification()"
+                class="border border-[#1394DB] rounded !text-white !bg-primary"
+                mat-button
+              >
+                Clarifications
+              </a>
+              } @if (showLotSelectionBtn && entityInfoSummary !== null && entityInfoSummary?.hasLot)
+              {
+              <a
+                (click)="handleLotDataSelection.emit(entityInfoSummary)"
+                class="border border-[#1394DB] rounded !text-white !bg-primary"
+                mat-button
+              >
+                View Lot Selection
+              </a>
+              } @if (!useMainMerged) {
+              <button
+                (click)="openTenderDocument(entityInfoSummary)"
+                class="py-2 whitespace-nowrap px-2 !border !border-[#1394DB] rounded !text-grey bg-white"
+              >
+                <div class="flex flex-row gap-1 items-center justify-center">
+                  <img src="assets/images/pdf-icon.png" style="height: 20px;" />
+                  <span class="text-grey">Tender Document</span>
+                </div>
+              </button>
+              }
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+}
+
+<ng-template #infoRow let-data="data">
+  <tr
+    class="flex flex-col flex-no wrap sm:table-row mb-2 sm:mb-0 even:bg-white odd:bg-gray-100 border-b"
+  >
+    <td class="text-left p-3 font-bold">{{ data.title }}</td>
+    <td class="text-left p-3 border-l">
+      {{ data.info }}
+    </td>
+  </tr>
+</ng-template>

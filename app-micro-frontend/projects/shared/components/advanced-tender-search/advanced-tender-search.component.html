@@ -1,0 +1,373 @@
+@if (from == 'tenderer') {
+<div class="custom-page">
+  @if (showSubmissionTabs) {
+  <div class="flex flex-row justify-start">
+    @for (tab of submissionMasterFilterList; track tab) {
+    <ng-container
+      [ngTemplateOutlet]="actionTab"
+      [ngTemplateOutletContext]="{ data: tab }"
+    ></ng-container>
+    }
+  </div>
+  }
+  <div class="!p-0 bg-white rounded-xl overflow-hiddenn shadow-lg">
+    @if (activeTab) {
+    <p class="pt-2 pl-4">{{ activeTab.description | translate }}</p>
+    }
+    <ng-container *ngTemplateOutlet="tendersList"></ng-container>
+  </div>
+</div>
+} @if (from == 'website') {
+<ng-container *ngTemplateOutlet="tendersList"></ng-container>
+} @if (tendersResults.length > 0) {
+<div class="px-3">
+  <web-page-paginator
+    (pageOutput)="onPageNumberChange($event)"
+    (pageSizeOutput)="onPageSizeChange($event)"
+    [paginatorInput]="paginatorInput"
+  >
+  </web-page-paginator>
+</div>
+}
+<ng-template #tendersList>
+  <div id="tender-list-container">
+    @if(page == 'opened-tenders'){
+    <div
+      class="row !bg-[#fbfbfb] search-area-wrapper rounded-t-xl home-search-area py-2 px-3 flex md:justify-between items-center"
+    >
+      @if (loadingFinancialYear) {
+      <app-loader [message]="'Loading Financial Year, Please wait'"></app-loader>
+      } @if (financialYears?.length) {
+      <mat-card appearance="outlined">
+        <mat-form-field appearance="fill">
+          <mat-label>Financial Year</mat-label>
+          <mat-select
+            (selectionChange)="selectedFinancialYear($event)"
+            [ngModel]="financialYearCode"
+          >
+            @for(financialYear of financialYears;track financialYear){
+            <mat-option [value]="financialYear.code">
+              {{financialYear.code}}
+            </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </mat-card>
+      }
+    </div>
+    }
+
+    <div
+      class="!bg-[#fbfbfb] search-area-wrapper rounded-t-xl home-search-area py-2 px-3 flex md:justify-between items-center"
+    >
+      <div class="flex w-full md:w-auto items-center">
+        <div class="flex w-full md:w-auto items-start space-x-2">
+          <div class="flex flex-row pt-1 space-x-2">
+            <mat-form-field appearance="outline">
+              <mat-label>{{ "SEARCH_BY_KEYWORD" | translate }}</mat-label>
+              <input
+                (keyup.enter)="searchByInputFilters()"
+                [(ngModel)]="filters.search"
+                matInput
+                placeholder="{{ 'ENTER_KEYWORD' | translate }}"
+              />
+            </mat-form-field>
+            <div class="hidden lg:block">
+              <mat-form-field appearance="outline">
+                <mat-label>{{ "SELECT_TENDER_CATEGORY" | translate }} </mat-label>
+                <mat-select
+                  [(ngModel)]="filters.category"
+                  (selectionChange)="
+                    getSubCategories(filters.category, filters.processStage)
+                  "
+                >
+                  <mat-option [value]="'ALL'"
+                    >{{ "ALL_TENDER_CATEGORIES" | translate }}
+                  </mat-option>
+                  <mat-option [value]="'G'">{{ "GOODS_TENDERS" | translate }} </mat-option>
+                  <mat-option [value]="'W'">{{ "WORKS_TENDERS" | translate }} </mat-option>
+                  <mat-option [value]="'C'">{{ "CONSULTANCY_TENDERS" | translate }} </mat-option>
+                  <mat-option [value]="'NC'"
+                    >{{ "NON_CONSULTANCY_TENDERS" | translate }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="hidden lg:block">
+              <app-paginated-select
+                (fieldValue)="regionSelected($event)"
+                [field]="regionSearchField"
+                [(ngModel)]="filters.region"
+              ></app-paginated-select>
+            </div>
+
+            <div class="hidden lg:block">
+              @if (peSearchField) {
+              <app-paginated-select
+                (fieldValue)="onPeSelected($event)"
+                [field]="peSearchField"
+                [(ngModel)]="filters.procuringEntity"
+              ></app-paginated-select>
+              }
+            </div>
+          </div>
+          @if (!showAdvancedSearch) {
+          <button
+            id="advanced-search-button"
+            (click)="searchByInputFilters()"
+            class="!bg-secondary !text-black flex space-x-2 p-2 mt-2 md:mr-2 rounded-md !border-4 !border-secondary items-center"
+          >
+            <mat-icon>search</mat-icon>
+            <div>{{ "SEARCH" | translate }}</div>
+          </button>
+          } @if (!showAdvancedSearch) {
+          <button
+            (click)="clearSearch()"
+            class="hidden lg:flex space-x-2 p-2 md:mr-2 mt-2 rounded-md !border text-gray-400 hover:text-black border-gray-400 hover:border-black items-center"
+          >
+            <!-- <mat-icon>close</mat-icon> -->
+            <div class="hidden sm:block p-1">
+              {{ "CLEAR_SEARCH" | translate }}
+            </div>
+          </button>
+          }
+        </div>
+
+        <div class="pl-2 -mt-5">
+          @if (!showAdvancedSearch) {
+          <a
+            (click)="advancedSearch()"
+            class="text-gray-400 hidden cursor-pointer lg:flex space-x-2 p-2 hover:text-black rounded-md !border border-gray-400 hover:border-black items-center"
+          >
+            <mat-icon>tune</mat-icon>
+            <div></div>
+            <!-- <div>{{ "ADVANCED_SEARCH" | translate }}</div> -->
+          </a>
+          } @if (showAdvancedSearch) {
+          <div class="sticky mt-4 pt-4" @fadeIn>
+            <div class="advanced-search divide-y w-[420px] absolute z-10" style="right: 0px;">
+              <div class="flex items-center justify-between">
+                <div class="w-[55px] flex items-center justify-center p-[16px]">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                  >
+                    <rect width="20" height="20" fill="url(#pattern0)" />
+                    <defs>
+                      <pattern
+                        id="pattern0"
+                        patternContentUnits="objectBoundingBox"
+                        width="1"
+                        height="1"
+                      >
+                        <use xlink:href="#image0_1_28" transform="scale(0.0104167)" />
+                      </pattern>
+                      <image
+                        id="image0_1_28"
+                        width="96"
+                        height="96"
+                        xlink:href="data:image/png;base64,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"
+                      />
+                    </defs>
+                  </svg>
+                </div>
+                <div class="flex-1 text-left flex items-center justify-start p-[16px]">
+                  Advanced Search
+                </div>
+                <div
+                  (click)="closeAdvancedSearch()"
+                  class="w-[55px] flex items-center justify-center p-[16px] cursor-pointer"
+                >
+                  <div class="p-2 rounded">
+                    <svg
+                      width="11"
+                      height="11"
+                      viewBox="0 0 11 11"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M11 1.10786L9.89214 0L5.5 4.39214L1.10786 0L0 1.10786L4.39214 5.5L0 9.89214L1.10786 11L5.5 6.60786L9.89214 11L11 9.89214L6.60786 5.5L11 1.10786Z"
+                        fill="#4D4D4D"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <div class="p-[16px]">
+                <mat-form-field appearance="outline">
+                  <mat-label>{{ "SELECT_TENDER_CATEGORY" | translate }} </mat-label>
+                  <mat-select
+                    [(ngModel)]="filters.category"
+                    (selectionChange)="
+                      getSubCategories(filters.category, filters.processStage)
+                    "
+                  >
+                    <mat-option [value]="'ALL'"
+                      >{{ "ALL_TENDER_CATEGORIES" | translate }}
+                    </mat-option>
+                    <mat-option [value]="'G'">{{ "GOODS_TENDERS" | translate }} </mat-option>
+                    <mat-option [value]="'W'">{{ "WORKS_TENDERS" | translate }} </mat-option>
+                    <mat-option [value]="'C'">{{ "CONSULTANCY_TENDERS" | translate }} </mat-option>
+                    <mat-option [value]="'NC'"
+                      >{{ "NON_CONSULTANCY_TENDERS" | translate }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Process Stage</mat-label>
+                  <mat-select
+                    [(ngModel)]="filters.processStage"
+                    (selectionChange)="
+                      getSubCategories(filters.category, filters.processStage)
+                    "
+                  >
+                    <mat-option [value]="'TENDER'">Tendering</mat-option>
+                    <mat-option [value]="'PLANNED_TENDER'">Pre Qualification </mat-option>
+                    <mat-option [value]="'FRAMEWORK'">Framework</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                @if (filters.category) {
+                <mat-form-field appearance="outline" @fadeIn>
+                  <mat-label>Sub Category</mat-label>
+                  <mat-select [(ngModel)]="filters.subCategory">
+                    @for (subCategory of subCategories; track subCategory) {
+                    <mat-option [value]="subCategory">{{ subCategory }} </mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+                }
+                <mat-form-field appearance="outline">
+                  <mat-label>Invitation Date After</mat-label>
+                  <input
+                    matInput
+                    [matDatepicker]="dateAfter"
+                    [max]="filters.invitationBefore"
+                    [(ngModel)]="filters.invitationAfter"
+                    placeholder="Invitation Date After"
+                  />
+                  <mat-datepicker-toggle matSuffix [for]="dateAfter"></mat-datepicker-toggle>
+                  <mat-datepicker #dateAfter></mat-datepicker>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Invitation Date Before</mat-label>
+                  <input
+                    matInput
+                    [matDatepicker]="dateBefore"
+                    [min]="filters.invitationAfter"
+                    [(ngModel)]="filters.invitationBefore"
+                    placeholder="Invitation Date Before"
+                  />
+                  <mat-datepicker-toggle matSuffix [for]="dateBefore"></mat-datepicker-toggle>
+                  <mat-datepicker #dateBefore></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="p-[16px] flex items-center justify-end gap-[16px]">
+                <div
+                  class="border-[2px] border-[#C60000] px-[30px] py-[6px] rounded-[10px] text-[12px] text-[#C60000] cursor-pointer"
+                  (click)="closeAdvancedSearch(); clearSearch()"
+                >
+                  Clear
+                </div>
+                <div
+                  class="px-[20px] py-[8px] rounded-[10px] text-[12px] bg-[#FBD306] cursor-pointer"
+                  (click)="searchByInputFilters()"
+                >
+                  Search
+                </div>
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div
+      @fadeInOut
+      class="sm:flex sm:space-y-0 space-y-2 justify-between p-3 items-center text-sm !border-b border-b-gray-200"
+    >
+      <div class="text-center sm:text-left">
+        @if (tendersResults.length && paginatorInput?.totalRecords >= 0 && !loading) {
+        <span>
+          {{ getPaginatorLabel() }}
+        </span>
+        } @if (loading) {
+        <div class="bg-gray-300 animate-pulse text-gray-300 rounded-md">
+          Loading items...
+        </div>
+        }
+      </div>
+      <div>
+        <app-items-sort-filter
+          [sortOptions]="sortOptions"
+          (onSortOptionChange)="onSortOptionChange($event)"
+        >
+        </app-items-sort-filter>
+      </div>
+    </div>
+    @if (loading || loadingBusinessLines) {
+    <div @fadeIn class="m-4">
+      <app-loader [message]="'Getting tenders, please wait...'"></app-loader>
+    </div>
+    } @if (tendersResults.length > 0 && !loading && !loadingBusinessLines) {
+    <div @fadeIn class="bg-white rounded-b-xl overflow-hidden">
+      @for (tenderItem of tendersResults; track tenderItem; let i = $index) {
+      <app-advanced-tender-search-tender-item
+        @fadeInOut
+        (tendererNotEligible)="tendererNotEligible($event)"
+        [requisitionItem]="tenderItem"
+        [overrideActionButtons]="overrideActionButtons"
+        [isEligible]="
+          tenderItem.isTendererEligible &&
+          applicableCategories.includes(tenderItem?.procurementCategoryName)
+        "
+        [tendererType]="tendererType"
+        [isPublic]="true"
+        [submissionUuid]="selectedBidInterestUuid[tenderItem.uuid]"
+        [tenderIsInterested]="bidInterestEntityUuids.includes(tenderItem.uuid)"
+        [actionStatus]="submissionFilter"
+        [showApplyBtn]="showApplyBtn"
+        [showEntityNumber]="showEntityNumber"
+        [showActionButtons]="showActionButtons"
+        [showAwardButtons]="showAwardButtons"
+        [showIntention]="showIntention"
+        [showAmount]="showAmount"
+        [showAwardedTo]="showAwardedTo"
+        [showAwardDate]="showAwardDate"
+        [showSubmissionDeadline]="showSubmissionDeadline"
+        [showInvitationDate]="showInvitationDate"
+        [allowHeaderClick]="allowHeaderClick"
+      >
+      </app-advanced-tender-search-tender-item>
+      } @if (paginating) {
+      <div class="m-4">
+        <app-loader [message]="'Getting more tenders, please wait...'"></app-loader>
+      </div>
+      }
+    </div>
+    } @if (!loading && tendersResults.length == 0) {
+    <div @fadeIn class="bg-white grid place-content-center p-10">
+      <div>No results found</div>
+    </div>
+    }
+  </div>
+</ng-template>
+
+<ng-template #actionTab let-data="data">
+  <div
+    (click)="setActiveTabCode(data)"
+    [ngClass]="{
+      'bg-[#1394DB] text-white': activeTab.tabCode == data.tabCode,
+      'bg-slate-200': activeTab.tabCode != data.tabCode
+    }"
+    class="inline-block py-3 px-4 border-gray ml-2 rounded-t-md cursor-pointer"
+  >
+    {{ data.tabTitle | translate }}
+  </div>
+</ng-template>

@@ -1,0 +1,47 @@
+<div class="flex items-center justify-center h-screen bg-gray-200 background-image">
+	<div class="container">
+		<div class="bg-white rounded-lg shadow-lg p-5 md:p-20 mx-2">
+			<div style="background-color: #47BDFE; padding: 15px; border-radius: 15px 15px 0px 0px">
+				<div style="width: 70%; float: left;color:white"
+					class="font-semibold">
+					National e-Procurement System of Tanzania
+				</div>
+				<div style="clear: both; margin: 0;"></div>
+			</div>
+			<div class="text-center">
+				<div>
+					<img src="/assets/images/tabs.png"
+						alt="NeST"
+						class="h-[200px] m-auto"
+						title="Lock"
+						loading="lazy">
+				</div>
+				<section class="wrapper">
+					<div class="top">
+						<p class="mt-4 text-[12px] font-bold tracking-tight text-black sm:mt-5">
+							<span class="block text-black text-lg">NEW TAB OPENED</span>
+						</p>
+					</div>
+				</section>
+				<p class="text-md md:text-xl mt-10"></p>
+				<div>
+					<p class="text-lg text-gray-700 mb-6 font-medium">
+						Looks like you have opened a new tab and accessed NeST.
+					</p>
+					<p class="text-lg text-gray-700 font-medium">
+						Please close this new tab to continue using the system
+					</p>
+				</div>
+			</div>
+			<div style="background-color: #47BDFE; padding: 20px; border-radius: 0px 0px 15px 15px">
+				<div style="width: 70%; float: left;"></div>
+				<div (click)="closeTab()"
+					class="cursor-pointer"
+					style="float: right; background-color: #ffffff; color: #cf4d4d; width: 120px; text-align: center; padding: 10px; border-radius: 5px; font-size: 14px; font-weight: bold;">
+					Close
+				</div>
+				<div style="clear: both; margin: 0;"></div>
+			</div>
+		</div>
+	</div>
+</div>

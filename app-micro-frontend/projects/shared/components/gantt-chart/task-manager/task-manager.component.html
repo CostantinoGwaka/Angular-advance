@@ -1,0 +1,126 @@
+<h2 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">
+  @if (task?.id) {
+    <span>Edit</span>
+  }
+  @if (!task?.id) {
+    <span>Add</span>
+  }
+  <span> Task</span>
+</h2>
+<mat-dialog-content>
+  @if (saving) {
+    <app-loader [message]="'Saving task'"></app-loader>
+  }
+  <mat-form-field appearance="outline">
+    <mat-label>Name</mat-label>
+    <input matInput [(ngModel)]="task.name" />
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Type</mat-label>
+    <mat-select [(ngModel)]="taskType">
+      @for (taskType of taskTypes; track taskType) {
+        <mat-option [value]="taskType.value">
+          {{ taskType.label }}
+        </mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+  @if (taskType == 'task') {
+    <mat-form-field appearance="outline">
+      <mat-label>Parent</mat-label>
+      <mat-select
+        (selectionChange)="onTaskSelected($event.value)"
+        [(ngModel)]="selectedParentTaskId"
+        placeholder="Select parent task"
+        >
+        <app-mat-select-search [(ngModel)]="taskSearch"> </app-mat-select-search>
+        @for (task_item of savableTasks() | search : 'name' : taskSearch; track task_item) {
+          <mat-option
+            [value]="task_item.id"
+            >
+            <div class="flex flex-row gap-2 items-center">
+              {{ task_item.name }}
+            </div>
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  }
+  @if (taskType == 'sub-task' || taskType == 'task') {
+    <div class="flex gap-4">
+      <!-- start date with date picker -->
+      @if (useDates()) {
+        <div class="flex-1">
+          <mat-form-field appearance="outline">
+            <mat-label>Start Date</mat-label>
+            <input
+              #startDateControl="ngModel"
+              matInput
+              [ngModel]="startDate()"
+              (ngModelChange)="startDate.set($event)"
+              required
+              matInput
+              [matDatepicker]="picker"
+              [min]="minStartDate()"
+              [max]="maxStartDate()"
+              disabled
+              />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            @if (startDateControl.hasError('required')) {
+              <mat-error>
+                Start date is required</mat-error
+                >
+              }
+            </mat-form-field>
+          </div>
+        }
+        @if (!useDates()) {
+          <div class="flex-1">
+            <mat-form-field appearance="outline">
+              <mat-label>Starting Day</mat-label>
+              <input matInput [(ngModel)]="task.startingDay" />
+            </mat-form-field>
+          </div>
+        }
+        <div class="flex-1">
+          <mat-form-field appearance="outline">
+            <mat-label>Duration(Days)</mat-label>
+            <input
+              #daysControl="ngModel"
+              matInput
+              [ngModel]="days()"
+              (ngModelChange)="days.set($event)"
+              required
+              type="number"
+              min="1"
+              max="7300"
+              />
+            @if (daysControl.hasError('required')) {
+              <mat-error>
+                Duration is required</mat-error
+                >
+              }
+            </mat-form-field>
+          </div>
+        </div>
+      }
+      @if (taskType == 'task') {
+        <mat-form-field appearance="outline">
+          <mat-label>Description</mat-label>
+          <textarea matInput name="comment" [(ngModel)]="task.description"></textarea>
+        </mat-form-field>
+      }
+      @if (taskType == 'task') {
+        <div class="p-2 rounded bg-gray-100 broder">
+          Estimated End Date: {{ task.endDate | date : "dd/MM/yyyy" }}
+        </div>
+      }
+    </mat-dialog-content>
+    <mat-dialog-actions class="flex justify-end">
+      <button mat-button (click)="close()">Cancel</button>
+      <button mat-button (click)="save()">Save</button>
+    </mat-dialog-actions>

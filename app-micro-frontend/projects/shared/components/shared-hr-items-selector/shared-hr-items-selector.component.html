@@ -1,0 +1,38 @@
+<div class="relative flex items-center overflow-hidden h-[170px] -ml-4 -mr-4">
+  <div
+    (click)="previous()"
+    class="absolute z-50 cursor-pointer flex top-0 bottom-0"
+  >
+    <div class="w-20 h-full bg-white text-center grid place-content-center">
+      <div
+        class="w-10 !border aspect-square grid place-content-center rounded-full !pointer-events-autoborder-gray-500 text-gray-500"
+      >
+        <mat-icon class="ml-2">arrow_back_ios</mat-icon>
+      </div>
+    </div>
+    <div
+      class="h-full w-5 bg-gradient-to-r from-white via-white to-transparent"
+    ></div>
+  </div>
+  <div [style]="'margin-left:' + marginLeft + 'px'"
+    class="flex items-center space-x-6 transition-all">
+
+    <ng-content select="project-content-cards"></ng-content>
+
+  </div>
+  <div
+    (click)="next()"
+    class="absolute z-50 cursor-pointer flex top-0 bottom-0 right-0 -rotate-180"
+  >
+    <div class="w-20 h-full bg-white text-center grid place-content-center">
+      <div
+        class="w-10 !border aspect-square grid place-content-center rounded-full !pointer-events-autoborder-gray-500 text-gray-500"
+      >
+        <mat-icon class="ml-2">arrow_back_ios</mat-icon>
+      </div>
+    </div>
+    <div
+      class="h-full w-5 bg-gradient-to-r from-white via-white to-transparent"
+    ></div>
+  </div>
+</div>

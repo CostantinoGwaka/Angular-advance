@@ -1,0 +1,21 @@
+.phone-input-field {
+  display: inherit;
+}
+
+::ng-deep .mat-mdc-form-field-prefix {
+  top:0 !important;
+}
+.inactive {
+  color: grey;
+}
+
+.active {
+  color: #1A405D;
+}
+.multiline-mat-option.mat-mdc-option {
+  white-space: normal;
+  line-height: normal;
+  height: unset;
+  padding-top: 0.9em;
+  padding-bottom: 0.9em;
+}

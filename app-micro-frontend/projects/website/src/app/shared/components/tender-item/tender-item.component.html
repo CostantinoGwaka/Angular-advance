@@ -1,0 +1,104 @@
+<div class="!border-b !border-b-gray-200">
+  <div class="p-3">
+    <div class="grid grid-cols-12 grid-co">
+      <div class="mr-2 col-span-2 lg:col-span-1">
+        <div class="aspect-square h-16 grid place-content-center">
+          @if (!loadLogo && peLogo) {
+            <img
+              [src]="peLogo"
+              onerror="this.src='/assets/images/emblen.png';"
+              class="w-[60%] sm:w-auto"
+              />
+          }
+          @if (!loadLogo && !peLogo) {
+            <img
+              [src]="'/assets/images/emblen.png'"
+              class="w-[60%] sm:w-auto"
+              />
+          }
+          @if (loadLogo) {
+            <div
+              class="aspect-square h-14 animate-pulse bg-slate-300 rounded-full"
+            ></div>
+          }
+        </div>
+      </div>
+      <div class="items-center col-span-10 lg:col-span-11 xl:-ml-5">
+        <div (click)="navigateViewDetails(requisitionItem)">
+          <h3
+            class="!text-gray-600 truncate !text-md cursor-pointer !leading-none !font-medium !m-0"
+            >
+            {{ requisitionItem.descriptionOfTheProcurement }}
+          </h3>
+        </div>
+        <div class="mt-2">
+          <div
+            (click)="navigateViewDetails(requisitionItem)"
+            class="!text-primary !text-sm !mb-0 cursor-pointer"
+            >
+            {{ requisitionItem.procuringEntityName }}
+          </div>
+        </div>
+        <div class="lg:flex !text-sm items-center lg:space-x-4">
+          <div class="sm:flex sm:space-x-4 items-center">
+            <div class="flex sm:block xl:flex">
+              <div class="text-gray-400 whitespace-nowrap">
+                {{ "INVITATION_DATE" | translate }}:&nbsp;
+              </div>
+              <div class="whitespace-nowrap">
+                {{ formatDate(requisitionItem?.invitationDate) }}
+              </div>
+            </div>
+            <div class="flex sm:block xl:flex">
+              <div class="text-gray-400 whitespace-nowrap">
+                {{ "DEADLINE" | translate }}:&nbsp;
+              </div>
+              <div
+                [class]="
+                  isClosingSoon
+                    ? '!text-warning  whitespace-nowrap'
+                    : '!text-accent  whitespace-nowrap'
+                "
+                >
+                {{ formatDate(requisitionItem?.submissionOrOpeningDate, true) }}
+              </div>
+            </div>
+            <div class="flex sm:block xl:flex">
+              <div class="text-gray-400 whitespace-nowrap">
+                {{ "TENDER" | translate }} #:&nbsp;
+              </div>
+              <div class="whitespace-nowrap">
+                {{ requisitionItem.entityNumber }}
+              </div>
+            </div>
+          </div>
+          <div class="flex-1 mt-[10px] sm:mt-0">
+            <div class="sm:flex justify-between items-center">
+              <div class="inline-block">
+                <div
+                  class="rounded-full whitespace-nowrap px-2 py !bg-gray-200"
+                  >
+                  {{ requisitionItem.entitySubCategoryName }}
+                </div>
+              </div>
+              <div class="flex mt-[20px] sm:mt-auto space-x-2">
+                <!-- [routerLink]="['/login']" -->
+                <div
+                  (click)="navigateViewDetails(requisitionItem)"
+                  class="py-1 whitespace-nowrap px-2 !border cursor-pointer !border-primary rounded !text-primary"
+                  >
+                  {{ "VIEW_DETAILS" | translate }}
+                </div>
+                <!-- <div
+                (click)="navigateViewDetails(requisitionItem)"
+                class="py-1 whitespace-nowrap px-2 !border !border-primary !bg-primary rounded !text-white">
+                {{ "SUBMIT_BID" | translate }}
+              </div> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

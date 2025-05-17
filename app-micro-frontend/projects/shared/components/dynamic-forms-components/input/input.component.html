@@ -1,0 +1,74 @@
+@if (field) {
+  @if (field.inputType == 'hidden') {
+    <input [type]="field.inputType" />
+  }
+  @if (field.inputType != 'hidden' && field.inputType == 'rich-text') {
+    <form [formGroup]="group">
+      <div class="mb-2">
+        <div class="flex flex-row justify-between">
+          <mat-label class="text-muted font-normal">{{
+            field.label | translate
+          }}</mat-label>
+          <mat-icon matSuffix class="pointer text-gray-400 hover:!text-primary" (click)="openHelpPage()">
+            help_outline
+          </mat-icon>
+        </div>
+        <app-word-processor-form [selectedToolBarButtons]="field.richTextOptions" [customClassBottomContainer]="
+            'rounded-b overflow-auto !border-[#989898] hover:border-2 hover:outline-2'
+          " [customClassTopContainer]="
+            'rounded-t overflow-auto !border-[#989898] hover:border-2 hover:outline-2'
+          " (onInputChange)="fieldChange($event)" [formControlName]="field.key || null">
+        </app-word-processor-form>
+        <span class="!text-xs !text-grey" [ngClass]="{ danger: field.hintDanger }">
+          {{ field.hint | translate }}
+        </span>
+      </div>
+    </form>
+  }
+  @if (field.inputType != 'hidden' && field.inputType !== 'rich-text') {
+    <mat-form-field class="demo-full-width" [formGroup]="group" appearance="outline">
+      <mat-label>{{ field.label | translate }}
+        <!-- <span *ngIf="field.inputType == 'formattedNumber'">
+        <b>({{ amount | replace:',':'' | number }})</b>
+      </span> -->
+    </mat-label>
+    <input matInput appOnlyNumber [acceptedDecimalPoints]="field.acceptedDecimalPoints" [inputType]="field.inputType"
+      [formControlName]="field.key || null" placeholder="{{ field.placeholder || field.label || '' | translate }}"
+        [type]="
+          field.inputType == 'formattedNumber'
+            ? 'text'
+            : hide
+            ? 'text'
+            : field.inputType || 'text'
+        " [readonly]="field.readonly || loading" [maxlength]="field.maxCharacter" (input)="fieldChange($event)"
+      [required]="field.key && group?.get(field.key).errors !== null" />
+    <mat-hint align="start" [ngClass]="{ danger: field.hintDanger }"
+    innerHTML="{{ field.hint | translate }}"></mat-hint>
+    @if (field.showCounter && field.key) {
+      <mat-hint align="end">{{ (group?.get(field.key).value)!.length }} /
+      {{ field?.allowedLength }}</mat-hint>
+    }
+    @if (field.inputType == 'password') {
+      <mat-icon class="mx-2 cursor-pointer" matSuffix (click)="hide = !hide">{{
+      hide ? "visibility_off" : "visibility" }}</mat-icon>
+    }
+    @if (field?.icon) {
+      <mat-icon matPrefix>{{ field?.icon }}</mat-icon>
+    }
+    @if (field.inputType != 'password') {
+      <mat-icon matSuffix class="pointer text-gray-400 hover:!text-primary"
+        (click)="openHelpPage()">help_outline
+      </mat-icon>
+    }
+    @for (validation of field.validations; track validation) {
+      <ng-container ngProjectAs="mat-error">
+        @if (field.key && group?.get(field.key)?.hasError(validation.name)) {
+          <mat-error>{{ validation.message |
+            translate }}
+          </mat-error>
+        }
+      </ng-container>
+    }
+  </mat-form-field>
+}
+}

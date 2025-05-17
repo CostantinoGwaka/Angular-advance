@@ -1,0 +1,33 @@
+.danger { color:red }
+
+.number-label{
+  @apply bg-white px-[5px] py-[2px]
+}
+
+
+.label-position-rest{
+  @apply   text-[#717273]
+}
+
+.label-position-rest{
+  margin-left: 10px;
+  margin-top:-36px;
+  position: absolute;
+}
+
+
+.label-position-active{
+  margin-left: 10px;
+  margin-top:-60px;
+  position: absolute;
+  color: #0d6efd;
+  font-size: 12px;
+}
+
+.has-value{
+  margin-left: 10px;
+  margin-top:-60px;
+  font-size: 12px;
+  position: absolute;
+  color:gray;
+}

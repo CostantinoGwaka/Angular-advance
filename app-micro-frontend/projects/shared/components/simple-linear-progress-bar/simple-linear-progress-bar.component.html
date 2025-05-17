@@ -1,0 +1,12 @@
+<div class="flex flex-col items-center">
+  <div [style.width.%]="loaderWidth" class="h-[20px] flex-1 rounded-full bg-slate-300 overflow-hidden m-auto ">
+    <div [style.width.%]="loaderProgress"
+      class="bg-{{loaderColor}} bg-ac rounded-full text-center font-size-12 text-white transition-all duration-300">
+      {{ loaderProgress }}%
+    </div>
+  </div>
+
+  @if (showStatus) {
+    <div class=" rounded-md mt-2 px-3 ">{{loaderStatusMessage}}</div>
+  }
+</div>

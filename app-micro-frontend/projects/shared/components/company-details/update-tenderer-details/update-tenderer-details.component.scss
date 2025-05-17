@@ -1,0 +1,36 @@
+tr:nth-child(even) {
+    background-color: #f4f6fb !important;
+}
+
+table {
+    width: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+
+    td {
+        padding-left: 10px !important;
+    }
+
+    th {
+        padding-left: 10px !important;
+        color: #000 !important;
+        font-weight: bolder !important;
+        background-color: #0000001a !important;
+        opacity: .8 !important;
+    }
+}
+
+.node {
+    fill: #ddd;
+    stroke: #000;
+    stroke-width: 3px;
+}
+
+.text {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    text-anchor: middle;
+}
+
+svg {
+    border: 1px solid #ccc;
+}

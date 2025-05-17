@@ -1,0 +1,42 @@
+<div class="grid place-content-center">
+  <div class="flex">
+    @for (creationStep of creationSteps; track creationStep; let i = $index) {
+      <div class="text-center w-[200px] relative">
+        <div class="absolute flex left-0 top-6 right-0">
+          <div class="flex-1">
+            @if (!(i == 0)) {
+              <div class="h-[2px] bg-[#049E26] flex-1"></div>
+            }
+          </div>
+          <div class="flex-1">
+            @if (!(i == creationSteps.length - 1)) {
+              <div class="h-[2px] bg-[#049E26] flex-1"></div>
+            }
+          </div>
+        </div>
+        <div class="grid place-content-center relative m-auto">
+          <div
+            class="grid place-content-center relative w-12 aspect-square rounded-full {{ creationStep.stage == 'ON_PROGRESS' || creationStep.stage == 'PENDING' ? 'bg-white' : ''}}">
+          <div class="grid w-5 text-[18px] place-content-center aspect-square rounded-full  {{  creationStep.stage == 'FINISHED'  ?
+      'bg-[#049E26] border-[#049E26]' : creationStep.stage == 'FAILED' ? 'bg-red-500 border-red-500' : 'bg-white border-[#049E26]'}} border-2">
+              <div class="grid place-content-center aspect-square -ml-[2px] -mt-[2px]">
+                @if (creationStep.stage == 'FINISHED') {
+                  <mat-icon inline class="text-white">check</mat-icon>
+                }
+                @if (creationStep.stage == 'FAILED') {
+                  <mat-icon inline class="text-white">close</mat-icon>
+                }
+              </div>
+            </div>
+            @if (creationStep.stage == 'ON_PROGRESS') {
+              <div class="loader absolute inset-0 grid place-content-center">
+                <mat-progress-spinner [diameter]="35" mode="indeterminate"></mat-progress-spinner>
+              </div>
+            }
+          </div>
+        </div>
+        <div class="mt-2 {{ creationStep.stage == 'ON_PROGRESS' ? 'font-bold' : '' }}">{{ creationStep.title }}</div>
+      </div>
+    }
+  </div>
+</div>

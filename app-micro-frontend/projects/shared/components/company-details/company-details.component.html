@@ -1,0 +1,448 @@
+<div class="h-full">
+  @if (!showInstitutionProfile && tenderer) {
+  <div class="container mx-auto" @fadeIn>
+    <div class="block bg-white mt-4 mb-2 p-3 md:rounded-md">
+      <div class="flex flex-wrap justify-content-between items-center mb-4">
+        <h2 class="font-black text-word-primary">
+          {{(tenderer.tendererType == 'INDIVIDUAL_LOCAL'|| tenderer.tendererType ==
+          'INDIVIDUAL_FOREIGN') ? 'Individual' : 'Company'}} Details
+          {{(tenderer?.hasRegisteredByBrela) ? '(Brela)' : '(TIN)'}}
+        </h2>
+        @if (['INDIVIDUAL_LOCAL', 'INDIVIDUAL_FOREIGN'].includes(tenderer.tendererType)) {
+        <button
+          (click)="showIndividualResumeForm(true)"
+          mat-flat-button
+          color="primary"
+          class="!m-0 py-1 pb-1 pl-3 pr-3 cursor-pointer items-center flex flex-wrap gen__button btn__primary"
+        >
+          <mat-icon>edit</mat-icon> Update Curriculum Vitae
+        </button>
+        } @if (tenderer?.hasRegisteredByBrela && !fetchingData && tenderer?.brelaNumber != null &&
+        tenderer?.brelaNumber != '' && tenderer?.brelaNumber != undefined && tenderer?.brelaNumber
+        != 'N/A') {
+        <button
+          (click)="updateCompanyBrela(true,tenderer?.uuid,tenderer?.brelaNumber)"
+          mat-flat-button
+          color="primary"
+          class="!m-0 py-1 pb-1 pl-3 pr-3 cursor-pointer items-center flex flex-wrap gen__button btn__primary"
+        >
+          <mat-icon>edit</mat-icon> Update Details From Brela
+        </button>
+        } @if (tenderer?.hasRegisteredByBrela && !fetchingData && (tenderer?.brelaNumber == null ||
+        tenderer?.brelaNumber == '' || tenderer?.brelaNumber === undefined || tenderer?.brelaNumber
+        == 'N/A')) {
+        <button
+          (click)="updateBrelaNumber(tenderer?.uuid,tenderer?.name)"
+          mat-flat-button
+          color="primary"
+          class="!m-0 py-1 pb-1 pl-3 pr-3 cursor-pointer items-center flex flex-wrap gen__button btn__primary"
+        >
+          <mat-icon>edit</mat-icon> Update Number Brela
+        </button>
+        } @if (!tenderer?.hasRegisteredByBrela && !fetchingData) {
+        <button
+          (click)="updateCompanyBrela(false,tenderer?.uuid,tenderer?.taxIdentificationNumber)"
+          mat-flat-button
+          color="primary"
+          class="!m-0 py-1 pb-1 pl-3 pr-3 cursor-pointer items-center flex flex-wrap gen__button btn__primary"
+        >
+          <mat-icon>edit</mat-icon> Update Details From TRA
+        </button>
+        }
+      </div>
+      <div class="flex w-full min-w-0 flex-grow items-center justify-center m-2">
+        @if (fetchingData) {
+        <app-loader [message]="'Loading Information, please wait...'"></app-loader>
+        }
+      </div>
+      <div class="grid md:grid-cols-3 gap-4 my-3">
+        @if (tenderer.name) {
+        <app-item-detail-with-icon
+          [icon]="'business_center'"
+          [label]="(tenderer.tendererType == 'INDIVIDUAL_LOCAL'|| tenderer.tendererType == 'INDIVIDUAL_FOREIGN')
+            ? 'Individual' : 'Company'+' name'"
+          [title]="tenderer.name"
+        ></app-item-detail-with-icon>
+        } @if (tenderer.tendererType) {
+        <app-item-detail-with-icon
+          [icon]="'business_center'"
+          [label]="'Tenderer Type'"
+          [title]="tenderer.tendererType | replace: '_': ' '"
+        ></app-item-detail-with-icon>
+        } @if (tenderer.uniqueIdentificationNumber) {
+        <app-item-detail-with-icon
+          [icon]="'content_paste'"
+          [label]="'Tenderer Number'"
+          [title]="tenderer.uniqueIdentificationNumber"
+        ></app-item-detail-with-icon>
+        } @if (tenderer.phone) {
+        <app-item-detail-with-icon
+          [icon]="'phone'"
+          [label]="'Phone Number'"
+          [title]="tenderer.phone"
+        ></app-item-detail-with-icon>
+        } @if (tenderer.operatingCountry) {
+        <app-item-detail-with-icon
+          [icon]="'public'"
+          [label]="'Country'"
+          [title]="tenderer.operatingCountry?.name"
+        ></app-item-detail-with-icon>
+        } @if (tenderer.executiveLeaderTitle) {
+        <app-item-detail-with-icon
+          [icon]="'public'"
+          [label]="'Executive Leader Title'"
+          [title]="tenderer.executiveLeaderTitle"
+        ></app-item-detail-with-icon>
+        } @if (tenderer.executiveLeaderName) {
+        <app-item-detail-with-icon
+          [icon]="'public'"
+          [label]="'Name of Executive Leader'"
+          [title]="tenderer.executiveLeaderName"
+        ></app-item-detail-with-icon>
+        } @if (tenderer.physicalAddress) {
+        <app-item-detail-with-icon
+          [icon]="'location_on'"
+          [label]="'Physical Address'"
+          [title]="tenderer.physicalAddress"
+        ></app-item-detail-with-icon>
+        } @if (tenderer.taxIdentificationNumber) {
+        <app-item-detail-with-icon
+          [icon]="'content_paste'"
+          [label]="'Tax Identification Number'"
+          [title]="tenderer.taxIdentificationNumber"
+        ></app-item-detail-with-icon>
+        } @if (tenderer?.brelaNumber) {
+        <app-item-detail-with-icon
+          [icon]="'content_paste'"
+          [label]="'Brela Number'"
+          [title]="tenderer?.brelaNumber"
+        ></app-item-detail-with-icon>
+        } @if (tenderer.vatNumber) {
+        <app-item-detail-with-icon
+          [icon]="'content_paste'"
+          [label]="'VAT Number'"
+          [title]="tenderer.vatNumber"
+        ></app-item-detail-with-icon>
+        } @if (tenderer?.brelaNumber) {
+        <app-item-detail-with-icon
+          [icon]="'content_paste'"
+          [label]="'Company Number'"
+          [title]="tenderer?.brelaNumber"
+        ></app-item-detail-with-icon>
+        } @if (tenderer.postalAddress) {
+        <app-item-detail-with-icon
+          [icon]="'location_on'"
+          [label]="'Postal Address'"
+          [title]="tenderer.postalAddress"
+        ></app-item-detail-with-icon>
+        } @if (tenderer.postalCode) {
+        <app-item-detail-with-icon
+          [icon]="'location_on'"
+          [label]="'Postal Code'"
+          [title]="tenderer.postalCode"
+        ></app-item-detail-with-icon>
+        } @if (tenderer.createdAt) {
+        <app-item-detail-with-icon
+          [icon]="'date_range'"
+          [label]="'Registration Date'"
+          [title]="(tenderer.createdAt | date)"
+        ></app-item-detail-with-icon>
+        } @if (tenderer.website && tenderer.website != '') {
+        <app-item-detail-with-icon
+          [icon]="'public'"
+          [label]="'Website'"
+          [title]="tenderer.website"
+        ></app-item-detail-with-icon>
+        } @if (tenderer.attachmentUuid && tenderer.attachmentUuid != '') {
+        <app-item-detail-with-icon
+          [imageLink]="'assets/images/pdf-icon.png'"
+          [labelClass]="'!text-[#1394db]'"
+          [loading]="fetchingAttachment[tenderer.attachmentUuid]"
+          [icon]="'attachment'"
+          [label]="'View Attachment'"
+          [title]="'Anti Bribery Policy'"
+          (click)="viewAttachment(tenderer.attachmentUuid)"
+          class="!cursor-pointer"
+        >
+        </app-item-detail-with-icon>
+        } @if (tenderer.tocAttachmentUuid && tenderer.tocAttachmentUuid != '') {
+        <app-item-detail-with-icon
+          [imageLink]="'assets/images/pdf-icon.png'"
+          [labelClass]="'!text-[#1394db]'"
+          [loading]="fetchingAttachment[tenderer.tocAttachmentUuid]"
+          [icon]="'attachment'"
+          [label]="'View Attachment'"
+          [title]="'Terms and policy'"
+          (click)="viewAttachment(tenderer.tocAttachmentUuid)"
+          class="!cursor-pointer"
+        >
+        </app-item-detail-with-icon>
+        } @if (tenderer.tendererType && (tenderer.tendererType == 'INDIVIDUAL_FOREIGN' ||
+        tenderer.tendererType == 'INDIVIDUAL_LOCAL')) {
+        <app-item-detail-with-icon
+          [imageLink]="'assets/images/pdf-icon.png'"
+          [labelClass]="'!text-[#1394db]'"
+          [loading]="fetchingAttachment['cv-nest-2023']"
+          [icon]="'attachment'"
+          [label]="'View CV'"
+          [title]="'Resume'"
+          (click)="viewTendererCv(tenderer)"
+          class="!cursor-pointer"
+        >
+        </app-item-detail-with-icon>
+        }
+      </div>
+    </div>
+    @if (showDetailedProfile) {
+    <div class="block bg-white mt-4 mb-2 p-3 md:rounded-md">
+      <app-company-business-lines
+        [user]="user"
+        [businessLineList]="tenderer.tendererBusinessLineList"
+        (updateBusinessLines)="updateCurrentBusinessLines()"
+      >
+      </app-company-business-lines>
+    </div>
+    }
+    <!-- tenderer {{ tenderer?.tendererType | json}} -->
+    @if (showDetailedProfile && tenderer?.tendererType == 'COMPANY_LOCAL') {
+    <div class="block bg-white mt-4 mb-2 p-3 md:rounded-md">
+      <app-government-tenderer
+        [tenderer]="tenderer"
+        [tendererSide]="tendererSide"
+        [user]="user"
+        [tendererUuid]="tenderer.uuid"
+      >
+      </app-government-tenderer>
+    </div>
+    } @if (showDetailedProfile) {
+    <div class="block bg-white mt-4 mb-2 p-3 md:rounded-md">
+      <app-additional-details
+        [tenderer]="tenderer"
+        [tendererSide]="tendererSide"
+        [tendererUuid]="tenderer.uuid"
+        [configuration]="additionalDetailsConfig"
+      >
+      </app-additional-details>
+    </div>
+    }
+    <!-- <div class="block bg-white mt-4 mb-2 p-3  md:rounded-md" *ngIf="showDetailedProfile"> -->
+    <!-- <div class="grid grid-cols-4 !mt-4"> -->
+    <!-- <vertical-tabs -->
+    <!-- [tabItems]="tabItems" -->
+    <!-- [tabTitle]="'Company Profile Information'" -->
+    <!-- (onStepSelection)="onStepSelection($event)"> -->
+    <!-- </vertical-tabs> -->
+    <!-- <div class="col-span-3 pl-8"> -->
+    <!-- <app-company-experience *ngIf="currentTab == 'company-experience'"></app-company-experience> -->
+    <!-- <app-personnel-profile-institution *ngIf="currentTab == 'personnel-profile'"> -->
+    <!-- </app-personnel-profile-institution> -->
+    <!-- <app-financial-capability -->
+    <!-- *ngIf="currentTab == 'financial-capability'" -->
+    <!-- (setCurrentTab)="setCurrentTab('financial-capability')"> -->
+    <!-- </app-financial-capability> -->
+    <!-- <app-work-equipment-profile-information *ngIf="currentTab == 'work-equipment'"> -->
+    <!-- </app-work-equipment-profile-information> -->
+    <!-- <app-litigation-record-information *ngIf="currentTab == 'litigation-record'"> -->
+    <!-- </app-litigation-record-information> -->
+    <!-- <app-office-location-information *ngIf="currentTab == 'office-location'"> -->
+    <!-- </app-office-location-information> -->
+    <!-- <app-financial-resources-information *ngIf="currentTab == 'financial-resources'"> -->
+    <!-- </app-financial-resources-information> -->
+    <!-- <app-annual-turnover *ngIf="currentTab == 'annual-turnover'"> -->
+    <!-- </app-annual-turnover> -->
+    <!-- </div> -->
+    <!-- </div> -->
+    <!-- </div> -->
+  </div>
+  } @if (showInstitutionProfile && institution) {
+  <div class="container mx-auto" @fadeIn>
+    <div class="block bg-white mt-4 mb-2 p-3 md:rounded-md">
+      <div class="flex">
+        <h2 class="font-black text-word-primary">Institution Detail</h2>
+      </div>
+      <div class="grid md:grid-cols-3 gap-4 my-3">
+        <app-item-detail-with-icon
+          [icon]="'business_center'"
+          [label]="'Institution Name'"
+          [title]="institution.name ?? 'NOT SET'"
+        ></app-item-detail-with-icon>
+        <app-item-detail-with-icon
+          [icon]="'business_center'"
+          [label]="'Institution Acronym'"
+          [title]="institution.acronym ?? 'NOT SET'"
+        ></app-item-detail-with-icon>
+        <app-item-detail-with-icon
+          [icon]="'business_center'"
+          [label]="'Accounting Officer Title'"
+          [title]="institution.accountingOfficerTitle ?? 'NOT SET'"
+        ></app-item-detail-with-icon>
+        <app-item-detail-with-icon
+          [icon]="'business_center'"
+          [label]="'Institution Category'"
+          [title]="institution?.procuringEntityCategory?.name ?? 'NOT SET'"
+        ></app-item-detail-with-icon>
+        <app-item-detail-with-icon
+          [icon]="'business_center'"
+          [label]="'Financial System in Use'"
+          [title]="institution.financialSystem ?? 'NOT SET'"
+        ></app-item-detail-with-icon>
+        <app-item-detail-with-icon
+          [icon]="'business_center'"
+          [label]="'Budgeting System in Use'"
+          [title]="getBudgetingSystem(institution.budgetSystem)"
+        ></app-item-detail-with-icon>
+        <app-item-detail-with-icon
+          [icon]="'mail'"
+          [label]="'Institution Email'"
+          [title]="institution.email ?? 'NOT SET'"
+        ></app-item-detail-with-icon>
+        <app-item-detail-with-icon
+          [icon]="'phone'"
+          [label]="'Institution Phone'"
+          [title]="institution.phone ?? 'NOT SET'"
+        ></app-item-detail-with-icon>
+        <app-item-detail-with-icon
+          [icon]="'print'"
+          [label]="'Institution Fax'"
+          [title]="institution.fax ?? 'NOT SET'"
+        ></app-item-detail-with-icon>
+        <app-item-detail-with-icon
+          [icon]="'public'"
+          [label]="'Website'"
+          [title]="institution.website ?? 'NOT SET'"
+        ></app-item-detail-with-icon>
+        <app-item-detail-with-icon
+          [icon]="'location_on'"
+          [label]="'Physical Address'"
+          [title]="institution.physicalAddress ?? 'NOT SET'"
+        ></app-item-detail-with-icon>
+        <app-item-detail-with-icon
+          [icon]="'location_on'"
+          [label]="'Postal Code'"
+          [title]="institution.postalCode ?? 'NOT SET'"
+        ></app-item-detail-with-icon>
+        <app-item-detail-with-icon
+          [icon]="'location_on'"
+          [label]="'Postal Address'"
+          [title]="institution.postalAddress ?? 'NOT SET'"
+        ></app-item-detail-with-icon>
+        <app-item-detail-with-icon
+          [icon]="'content_paste'"
+          [label]="'Tax Identification Number'"
+          [title]="institution.taxIdentificationNumber ?? 'NOT SET'"
+        ></app-item-detail-with-icon>
+        <app-item-detail-with-icon
+          [icon]="'content_paste'"
+          [label]="'CODE'"
+          [title]="institution.procuringEntityCode ?? 'NOT SET'"
+        ></app-item-detail-with-icon>
+        @if (users?.userTypeEnum == 'PROCURING_ENTITY' && users?.cocAttachmentUuid &&
+        users?.cocAttachmentUuid != '') {
+        <app-item-detail-with-icon
+          [imageLink]="'assets/images/pdf-icon.png'"
+          [labelClass]="'!text-[#1394db]'"
+          [loading]="fetchingAttachment[users.cocAttachmentUuid]"
+          [icon]="'attachment'"
+          [label]="'View Attachment'"
+          [title]="'Code of Conduct'"
+          (click)="viewAttachment(user.cocAttachmentUuid)"
+          class="!cursor-pointer"
+        >
+        </app-item-detail-with-icon>
+        } @if (users?.userTypeEnum == 'PROCURING_ENTITY' && users?.wpAttachmentUuid &&
+        users?.wpAttachmentUuid != '') {
+        <app-item-detail-with-icon
+          [imageLink]="'assets/images/pdf-icon.png'"
+          [labelClass]="'!text-[#1394db]'"
+          [loading]="fetchingAttachment[users.wpAttachmentUuid]"
+          [icon]="'attachment'"
+          [label]="'View Attachment'"
+          [title]="'Billing Policy'"
+          (click)="viewAttachment(user.wpAttachmentUuid)"
+          class="!cursor-pointer"
+        >
+        </app-item-detail-with-icon>
+        } @if (users?.userTypeEnum == 'PROCURING_ENTITY' && users?.tocAttachmentUuid &&
+        users?.tocAttachmentUuid != '') {
+        <app-item-detail-with-icon
+          [imageLink]="'assets/images/pdf-icon.png'"
+          [labelClass]="'!text-[#1394db]'"
+          [loading]="fetchingAttachment[users.tocAttachmentUuid]"
+          [icon]="'attachment'"
+          [label]="'View Attachment'"
+          [title]="'Terms and Conditions'"
+          (click)="viewAttachment(user.tocAttachmentUuid)"
+          class="!cursor-pointer"
+        >
+        </app-item-detail-with-icon>
+        } @if (tenderer?.tocAttachmentUuid && tenderer?.tocAttachmentUuid != '') {
+        <app-item-detail-with-icon
+          [imageLink]="'assets/images/pdf-icon.png'"
+          [labelClass]="'!text-[#1394db]'"
+          [loading]="fetchingAttachment[tenderer.tocAttachmentUuid]"
+          [icon]="'attachment'"
+          [label]="'View Attachment'"
+          [title]="'Terms and Conditions'"
+          (click)="viewAttachment(tenderer.tocAttachmentUuid)"
+          class="!cursor-pointer"
+        >
+        </app-item-detail-with-icon>
+        } @if (tenderer?.wpAttachmentUuid && tenderer?.wpAttachmentUuid != '') {
+        <app-item-detail-with-icon
+          [imageLink]="'assets/images/pdf-icon.png'"
+          [labelClass]="'!text-[#1394db]'"
+          [loading]="fetchingAttachment[tenderer.wpAttachmentUuid]"
+          [icon]="'attachment'"
+          [label]="'View Attachment'"
+          [title]="'Billing Policy'"
+          (click)="viewAttachment(tenderer.wpAttachmentUuid)"
+          class="!cursor-pointer"
+        >
+        </app-item-detail-with-icon>
+        }
+      </div>
+    </div>
+  </div>
+  } @if (users?.embassy) {
+  <div class="container mx-auto" @fadeIn>
+    <div class="block bg-white mt-4 mb-2 p-3 md:rounded-md">
+      <div class="flex">
+        <h2 class="font-black text-word-primary">Embassy Detail</h2>
+      </div>
+      <div class="grid md:grid-cols-3 gap-4 my-3">
+        <!-- <app-item-detail-with-icon [icon]="'business_center'" [label]="'Country'" [title]="users?.embassy.country.name"></app-item-detail-with-icon> -->
+        <app-item-detail-with-icon
+          [icon]="'mail'"
+          [label]="'Embassy Email'"
+          [title]="users?.embassy.email ?? 'NOT SET'"
+        ></app-item-detail-with-icon>
+        <app-item-detail-with-icon
+          [icon]="'print'"
+          [label]="'Embassy Fax'"
+          [title]="users?.embassy.fax ?? 'NOT SET'"
+        ></app-item-detail-with-icon>
+        <app-item-detail-with-icon
+          [icon]="'business_center'"
+          [label]="'Name'"
+          [title]="users?.embassy.name ?? 'NOT SET'"
+        ></app-item-detail-with-icon>
+        <app-item-detail-with-icon
+          [icon]="'phone'"
+          [label]="'Embassy Phone'"
+          [title]="users?.embassy.phone ?? 'NOT SET'"
+        ></app-item-detail-with-icon>
+        <app-item-detail-with-icon
+          [icon]="'location_on'"
+          [label]="'Postal Address'"
+          [title]="users?.embassy?.postalAddress ?? 'NOT SET'"
+        ></app-item-detail-with-icon>
+        <app-item-detail-with-icon
+          [icon]="'public'"
+          [label]="'website'"
+          [title]="users?.embassy.website ?? 'NOT SET'"
+        ></app-item-detail-with-icon>
+      </div>
+    </div>
+  </div>
+  }
+</div>

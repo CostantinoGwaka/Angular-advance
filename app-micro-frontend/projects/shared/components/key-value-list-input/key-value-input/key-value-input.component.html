@@ -1,0 +1,130 @@
+<div class="row">
+  <div class="grid grid-cols-2 mt-3">
+    <div class="!border !border-grey-300 bg-white p-2">{{field?.keyLabel}}</div>
+    <div class="!border !border-grey-300 bg-white p-2">{{field?.valueLabel}}</div>
+  </div>
+
+  @for (option of options; track option) {
+    <div class="grid grid-cols-2">
+      <div class="!border !border-grey-300 bg-white  p-2">{{option.description}}</div>
+      <div class="!border !border-grey-300 bg-white  p-2">{{option.value}}</div>
+    </div>
+  }
+
+  <form [formGroup]="form" autocomplete="off">
+    <div class="grid grid-cols-2">
+      <div class="!border !border-grey-300 font-bold p-2">
+        <mat-form-field appearance="outline">
+          <mat-label>{{field?.keyLabel}}</mat-label>
+          <input
+            formControlName="description"
+            matInput
+            [placeholder]="field?.keyLabel"
+            />
+        </mat-form-field>
+      </div>
+      <div class="!border !border-grey-300 font-bold p-2">
+        <mat-form-field appearance="outline">
+          <mat-label>{{field?.valueLabel}}</mat-label>
+          <input
+            formControlName="value"
+            matInput
+            [placeholder]="field?.valueLabel"
+            />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="flex justify-between">
+      @if (loading) {
+        <app-loader [message]="'saving...'"></app-loader>
+      }
+    </div>
+    <div class="flex justify-between">
+      <div>
+        <button
+          [disabled]="!form.valid"
+          (click)="addNewItem()"
+          class="flex mt-2"
+          mat-stroked-button
+          color="primary"
+          >
+          <mat-icon inline>add</mat-icon>
+          Add
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+<!--<div class="mt-2 flex group relative p-1 !border border-gray bg-white rounded">-->
+<!--<div *ngIf="!editMode">{{ item.label }}</div>-->
+<!--<input-->
+<!--*ngIf="editMode"-->
+<!--#inputRef-->
+<!--[value]="item?.label"-->
+<!--class="outline-none w-full"-->
+<!--[placeholder]="placeholderText"-->
+<!--(keyup)="onKeyUup($event)"-->
+<!--/>-->
+<!--<div-->
+<!--#optionElementRef-->
+<!--*ngIf="editMode && showOptions"-->
+<!--class="absolute left-0 right-0 z-10 top-8"-->
+<!--&gt;-->
+<!--<div class="shadow bg-white rounded-sm">-->
+<!--<div-->
+<!--class="p-3 !border-b cursor-pointer hover:bg-gray-50"-->
+<!--*ngFor="let option of filteredOptions"-->
+<!--(click)="select(option)"-->
+<!--&gt;-->
+<!--{{ option.label }}-->
+<!--</div>-->
+<!--<div-->
+<!--*ngIf="newItemToAdd"-->
+<!--class="p-3 !border-b cursor-pointer !bg-primary/20 hover:bg-gray-50"-->
+<!--(click)="addNewItem()"-->
+<!--&gt;-->
+<!--+ Add '<strong>{{ newItemToAdd }}</strong-->
+<!--&gt;'-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div-->
+<!--class="absolute hidden group-hover:flex -space-x-3 right-0 top-0 bottom-0 items-center"-->
+<!--&gt;-->
+<!--<ng-container *ngIf="editMode">-->
+<!--<button-->
+<!--(click)="onAccept()"-->
+<!--mat-icon-button-->
+<!--color="accent"-->
+<!--aria-label="Accept"-->
+<!--&gt;-->
+<!--<mat-icon inline>check</mat-icon>-->
+<!--</button>-->
+<!--<button mat-icon-button (click)="onCloseClick()" color="warn">-->
+<!--<mat-icon inline>close</mat-icon>-->
+<!--</button>-->
+<!--</ng-container>-->
+<!--<ng-container *ngIf="!editMode">-->
+<!--<button-->
+<!--*ngIf="item.isEditable && !editMode"-->
+<!--(click)="toggleEditMode(true, item)"-->
+<!--mat-icon-button-->
+<!--color="primary"-->
+<!--aria-label="Edit"-->
+<!--&gt;-->
+<!--<mat-icon inline>edit</mat-icon>-->
+<!--</button>-->
+
+
+<!--<button mat-icon-button (click)="onRemove(item)" color="warn">-->
+<!--<mat-icon inline>delete</mat-icon>-->
+<!--</button>-->
+
+
+<!--<button mat-icon-button color="warn">-->
+<!--<mat-icon inline>menu</mat-icon>-->
+<!--</button>-->
+<!--</ng-container>-->
+<!--</div>-->
+<!--</div>-->

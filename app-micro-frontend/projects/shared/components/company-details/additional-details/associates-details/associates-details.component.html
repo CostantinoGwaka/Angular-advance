@@ -1,0 +1,62 @@
+
+<div class="flex justify-between">
+  <span class="text-lg">Associates Details</span>
+</div>
+
+@if (loading) {
+  <app-loader message="Fetching Associates details..."></app-loader>
+}
+
+@if (!loading) {
+  <div class="mt-4">
+    <mat-card appearance="outlined">
+      @if (associateType == 'SUBSIDIARY') {
+        <div class="row">
+          @if (parentSubsidiaryDetails) {
+            @if (associateType) {
+              <div class="col-sm-6">
+                <app-view-details-item key="Associate Type" [value]="associateType"></app-view-details-item>
+              </div>
+            }
+            @if (parentSubsidiaryDetails.parentCompanyName) {
+              <div class="col-sm-6">
+                <app-view-details-item key="Name" [value]="parentSubsidiaryDetails.parentCompanyName"></app-view-details-item>
+              </div>
+            }
+            @if (parentSubsidiaryDetails.parentPhysicalAddress) {
+              <div class="col-sm-6">
+                <app-view-details-item key="Certificate Name" [value]="parentSubsidiaryDetails.parentPhysicalAddress"></app-view-details-item>
+              </div>
+            }
+            @if (parentSubsidiaryDetails.parentWebsite) {
+              <div class="col-sm-6">
+                <app-view-details-item key="Registration Number" [value]="parentSubsidiaryDetails.parentWebsite"></app-view-details-item>
+              </div>
+            }
+          }
+          @if (associateType == 'SUBSIDIARY' && !parentSubsidiaryDetails) {
+            <div> No details found</div>
+          }
+        </div>
+      }
+      @if (associateType == 'PARENT') {
+        <div class="row">
+          @if (associatesDetails) {
+            <div class="grid grid-cols-2">
+              <div class="col-span-2 mb-2 mt-2 font-bold">Associate Type {{associateType}}</div>
+              <div class="!border !border-grey-300 font-bold p-2">Name of Subsidiary</div>
+              <div class="!border !border-grey-300 font-bold p-2">Location</div>
+              @for (item  of associatesDetails; track item ) {
+                <div class="!border !border-grey-300 p-2 "> {{item.nameOfSubsidiary}}</div>
+                <div class="!border !border-grey-300 p-2"> {{item.locationOfSubsidiary}}</div>
+              }
+            </div>
+          }
+          @if (associateType == 'PARENT' && !associatesDetails) {
+            <div> No details found</div>
+          }
+        </div>
+      }
+    </mat-card>
+  </div>
+}

@@ -1,0 +1,48 @@
+<div class="space-y-6">
+	<!-- Current Stage Card -->
+	<div class="flex">
+		<div class="flex-1 border rounded-lg bg-gray-50 p-4">
+			<div class="space-y-1">
+				<span class="text-sm text-gray-500">Current Stage</span>
+				<div class="text-base font-medium text-gray-900">
+					{{ stageName }}
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Action Selection -->
+	@if(possibleFlows.length > 0) {
+	<mat-form-field appearance="outline" class="w-full">
+		<mat-label>Select task action</mat-label>
+		<mat-select>
+			@for (possibleFlow of possibleFlows; track possibleFlow) {
+			<mat-option
+				[value]="possibleFlow"
+				(click)="select(possibleFlow)"
+				class="transition-colors duration-200 font-medium"
+				[style.color]="possibleFlow.color"
+			>
+				{{ possibleFlow.action }}
+			</mat-option>
+			}
+		</mat-select>
+	</mat-form-field>
+	} @else {
+	<div class="mt-4">
+		<app-attention-message
+			type="warning"
+			[message]="
+				'No possible actions available, probably this is a system controlled task, so you will have to wait until it is completed by the system.'
+			"
+		>
+		</app-attention-message>
+	</div>
+	}
+
+	<!-- Next Task Info -->
+	@if (selectedFlow && selectedFlow?.nextTaskDefinition?.taskName) {
+	<app-work-flow-quick-task-info [task]="selectedFlow?.nextTaskDefinition">
+	</app-work-flow-quick-task-info>
+	}
+</div>

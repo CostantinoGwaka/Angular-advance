@@ -1,0 +1,22 @@
+<h2 mat-dialog-title>Workflow Preview</h2>
+<mat-dialog-content class="mat-typography">
+  @if (loading) {
+    <div>
+      <app-loader [message]="'Loading users'"></app-loader>
+    </div>
+  }
+  <div>
+    <!-- <app-work-flow-container
+    [selectedUuid]="selectedUuid"
+    [currentServiceKey]="currentServiceKey"
+  ></app-work-flow-container> -->
+</div>
+<div>
+  @if (errorMessage) {
+    <span class="text-red-500">{{ errorMessage }}</span>
+  }
+</div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+</mat-dialog-actions>

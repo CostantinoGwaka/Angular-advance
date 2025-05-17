@@ -1,0 +1,111 @@
+<div
+  class="{{ backgroundColorClass }} search-area-wrapper home-search-area
+   py-2 px-3 flex md:justify-between items-center"
+  >
+  <ng-container>
+    <div class="flex w-full md:w-auto items-center">
+      <div class="flex gap-2 w-full md:w-auto items-center">
+        <div class="flex flex-row items-center w-3/4">
+          <main-dynamic-form
+            [hideTopLine]="true"
+            [fields]="searchFields"
+            [form]="searchForm">
+          </main-dynamic-form>
+        </div>
+
+
+        <div class="flex flex-row items-center gap-2 mb-2">
+          <button
+            (click)="searchByInputFilters()"
+            class="!bg-secondary flex-1 md:flex-auto !text-black flex space-x-2 p-2 md:mr-2
+           rounded-md !border-4 !border-secondary items-center">
+            <mat-icon>search</mat-icon>
+            <span class="hidden md:block">{{ "SEARCH" | translate }}</span>
+          </button>
+          <button
+            (click)="clearFilter()"
+            class="flex-1 md:flex-auto flex space-x-2 p-2 md:mr-2 rounded-md !border text-gray-40
+           hover:text-black border-gray-400 hover:border-black items-center">
+            <span class="hidden md:block p-1">
+              {{ "CLEAR_SEARCH" | translate }}
+            </span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="flex flex-row">
+      @if (useCustomButton) {
+        <button
+          (click)="customButtonClicked()"
+          class="md:flex space-x-2 p-2 !bg-primary text-white rounded-md shadow-md hover:cursor-pointer"
+          >
+          {{ customButtonTitle }}
+        </button>
+      }
+
+      @if (advancedSearchFields.length) {
+        <a
+          (click)="showAdvancedMenu = true"
+        class="text-gray-400 hidden cursor-pointer lg:flex space-x-2 p-2 hover:text-black
+            rounded-md !border border-gray-400 hover:border-black items-center">
+          <mat-icon>tune</mat-icon>
+          <div>{{ "ADVANCED_SEARCH" | translate }}</div>
+        </a>
+      }
+
+      @if (showAdvancedMenu) {
+        <ng-container
+          [ngTemplateOutlet]="advancedMenu">
+        </ng-container>
+      }
+    </div>
+  </ng-container>
+</div>
+
+<ng-template #advancedMenu>
+  <div class="sticky mt-2">
+    <div class="advanced-search divide-y w-[420px] absolute z-10" style="right:0px;">
+      <div class="flex items-center justify-between">
+        <div class="w-[55px] flex items-center justify-center  p-[16px]">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <rect width="20" height="20" fill="url(#pattern0)"/>
+            <defs>
+              <pattern id="pattern0" patternContentUnits="objectBoundingBox" width="1" height="1">
+                <use xlink:href="#image0_1_28" transform="scale(0.0104167)"/>
+              </pattern>
+              <image id="image0_1_28" width="96" height="96" xlink:href="data:image/png;base64,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"/>
+            </defs>
+          </svg>
+        </div>
+        <div class="flex-1 text-left flex items-center justify-start p-[16px]">
+          Advanced Search
+        </div>
+
+        <div (click)="closeAdvancedSearch()" class="w-[55px]  flex items-center justify-center  p-[16px] cursor-pointer">
+          <div class="p-2 rounded " >
+            <svg  width="11" height="11" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M11 1.10786L9.89214 0L5.5 4.39214L1.10786 0L0 1.10786L4.39214 5.5L0 9.89214L1.10786 11L5.5 6.60786L9.89214 11L11 9.89214L6.60786 5.5L11 1.10786Z" fill="#4D4D4D"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div class="p-[16px]">
+
+        <div class="flex flex-col">
+          <main-dynamic-form
+            [hideTopLine]="true"
+            [fields]="advancedSearchFields"
+            [form]="advancedSearchForm">
+          </main-dynamic-form>
+        </div>
+      </div>
+      <div class="p-[16px] flex items-center justify-end gap-[16px]">
+        <div class="border-[2px] border-[#C60000] px-[30px] py-[6px] rounded-[10px] text-[12px] text-[#C60000] cursor-pointer"
+        (click)="clearFilter()">Clear</div>
+        <div class="px-[27px] py-[8px] rounded-[10px] text-[12px] bg-[#FBD306]  cursor-pointer" (click)="searchByInputFilters()">Search</div>
+      </div>
+    </div>
+  </div>
+</ng-template>

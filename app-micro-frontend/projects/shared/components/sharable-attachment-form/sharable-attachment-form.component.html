@@ -1,0 +1,170 @@
+<div class="sharable-attachments">
+  @for (attach of attachmentList; track attach; let i = $index) {
+    <div
+      class="attachment-list"
+      >
+      <div class="attachment-wrapper shadow-sm">
+        <div class="attachment-content">
+          <div class="top">
+            <div class="attach-title">
+              <span class="title !text-primary">Title:</span> {{ attach?.title }}
+            </div>
+            <div class="attach-type">
+              <span class="title !text-primary">Attachment Type:</span>
+              {{ attach?.attachmentType }}
+            </div>
+          </div>
+          @if (showDescription) {
+            <div class="bottom" >
+              <span class="title !text-primary">Description:</span>
+              {{ attach?.description }}
+            </div>
+          }
+        </div>
+        <div class="attachment-icon">
+          @if (loadViewAttachment[i]) {
+            <mat-progress-spinner
+              @fadeSmooth
+              [diameter]="25"
+              mode="indeterminate"
+              >
+            </mat-progress-spinner>
+          }
+          @if (!loadViewAttachment[i]) {
+            <button mat-mini-fab class="!shadow-sm"
+              (click)="viewAttachment(attach, i)" color="primary">
+              <mat-icon>visibility</mat-icon>
+            </button>
+          }
+          @if (!viewMode) {
+            <div class="ml-2">
+              @if (
+                confirmDeleteAttachment[i] &&
+                !loadDeletingAttachment[i]
+                ) {
+                <app-inline-confirm
+                  @fadeSmooth
+                  (confirmYes)="removeAttachment(attach.uuid, attach.description, attach.title, attach.attachmentType, i)"
+                  (confirmCancel)="cancelAnAction(i)"
+                  >
+                </app-inline-confirm>
+              }
+              @if (loadDeletingAttachment[i]) {
+                <mat-progress-spinner
+                  [diameter]="25"
+                  mode="indeterminate"
+                  >
+                </mat-progress-spinner>
+              }
+              @if (!loadDeletingAttachment[i] &&
+                !confirmDeleteAttachment[i]) {
+                <button mat-mini-fab color="warn" class="shadow-sm" (click)="confirmDeleteAttachment[i] = !confirmDeleteAttachment[i]">
+                  <mat-icon svgIcon="trash_delete"></mat-icon>
+                </button>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+
+  <!--  <div class="attachment-list" *ngIf="attachmentList?.length === 0">-->
+  <!--    <div class="attachment-wrapper shadow-sm">-->
+  <!--      <span>Your attachments will be shown here when added to list...</span>-->
+<!--    </div>-->
+<!--  </div>-->
+
+@if (showForm) {
+  <form
+    [formGroup]="attachmentForm"
+    autocomplete="off"
+    novalidate
+    >
+    <div class="mb-3 mt-3" @fadeSmooth>
+      <div>
+        <div>
+          <b>Add attachment</b> (Maximum file size: {{ FILE_SIZE_LIMIT }}MB)
+        </div>
+        <div class="flex text-sm space-x-2">
+          <div>Allowed file types:</div>
+          @for (fileType of fileTypes; track fileType) {
+            <div
+              class="!bg-gray-800 text-white rounded-sm px-2"
+              >
+              {{ fileType }}
+            </div>
+          }
+        </div>
+      </div>
+      <div class="flex space-x-4">
+        <div class="flex-1">
+          <mat-form-field appearance="outline" class="material-form">
+            <mat-label>Attachment Type</mat-label>
+            <mat-select formControlName="attachmentType">
+              @for (sf of attachmentTypes; track sf) {
+                <mat-option [value]="sf.name">
+                  {{ sf.name }}</mat-option
+                  >
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="flex-1">
+            <mat-form-field appearance="outline" class="material-form">
+              <mat-label>Attachment Description</mat-label>
+              <input formControlName="description" matInput />
+            </mat-form-field>
+          </div>
+          <div style="max-width: 60px" class="flex-1 justify-center">
+            <button
+              class="custom__add__btn"
+              matRipple
+              matTooltip="Click to Add"
+              [matTooltipPosition]="'right'"
+              (click)="attachment.click()"
+              [disabled]="!attachmentForm.valid"
+              >
+              <mat-icon>attachment</mat-icon>
+            </button>
+            <input
+              type="file"
+              class="d-none"
+              #attachment
+              (change)="addAttachmentToList($event)"
+              accept="application/pdf,image/*"
+              />
+          </div>
+        </div>
+      </div>
+    </form>
+  }
+
+  @if (loadExistingAttachments) {
+    <app-loader
+      @fadeSmooth
+      class="my-3"
+      [message]="'Just a moment... checking for existing attachments...'"  >
+    </app-loader>
+  }
+
+  @if (loadSavingAttachment) {
+    <app-loader
+      @fadeSmooth
+      class="my-3"
+      [message]="'Just a moment... Saving your attachment...'">
+    </app-loader>
+  }
+
+  @if (!viewMode) {
+    @if (!showForm && !loadSavingAttachment && !loadExistingAttachments) {
+      <button
+        class="add-attachment"
+        mat-raised-button
+        (click)="showForm = true;">
+        <mat-icon>add</mat-icon>
+        Add Attachment
+      </button>
+    }
+  }
+</div>

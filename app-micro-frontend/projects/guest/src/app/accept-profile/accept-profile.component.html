@@ -1,0 +1,37 @@
+<div class="grid place-content-center h-[100vh] bg-gray-200">
+  <div class="flex items-center">
+    <div class="w-[35vw]">
+      <div class="block bg-white mt-4 mb-2 p-3  md:rounded-xl shadow-xl">
+        <div class="flex flex-col space-y-2 justify-center items-center px-11 py-11">
+          <div class="text-center space-y-5">
+            <div
+              class="aspect-square text-4xl w-20 rounded-full border-2 border-[#049E26] m-auto !bg-[#EDFCF0] grid place-content-center !text-gray-700">
+              <mat-icon inline class="text-[#049E26]">done</mat-icon>
+            </div>
+            <h3 class="!font-bold text-[#049E26]">Request Accepted</h3>
+            @if (message != 'Verification token expired or not found') {
+              <p class="justify-center">
+                <!-- Thank you <b>Name</b>, you have accepted <b>XYZ Limited</b> to use
+                your CV as one of their key personels in NeST. -->
+                {{message}}
+              </p>
+            }
+            @if (message == 'Verification token expired or not found') {
+              <p class="justify-center">
+                <!-- Thank you <b>Name</b>, you have accepted <b>XYZ Limited</b> to use
+                your CV as one of their key personels in NeST. -->
+                Your Already Accept this request.
+              </p>
+            }
+            <div class="col-sm-12 col-xl-12 p-0 ml-4 mt-8">
+              <a [routerLink]="['']" mat-button href="" class="!-ml-[20px] !border !border-primary !bg-primary rounded !text-white">
+                <mat-icon matPrefix class="mr-3">keyboard_backspace</mat-icon>
+                Home
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

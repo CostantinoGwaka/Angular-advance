@@ -1,0 +1,62 @@
+<app-shared-layout
+  [Analysis]="teamConfigValue[teamType] + ' Management'"
+  [hideAdd]="false"
+  [viewDetails]="viewDetails"
+  [addPermission]="[]"
+  (addItem)="onAdd()"
+  [smallForm]="false"
+  animationSize="full"
+  [formTitle]="viewDetailsTitle"
+  (closeDetails)="closeDetails()">
+  <div ngProjectAs="table">
+    <app-paginated-table-expandable-row
+      [query]="query"
+      [apolloNamespace]="apolloNamespace"
+      [mapFunction]="mapFunction"
+      [permissions]="permissions"
+      [tableConfigurations]="tableConfigurations"
+      [additionalVariables]="{entityType:entityType,teamType:teamType}"
+      (rowCustomPrimary)="customPrimary($event)"
+      (rowDelete)="delete($event)">
+      <ng-template #actions let-data="data">
+        <app-team-detail
+          [selectedUuid]="data.uuid"
+          [entityType]="entityType"
+          [teamType]="teamType">
+        </app-team-detail>
+      </ng-template>
+
+
+
+    </app-paginated-table-expandable-row>
+  </div>
+  <div ngProjectAs="form">
+    @if (viewType == 'add') {
+      <app-add-update-team-new
+        [entityType]="entityType"
+        [teamType]="teamType"
+        [team]=""
+        [entityName]="entityLabelValue[entityType]"
+        [teamTypeName]="teamLabelValue[entityType]"
+        (closeForm)="closeDetails($event)">
+      </app-add-update-team-new>
+    }
+
+    @if (viewType == 'manage-team') {
+      <app-manage-team
+        [entityType]="entityType"
+        [teamType]="teamType"
+        [selectedUuid]="selectedUuid"
+        (closeForm)="closeDetails($event)"
+        >
+      </app-manage-team>
+    }
+    @if (viewType === 'letter') {
+      <app-invitation-letter
+        (setPanelTitle)="setPanelTitle($event)"
+        (closePanelTitle)="closeDetails()"
+        [teamMemberUuid]="memberUuid">
+      </app-invitation-letter>
+    }
+  </div>
+</app-shared-layout>

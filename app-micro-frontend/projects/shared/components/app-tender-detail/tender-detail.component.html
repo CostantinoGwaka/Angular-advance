@@ -1,0 +1,335 @@
+@if (loading) {
+  <app-loader message="{{ 'LOADING' |translate }}"></app-loader>
+}
+@if (!loading) {
+  <div class="rounded-md my-1 bg-slate-50 divide-y">
+    <div class="py-3 px-2 grid grid-cols-12 gap-1">
+      <div class="col-span-4 text-left font-medium text-gray-400">{{ tenderDetails?.donorTenderNumber != '' &&
+      tenderDetails?.donorTenderNumber != null ? tenderDetails?.donorTenderNumber : tenderDetails?.tenderNumber }}</div>
+      <div class="col-span-4 text-left font-medium text-gray-400">{{ tenderDetails?.descriptionOfTheProcurement }}</div>
+      <div class="col-span-4 text-left font-medium text-gray-400">{{ tenderDetails?.estimatedBudget | currency:"":"" }}
+      </div>
+    </div>
+    <div class="p-2">
+      <div class="grid grid-cols-12 gap-3">
+        <div class="col-span-3">
+          <app-view-details-item key="Tender Category"
+          [value]="tenderDetails?.procurementCategoryName"></app-view-details-item>
+        </div>
+        <div class="col-span-3">
+          <app-view-details-item key="Procurement Method"
+          [value]="tenderDetails?.procurementMethod?.description"></app-view-details-item>
+        </div>
+        <div class="col-span-3"><app-view-details-item key="Procurement Method Category"
+        [value]="tenderDetails?.procurementMethodCategory"></app-view-details-item></div>
+        <div class="col-span-3">
+          <app-view-details-item key="Selection Method"
+          [value]="tenderDetails?.selectionMethod?.name"></app-view-details-item>
+        </div>
+      </div>
+      <div class="grid grid-cols-12 gap-3">
+        <div class="col-span-3">
+          <app-view-details-item key="Tender Sub Category"
+          [value]="tenderDetails?.tenderSubCategoryName"></app-view-details-item>
+        </div>
+        <div class="col-span-3">
+          <app-view-details-item key="Budget Purpose" [value]="tenderDetails?.budgetPurpose"></app-view-details-item>
+        </div>
+        <div class="col-span-3">
+          <app-view-details-item key="Source Of Fund" [value]="tenderDetails?.sourceOfFund?.name"></app-view-details-item>
+        </div>
+        <div class="col-span-3">
+          <app-view-details-item key="Contract Type" [value]="tenderDetails?.contractType?.name"></app-view-details-item>
+        </div>
+        <!-- <div class="col-span-3">{{ tenderDetails?.procurementCategoryName }}</div> -->
+      </div>
+      <div class="grid grid-cols-12 gap-3">
+        <div class="col-span-3">
+          <app-view-details-item key="Pre Qualification Invitation Date"
+          [value]="tenderDetails?.preQualificationInvitationDate | date"></app-view-details-item>
+        </div>
+        <div class="col-span-3">
+          <app-view-details-item key="Pre Qualification Tender Sub Category"
+          [value]="tenderDetails?.prequalificationTenderSubCategoryName"></app-view-details-item>
+        </div>
+        <div class="col-span-3">
+          <app-view-details-item key="Tender Invitation Date"
+          [value]="tenderDetails?.invitationDate"></app-view-details-item>
+        </div>
+        <div class="col-span-3">
+          <app-view-details-item key="Is Cuis" [value]="tenderDetails?.isCuis ? 'YES' : 'NO'"></app-view-details-item>
+        </div>
+        <div class="col-span-3">
+          <app-view-details-item key="Framework Type" [value]="tenderDetails?.frameworkType"></app-view-details-item>
+        </div>
+        <div class="col-span-3">
+          <app-view-details-item key="CUIS Option" [value]="tenderDetails?.cuisOption"></app-view-details-item>
+        </div>
+      </div>
+      <div class="grid grid-cols-12 gap-3">
+        <div class="col-span-3">
+          <app-view-details-item key="Estimate Budget" [valueType]="'number'"
+          [value]="tenderDetails?.estimatedBudget"></app-view-details-item>
+        </div>
+        <div class="col-span-3">
+          <app-view-details-item key="Pre Qualification Approach"
+          [value]="preQualification?.preQualificationMethod"></app-view-details-item>
+        </div>
+        @if (preQualification?.preSelectionSourceDefinition) {
+          <div class="col-span-3">
+            <app-view-details-item key="Pre selection source"
+            [value]="preQualification?.preSelectionSourceDefinition"></app-view-details-item>
+          </div>
+        }
+        @if (preQualification?.sourceFinancialYear) {
+          <div class="col-span-3">
+            <app-view-details-item key="Source Financial Year"
+            [value]="preQualification?.sourceFinancialYear"></app-view-details-item>
+          </div>
+        }
+        @if (preQualification?.sourceProcuringEntityName) {
+          <div class="col-span-3">
+            <app-view-details-item key="Source PE"
+            [value]="preQualification?.sourceProcuringEntityName"></app-view-details-item>
+          </div>
+        }
+        @if (preQualification?.sourceTenderBudget) {
+          <div class="col-span-3">
+            <app-view-details-item key="Source Tender Budget" [valueType]="'number'"
+            [value]="preQualification?.sourceTenderBudget"></app-view-details-item>
+          </div>
+        }
+        @if (preQualification?.sourceTenderCategoryName) {
+          <div class="col-span-3">
+            <app-view-details-item key="Source Tender Category"
+            [value]="preQualification?.sourceTenderCategoryName"></app-view-details-item>
+          </div>
+        }
+        @if (preQualification?.sourceTenderDescription) {
+          <div class="col-span-3">
+            <app-view-details-item key="Source Tender Description"
+            [value]="preQualification?.sourceTenderDescription"></app-view-details-item>
+          </div>
+        }
+        @if (preQualification?.sourceTenderNumber) {
+          <div class="col-span-3">
+            <app-view-details-item key="Source Tender Number"
+            [value]="preQualification?.sourceTenderNumber"></app-view-details-item>
+          </div>
+        }
+        @if (preQualification?.detailOfDirectiveIssuingAuthority) {
+          <div class="col-span-6">
+            <app-view-details-item key="Detail of Directive Issuing Authority"
+            [value]="preQualification?.detailOfDirectiveIssuingAuthority"></app-view-details-item>
+          </div>
+        }
+        @if (preQualification?.descriptionOfApproach) {
+          <div class="col-span-6">
+            <app-view-details-item key="Description of Approach"
+            [value]="preQualification?.descriptionOfApproach"></app-view-details-item>
+          </div>
+        }
+        @if (preQualification?.descriptionOfProfessionalBody) {
+          <div class="col-span-6">
+            <app-view-details-item key="Description of professional body"
+            [value]="preQualification?.descriptionOfProfessionalBody"></app-view-details-item>
+          </div>
+        }
+      </div>
+      <!--    <div class="grid grid-cols-12"-->
+      <!--         *ngIf="(preQualification?.reasonForPreQualificationPreSelections || []).length">-->
+      <!--      <div class="flex flex-col col-span-6">-->
+      <!--        <div class="text-bold" style="color: #808080a1">Pre Selection Reasons</div>-->
+      <!--        <ol class="list-decimal">-->
+      <!--          <li *ngFor="let data of preQualification?.reasonForPreQualificationPreSelections">-->
+      <!--            {{data?.preQualificationPreselectionReason?.reason}}-->
+    <!--          </li>-->
+  <!--        </ol>-->
+  <!--        <mat-divider></mat-divider>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--Tender Document-->
+<button type="button" class="itemButton" (click)="viewTenderDocument()">
+  View Tender Document
+</button>
+<br />
+@if (tenderDetails?.hasLot == false) {
+  <div class="py-2">
+    <span class="font-medium">Items:</span>
+    @for (item of tenderItems; track item) {
+      <div class="my-1 rounded-[10px] bg-white border-l-2 border-primary shadow-md ">
+        <div (click)="openMoreTenderItem(item)" class="py-3 px-1 rounded-[10px] hover:bg-slate-300 active:bg-slate-200">
+          <div class="grid grid-cols-12 gap-4 cursor-pointer">
+            <div class="col-span-2 flex items-center"><span class="font-medium">GFS Code:</span> {{item?.gfsCode?.code}}
+          </div>
+          <div class="col-span-7 flex items-center"><span class="font-medium">Item Description :</span>
+        {{item.description}}</div>
+        <div class="col-span-1 flex items-center"><span class="font-medium">Quantity :</span> {{item.quantity}}
+      </div>
+      <div class="col-span-2 flex items-center"><span class="font-medium">Budget Estimate:</span>
+    {{item.totalPrice|currency:'':''}}</div>
+  </div>
+</div>
+@if (viewTender[item.uuid]) {
+  <div @fadeIn class="p-2">
+    <app-full-data-table [tableConfigurations]="tableConfigurations" [tableList]="item.scheduleOfRequirements"
+      [mapFunction]="mapFunction">
+    </app-full-data-table>
+  </div>
+}
+</div>
+}
+@if (totalNumberOfItems>1) {
+  <mat-paginator [length]="totalNumberOfItems" [pageSize]="itemPageSize"
+    [pageSizeOptions]="[5, 10, 25, 100]" (page)="onItemPageChange($event)" aria-label="Select page">
+  </mat-paginator>
+}
+</div>
+}
+@if (tenderDetails?.hasLot == true) {
+  <div class="">
+    <span class="font-medium">Lots:</span>
+    @for (lot of tenderLots; track lot) {
+      <div class="mb-2 border-l-2 border-l-blue-400 shadow-sm rounded-[2px] bg-white">
+        <div class="flex items-center">
+          <div class="flex-grow">
+            <div class="py-1 px-1">
+              <div class="font-medium text-base text-slate-400">{{lot.tenderNumber}} {{lot.descriptionOfTheProcurement}}
+              </div>
+            </div>
+            <div class="px-1">
+              Estimated Budget: <span class="font-medium">{{lot.estimatedBudget| currency:"":""}}</span>
+            </div>
+          </div>
+          <div class="flex items-center justify-end px-2">
+            <div
+              class="p-1 flex items-center justify-center cursor-pointer rounded-full hover:bg-slate-300 active:bg-slate-200"
+              @fadeIn (click)="showLotDetail(lot)">
+              @if (!display[lot.uuid]) {
+                <mat-icon>keyboard_arrow_right</mat-icon>
+              }
+              @if (display[lot.uuid]) {
+                <mat-icon>keyboard_arrow_down</mat-icon>
+              }
+            </div>
+          </div>
+        </div>
+        @if (display[lot.uuid] == true) {
+          <div @fadeIn class="bg-slate-100 p-2">
+            @if (loadLotItem) {
+              <app-loader @fadeIn [message]="'Loading lot items'"></app-loader>
+            }
+            <span class="font-medium">Items:</span>
+            @for (item of tenderLotItems; track item) {
+              <div
+                class="my-1 rounded-[10px] bg-white border-l-2 border-primary shadow-md ">
+                <div (click)="openMoreTenderItem(item)"
+                  class="py-3 px-1 rounded-[10px] hover:bg-slate-300 active:bg-slate-200">
+                  <div class="grid grid-cols-12 gap-4 cursor-pointer">
+                    <div class="col-span-2"><span class="font-medium">GFS Code:</span> {{item?.gfsCode?.code}}</div>
+                    <div class="col-span-7"><span class="font-medium">Item Description :</span> {{item.description}}</div>
+                    <div class="col-span-1"><span class="font-medium">Quantity :</span> {{item.quantity}}</div>
+                    <div class="col-span-2"><span class="font-medium">Budget Estimate:</span>
+                  {{item.totalPrice|currency:'':''}}</div>
+                </div>
+              </div>
+              @if (viewTender[item.uuid]) {
+                <div @fadeIn class="p-2">
+                  <app-full-data-table [tableConfigurations]="tableConfigurations" [tableList]="item.scheduleOfRequirements"
+                    [mapFunction]="mapFunction">
+                  </app-full-data-table>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+  @if (totalNumberOfLots>1) {
+    <mat-paginator [length]="totalNumberOfLots" [pageSize]="lotPageSize"
+      [pageSizeOptions]="[5, 10, 25, 100]" (page)="onlotPageChange($event)" aria-label="Select page">
+    </mat-paginator>
+  }
+</div>
+}
+<br />
+<div class="">
+  <div class="grid grid-cols-12 gap-3 divide-x">
+    @if (tenderDetails?.prequalificationTendererTypes.length>0) {
+      <div class="md:col-span-2 sm:col-span-6">
+        <div class="text-bold" style="color: #808080a1;">Pre Qualification Tenderer Types</div>
+        <div class="text-gray-900 mt-2" style="min-height: 30px;">
+          @for (type of tenderDetails?.prequalificationTendererTypes; track type) {
+            <p>{{ capitalizeWords(type.name) }}</p>
+          }
+        </div>
+      </div>
+    }
+    @if (tenderDetails?.preQualificationTenderCalenderDates.length>0) {
+      <div class="md:col-span-4 sm:col-span-6 pl-3"
+        >
+        <div class="text-bold" style="color: #808080a1;">Pre Qualification Calendar</div>
+        <div class="text-gray-900 mt-2" style="min-height: 30px;">
+          <div class="grid grid-cols-12 m-1">
+            @if (tenderDetails?.preQualificationTenderCalenderDates.length>0) {
+              <div class="col-span-6 font-medium">
+              Stage</div>
+            }
+            @if (tenderDetails?.preQualificationTenderCalenderDates.length>0) {
+              <div class="col-span-6 font-medium">
+              Planned Date</div>
+            }
+          </div>
+          @for (precalendar of tenderDetails?.preQualificationTenderCalenderDates|sortArray:'ASC':'procurementStage':'orderNumber'; track precalendar) {
+            <div class="grid grid-cols-12 m-1"
+              >
+              <div class="col-span-6">{{ precalendar?.procurementStage?.name }}</div>
+              <div class="col-span-6">{{ precalendar?.plannedDate|date }}</div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+    <div class="md:col-span-2  sm:col-span-6 pl-3" *ngif="tenderDetails?.tendererTypes.length>0">
+      <div class="text-bold" style="color: #808080a1;">Tenderer Types</div>
+      <div class="text-gray-900 mt-2" style="min-height: 30px;">
+        @for (type of tenderDetails?.tendererTypes; track type) {
+          <p>{{ capitalizeWords(type.name) }}</p>
+        }
+      </div>
+    </div>
+    @if (tenderDetails?.tenderCalenderDates.length>0) {
+      <div class="md:col-span-4  sm:col-span-6 pl-3">
+        <div class="text-bold" style="color: #808080a1;">Tender Calendar</div>
+        <div class="text-gray-900 mt-2 row" style="min-height: 30px;">
+          <div class="grid grid-cols-12 m-1">
+            @if (tenderDetails?.tenderCalenderDates.length>0) {
+              <div class="col-span-6 font-medium">Stage</div>
+            }
+            @if (tenderDetails?.tenderCalenderDates.length>0) {
+              <div class="col-span-6 font-medium">Planned Date</div>
+            }
+          </div>
+          @for (calendar of (tenderDetails?.tenderCalenderDates||[])|sortArray:'ASC':'procurementStage':'orderNumber'; track calendar) {
+            <div class="grid grid-cols-12 m-1"
+              >
+              <div class="col-span-6">{{ calendar?.procurementStage?.name }}</div>
+              <div class="col-span-6">{{ calendar?.plannedDate|date }}</div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>
+<br />
+<br />
+@if (!forTask) {
+  <app-sharable-comments-viewer
+    [comments]="preQualificationUuid?preQualificationApprovals:tenderDetails?.approvals">
+  </app-sharable-comments-viewer>
+}
+</div>
+</div>
+}

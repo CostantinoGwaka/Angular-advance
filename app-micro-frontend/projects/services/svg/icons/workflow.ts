@@ -1,0 +1,3 @@
+export const workflow = `
+<svg fill="#1394DB" viewBox="0 0 32 32" id="icon" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <defs> <style> .cls-1 { fill: none; } </style> </defs> <path d="M10,10H2V2h8ZM4,8H8V4H4Z"></path> <path d="M30,30H22V22h8Zm-6-2h4V24H24Z"></path> <path d="M20,27H8A6,6,0,0,1,8,15v2a4,4,0,0,0,0,8H20Z"></path> <path d="M24,17V15a4,4,0,0,0,0-8H12V5H24a6,6,0,0,1,0,12Z"></path> <path d="M19,11H13l-3,4,6,6,6-6Z"></path> <rect id="_Transparent_Rectangle_" data-name="<Transparent Rectangle>" class="cls-1" width="32" height="32"></rect> </g></svg>
+`

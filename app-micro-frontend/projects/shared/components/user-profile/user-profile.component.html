@@ -1,0 +1,107 @@
+<div class="h-full">
+  <div class="container mx-auto">
+    <div class="block bg-white p-3 mb-2 md:rounded-md">
+      <div class="flex flex-wrap items-center justify-content-between">
+        @if (false) {
+          <div
+            class="w-full bg-red-100 border-t border-l border-r border-b border-red-500 rounded text-red-500 px-4 py-3 mb-2"
+            >
+            <div class="flex flex-wrap justify-between mt-2">
+              <p class="text-base m-0 text-center">
+                Important information is missing in your profile. Please update your profile
+                information
+              </p>
+              <button
+                mat-flat-button
+                color="primary"
+                (click)="editProfile()"
+                style="padding-right: 25px; padding-bottom: 5px; padding-top: 5px;"
+                class="!m-0 py-1 items-center flex flex-wrap gen__button btn__primary"
+                >
+                <mat-icon>edit</mat-icon> Edit Profile
+              </button>
+            </div>
+          </div>
+        }
+        <div class="flex flex-wrap items-center">
+          <div>
+            <img class="h-auto w-20 mx-auto" src="/assets/images/avatar.svg" alt="" />
+          </div>
+          <div class="p-3">
+            <div class="text-lg font-bold mb-2">{{user?.fullName }}</div>
+            @if (!peProfile) {
+              <div class="text-gray">{{ user?.tenderer?.name }}</div>
+            }
+            @if (peProfile) {
+              <div class="text-gray">{{ user?.procuringEntity?.name}}</div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    @if (user) {
+      <div class="block bg-white mt-4 mb-2 p-3 md:rounded-md">
+        <div class="flex flex-wrap justify-content-between items-center mb-4">
+          <h2>Account Information</h2>
+          @if (showEditButton) {
+            <div class="place-items-end">
+              <button
+                *appHasPermission="updateProfilePermission ? [updateProfilePermission] : []"
+                mat-flat-button
+                color="primary"
+                (click)="editProfile()"
+                style="padding-right: 25px; padding-bottom: 5px; padding-top: 5px;"
+                class="!m-0 py-1 items-center flex flex-wrap gen__button btn__primary"
+                >
+                <mat-icon>edit</mat-icon> Update Account Information
+              </button>
+            </div>
+          }
+        </div>
+        <div class="grid md:grid-cols-3 gap-4">
+          <app-item-detail-with-icon
+            [icon]="'account_circle'"
+            [label]="'Full Name'"
+            [title]="user?.fullName"
+          ></app-item-detail-with-icon>
+          <app-item-detail-with-icon
+            [icon]="'mail'"
+            [label]="'Account Email'"
+            [title]="user?.email"
+          ></app-item-detail-with-icon>
+          <app-item-detail-with-icon
+            [icon]="'phone'"
+            [label]="'Phone number'"
+            [title]="user?.phone.toString()"
+          ></app-item-detail-with-icon>
+        </div>
+        <!-- ROLE LIST ARRAY -->
+        @if (user?.rolesList) {
+          <div class="mt-4">
+            <div class="font-bold text-gray-800 my-2 mt-3">Roles ({{user?.rolesList.length}})</div>
+            <div class="flex flex-wrap justify-start">
+              @for (gp of user?.rolesList; track gp) {
+                <span (click)="openRole(gp)">
+                  <span
+                    class="px-4 py-2 m-1 rounded-full text-gray-700 bg-gray-200 font-normal text-sm flex align-center w-max cursor-pointer active:bg-gray-300 transition duration-300 ease"
+                    >
+                    {{gp.displayName | replace:"_":" " | uppercase}}
+                  </span>
+                </span>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  @if (user?.tenderer && showUserSubscriptions) {
+    <user-subscriptions
+      [user]="user"
+      [userAccountUuid]="user.uuid"
+      >
+    </user-subscriptions>
+  }
+</div>

@@ -1,0 +1,23 @@
+<!-- <div id="player"></div>
+<app-loader *ngIf="loading" [message]="'Loading..'"></app-loader>
+<p *ngIf="message" class="text-red-500">{{message}}</p>
+<button mat-raised-button color="primary" class="mt-2" (click)="closeModal()">Close</button> -->
+<div id="player"></div>
+@if (loading) {
+  <div class="h-[450] w-[640]">
+    <div class="container mx-auto h-[200] w-[640]">
+      <p></p>
+      <div class="border border-blue-300 shadow rounded-md p-4 mx-auto h-[200] w-[640]">
+        <div class="animate-pulse flex space-x-4">
+          <div class="bg-slate-200">
+            <img src="assetupdates/images/yt1.png" class="h-[200] w-auto p-10" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+@if (message) {
+  <p class="text-red-500">{{message}}</p>
+}
+<button mat-raised-button color="primary" class="mt-2" (click)="closeModal()">Close</button>

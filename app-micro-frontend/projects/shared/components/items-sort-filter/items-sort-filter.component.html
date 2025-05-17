@@ -1,0 +1,22 @@
+<div
+  class="flex space-x-1 py-1 px-2 !border bg-gray-100 border-gray-300 cursor-pointer rounded-md items-center"
+  [matMenuTriggerFor]="sorter"
+  >
+  <div class="text-gray-400">Sort by:</div>
+  <div class="text-gray-600 flex items-center">
+    <div>
+      {{ selectedOption?.label }}
+    </div>
+    <mat-icon class="mat-icon-inline">arrow_drop_down</mat-icon>
+  </div>
+</div>
+<mat-menu #sorter="matMenu">
+  @for (sortOption of sortOptions; track sortOption) {
+    <button
+      (click)="onSortOptionChangeHandler(sortOption)"
+      mat-menu-item
+      >
+      {{ sortOption.label }}
+    </button>
+  }
+</mat-menu>

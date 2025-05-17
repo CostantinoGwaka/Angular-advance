@@ -1,0 +1,158 @@
+<web-layout>
+  <parallax-container
+    [description]="subtitle"
+    [title]="'Annual Procurement Plans'"
+    >
+
+    @if (loadingFinancialYear) {
+      <app-loader message="loading..."></app-loader>
+    }
+    @if (!loadingFinancialYear) {
+      <div>
+        <app-advanced-search-filter
+          (searchParams)="searchByInputFilters($event)"
+          (clearSearchParams)="clearSearchParams()"
+          (onCustomButtonClick)="checkGPNSummary()"
+          [loading]="loadingFinancialYear"
+          [useCustomButton]="true"
+          [customButtonTitle]="'GPN_SUMMARY' | translate"
+          [backgroundColorClass]="'bg-[#E2E2E2]'"
+          [searchFields]="searchFilterItems">
+        </app-advanced-search-filter>
+        <div class="divide-y">
+          <div class="px-[14px] py-2">
+            <div class="flex justify-between items-center text-sm">
+              <div class="font-bold">
+                @if (pes.length && paginatorInput?.totalRecords >= 0) {
+                  <span>
+                    {{ paginatorInput.totalRecords }} Item(s) found
+                  </span>
+                }
+              </div>
+              <app-items-sort-filter
+                [sortOptions]="sortOptions"
+                (onSortOptionChange)="onSortOptionChange($event)"
+                >
+              </app-items-sort-filter>
+            </div>
+          </div>
+          @if (loading) {
+            <div class="text-[10px]">
+              <app-loader [message]="'Loading Procuring Entities please wait...'"></app-loader>
+            </div>
+          }
+          @for (pe of pes; track pe) {
+            <div class="md:flex px-[14px] gap-[30px] py-4">
+              <div class="flex-1 flex gap-[30px]">
+                <div>
+                  <div
+                    class="flex items-center justify-center inline-block ng-tns-c573-1 w-[66px] h-[51px]"
+                    >
+                    @if (
+                      !loadLogo[pe.procurementEntityUuid] &&
+                      peLogo[pe.procurementEntityUuid]
+                      ) {
+                      <img
+                        [src]="peLogo[pe.procurementEntityUuid]"
+                        class="w-[60%] sm:w-auto"
+                        onerror="this.src='/assets/images/emblen.png';"
+                        />
+                    }
+                    @if (
+                      !loadLogo[pe.procurementEntityUuid] &&
+                      !peLogo[pe.procurementEntityUuid]
+                      ) {
+                      <img
+                        [src]="'/assets/images/emblen.png'"
+                        class="w-[60%] sm:w-auto"
+                        />
+                    }
+                    @if (loadLogo[pe.procurementEntityUuid]) {
+                      <div
+                        class="aspect-square w-[66px] h-[51px] animate-pulse bg-slate-300"
+                      ></div>
+                    }
+                  </div>
+                </div>
+                <div>
+                  <div class="font-[700] text-[14px] text-[#3F3F3F]">
+                    {{ pe.procuringEntityName }}
+                  </div>
+                  <div
+                    class="!text-[#2494D2] flex gap-4 text-md font-normal mt-2"
+                    >
+                    <div>
+                      Estimated Budget:
+                      {{ pe.estimatedBudget.toFixed(0) | currency : "" : "" }}
+                    </div>
+                    <div>
+                      GPN Date: {{ pe.generalProcurementNoticeAdvertDate | date }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="flex mt-2 justify-between gap-[14px]">
+                <div
+                  (click)="viewMore(pe)"
+                  class="flex flex-row gap-[4px] cursor-pointer bg-grey-200 hover:bg-[#DCEAF7] rounded"
+                  >
+                  <div
+                    class="flex items-center justify-center h-[47px] w-[45px] bg-[#DCEAF7] rounded-[6px]"
+                    >
+                    <svg
+                      fill="none"
+                      height="22"
+                      viewBox="0 0 22 22"
+                      width="22"
+                      xmlns="http://www.w3.org/2000/svg"
+                      >
+                      <path
+                        d="M1.58463 20.072C1.16206 20.072 0.792317 19.9136 0.47539 19.5966C0.158463 19.2797 0 18.91 0 18.4874V5.46699C0 5.04442 0.158463 4.67467 0.47539 4.35774C0.792317 4.04082 1.16206 3.88235 1.58463 3.88235H6.60264V1.58463C6.60264 1.17967 6.7611 0.814326 7.07803 0.488595C7.39496 0.162865 7.76471 0 8.18727 0H12.9412C13.3637 0 13.7335 0.162865 14.0504 0.488595C14.3673 0.814326 14.5258 1.17967 14.5258 1.58463V3.88235H19.5438C19.9664 3.88235 20.3361 4.04082 20.6531 4.35774C20.97 4.67467 21.1285 5.04442 21.1285 5.46699V11.7527C20.882 11.559 20.6311 11.383 20.3758 11.2245C20.1204 11.066 19.8431 10.9164 19.5438 10.7755V5.46699H1.58463V18.5006V18.4874H10.4178C10.4802 18.7691 10.5642 19.042 10.6699 19.3061C10.7755 19.5702 10.8988 19.8255 11.0396 20.072H1.58463ZM8.18727 3.88235H12.9412V1.58463H8.18727V3.88235ZM16.9028 22C15.5118 22 14.3145 21.4982 13.3109 20.4946C12.3073 19.491 11.8055 18.2937 11.8055 16.9028C11.8055 15.5118 12.3073 14.3145 13.3109 13.3109C14.3145 12.3073 15.5118 11.8055 16.9028 11.8055C18.2937 11.8055 19.491 12.3073 20.4946 13.3109C21.4982 14.3145 22 15.5118 22 16.9028C22 18.2937 21.4982 19.491 20.4946 20.4946C19.491 21.4982 18.2937 22 16.9028 22ZM18.8571 19.5702L19.5702 18.8571L17.3517 16.8499V13.575H16.2425V17.161L18.8571 19.5702Z"
+                        fill="#4293D5"
+                        />
+                    </svg>
+                  </div>
+                  <div class="flex flex-col pr-1 justify-center">
+                    <div class="font-[700] text-[22.76px] text-[#3F3F3F]">
+                      {{ pe.totalTenderCount }}
+                    </div>
+                    <div class="font-[400] text-[13.49px] text-[#989898]">
+                      GPN Tenders
+                    </div>
+                  </div>
+                </div>
+                <div class="flex items-center">
+                  <div (click)="viewMore(pe)" class="p-2 inline-block rounded-full h-10 w-10 hover:bg-slate-300 cursor-pointer">
+                    <mat-icon>expand_more</mat-icon>
+                  </div>
+                </div>
+              </div>
+            </div>
+            @if (show[pe.appUuid]) {
+              <div @fadeIn class="bg-slate-100 p-2">
+                <app-render-tender-gpn
+                  [appUuid]="pe.appUuid"
+                  (onClose)="expandedRowClose($event)"
+                  [procuringEntityName]="pe.procuringEntityName"
+                  >
+                </app-render-tender-gpn>
+              </div>
+            }
+          }
+          <!--        <ng-container *ngIf="!loading && pes.length == 0">-->
+          <!--          <div class="flex flex-row justify-center">-->
+          <!--             <span class="text=primary">Sorry, there is no procuring entity match your search area, Please clear search</span>-->
+        <!--          </div>-->
+      <!--        </ng-container>-->
+      @if (paginatorInput.numberOfRecords !== 0) {
+        <web-page-paginator
+          (pageOutput)="handlePageEvent($event)"
+          (pageSizeOutput)="handlePageSizeEvent($event)"
+          [paginatorInput]="paginatorInput">
+        </web-page-paginator>
+      }
+    </div>
+  </div>
+}
+</parallax-container>
+</web-layout>

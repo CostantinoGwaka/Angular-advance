@@ -1,0 +1,37 @@
+@if ((tenderLots || []).length == 0) {
+<p class="text-center font-bold text-lg pt-4">No tender lot items</p>
+} @if (loading) {
+<app-loader message="Loading..."></app-loader>
+} @if (!loading) {
+<div class="w-full">
+  <mat-accordion>
+    @for (lot of tenderLots; track lot; let i = $index) {
+    <mat-expansion-panel
+      class="custom-panel"
+      (opened)="onOpenPanel(lot?.uuid)"
+      (closed)="onClosePanel(lot?.uuid)"
+      [expanded]="i == 0"
+    >
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{lot?.lotDescription}} ({{lot?.lotNumber}})
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      @if (lotItems[lot.uuid] | withLoading | async; as itemsData) {
+      <div class="w-full">
+        @if (itemsData.loading) {
+        <app-loader [message]="'Loading Lot Items, Please wait...'"></app-loader>
+        } @if (!itemsData.loading&&(itemsData.value || []).length == 0) {
+        <p class="text-center font-bold text-lg pt-4">No Merged Procurement Requisition Items</p>
+        }
+        <app-merged-itemization
+          [showEstimatedBudget]="showEstimatedBudget"
+          [lotItems]="itemsData.value || []"
+        ></app-merged-itemization>
+      </div>
+      }
+    </mat-expansion-panel>
+    }
+  </mat-accordion>
+</div>
+}

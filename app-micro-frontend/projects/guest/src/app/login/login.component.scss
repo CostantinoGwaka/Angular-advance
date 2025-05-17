@@ -1,0 +1,29 @@
+input:not[type="submit"] {
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  padding: 5px;
+}
+
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px white inset !important;
+}
+
+.hidden {
+  display: none;
+}
+
+
+#login-arrow {
+
+  animation: margni-move 2s ease-in-out infinite alternate;
+}
+
+@keyframes margni-move {
+  0% {
+    transition: margin-left 0px;
+  }
+
+  100% {
+    transition:margin-left 10px;
+  }
+}

@@ -1,0 +1,69 @@
+@if (loading) {
+  <app-loader [message]="'Loading GPN please wait...'"></app-loader>
+}
+<div class="rounded-md border border-slate-300 bg-white">
+  <div class="flex flex-row justify-between items-center">
+    <div class="w-[75%] p-2 flex flex-row justify-between items-center">
+      <mat-form-field
+        appearance="outline"
+        class="example-full-width">
+        <mat-label class="px-3">Search</mat-label>
+        <input
+          (change)="listenToChanges()"
+          [(ngModel)]="fieldValue"
+          class="px-3"
+          matInput placeholder="Search">
+      </mat-form-field>
+
+      @if (downloadingExcel) {
+        <mat-spinner
+          diameter="35"
+          class="ml-2"
+          >
+        </mat-spinner>
+      }
+
+      @if (!downloadingExcel) {
+        <button
+          (click)="downloadExcel('table_id','GPN')"
+        class="ml-2 py-1 whitespace-nowrap w-auto justify-center
+         px-2 !border !border-primary !bg-primary rounded
+         !text-white !cursor-pointer">
+          Export to excel
+        </button>
+      }
+
+    </div>
+    <div class="flex items-center mr-2">
+      <button
+        class="!text-grey-500 border"
+        (click)="expandedRowClose()"
+        mat-stroked-button>
+        Close
+      </button>
+    </div>
+  </div>
+  <div class="overflow-auto">
+    <app-normal-table-expandable-row2
+      (rowCustomPrimary)="expandedRow($event)"
+      [expandedElement]="expandedRowItem"
+      [mapFunction]="mapFunction"
+      [tableConfigurations]="tableConfigurations"
+      [tableList]="tenders">
+      <ng-template #actions let-data="data">
+        <app-view-tender-calendar
+          [tenderUuid]="data?.tenderUuid"
+          [isCuis]="data?.cuis"
+        ></app-view-tender-calendar>
+      </ng-template>
+    </app-normal-table-expandable-row2>
+  </div>
+  <mat-paginator
+    (page)="handlePageEvent($event)"
+    [length]="totalLength"
+    [pageSizeOptions]="paginatedList"
+    [pageSize]="pageSize"
+    aria-label="Select page">
+  </mat-paginator>
+  <div class="mt-5"></div>
+</div>

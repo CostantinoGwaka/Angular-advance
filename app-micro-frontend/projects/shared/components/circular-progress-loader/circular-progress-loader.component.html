@@ -1,0 +1,54 @@
+<div class="w-[{{ size }}px] aspect-square relative">
+  <div class="inset-0 absolute grid place-content-center">
+    <circular-progress-bar
+      #progressRef
+      [value]="percentageProgress"
+      [color]="progressColor"
+      [backgroundColor]="progressColor + '10'"
+      [showValue]="false"
+      [thickness]="'96%'"
+      [valueStyle]="'font-size:40px'"
+      [text]="''"
+      class="-mt-2"
+      [style]="'width:220px'"
+    ></circular-progress-bar>
+  </div>
+  <div class="inset-0 absolute grid place-content-center text-center">
+    <div class="space-y-2">
+      <div class="space-y-1">
+        @if (percentageProgress < 100 && showLoadingIndicator) {
+          <div
+            class="-mt-[10px] mb-[10px]"
+            >
+            <mat-spinner
+              [diameter]="15"
+              [strokeWidth]="2"
+              color="accent"
+              class="mx-auto"
+            ></mat-spinner>
+          </div>
+        }
+        <div
+          [class]="
+            'text-2xl  text-black transition-all duration-300 ' +
+            (percentageProgress >= 100 ? 'font-extrabold' : 'font-bold')
+          "
+          >
+          <animated-digit
+            [digit]="percentageProgress - prevPercentageProgress"
+            [fromDigit]="prevPercentageProgress"
+            [duration]="500"
+            ></animated-digit
+            >%
+          </div>
+          <div
+          [class]="
+            ' transition-all duration-300 text-gray-500 mx-[30px] text-xs '
+          "
+            >
+            {{ message }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

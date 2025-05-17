@@ -1,0 +1,27 @@
+.additional-selection { opacity: 0.75; font-size: 0.75em; }
+.danger { color:red }
+
+
+.label-container {
+    display: flex;
+    align-items: center;
+    span {
+        flex: 1;
+    }
+}
+
+.hideOption {
+    display: none !important;
+}
+
+.multiline-mat-option.mat-mdc-option {
+    white-space: normal;
+    line-height: normal;
+    height: unset;
+    padding-top: 0.9em;
+    padding-bottom: 0.9em;
+  }
+
+.flatButtonColor{
+  color: #1394DB !important;
+}

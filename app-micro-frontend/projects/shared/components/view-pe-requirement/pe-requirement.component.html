@@ -1,0 +1,38 @@
+@if (tenderCriteria.hasPERequirement || criteria.hasPERequirement) {
+  @if (criteriaField?.fields.length) {
+    <h4 class="text-black font-bold mt-3 mb-1">PE Requirement </h4>
+  }
+  @if (criteriaField?.fields.length) {
+    <div class="col-sm-12 py-2">
+      <div class="rounded p-0 overflow-hidden">
+        <table class="w-full table table-bordered">
+          <thead>
+            @for (item of criteriaField.fields | sortBy: 'asc': 'sortNumber'; track item) {
+              <th class="pt-3 pb-3 border"
+                >
+                {{item.name}}
+              </th>
+            }
+          </thead>
+          <tbody>
+            @if (itemList.length ==0) {
+              <tr>
+                <td [attr.colspan]="criteriaField.fields.length">
+                  <p class="text-center mt-2">No PE requirement specified.</p>
+                </td>
+              </tr>
+            }
+            @for (item of itemList; track item) {
+              <tr class="border">
+                @for (field of criteriaField.fields | sortBy: 'asc': 'sortNumber'; track field) {
+                  <td [innerHTML]="item[field.uuid]| doNotSanitize"></td>
+                }
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+}
+

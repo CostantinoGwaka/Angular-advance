@@ -1,0 +1,40 @@
+<div class="flex items-center justify-center mt-8">
+  <!-- Left Section -->
+  <div class="w-full mr-4">
+    <div class="mb-4">
+      <label for="available" class="block mb-2">Available Items</label>
+      <input id="available" type="text" [(ngModel)]="searchItemAvailable" placeholder="Search..." class="w-full px-4 py-2 border rounded">
+    </div>
+    <div class="border rounded-[5px] overflow-y-auto h-80">
+      @if (fetchingPaginated) {
+        <app-loader message="'Loading please wait..'"></app-loader>
+      }
+      @for (item of availableItems|filter:searchItemAvailable:'name'; track item) {
+        <div class="px-[1px] mt-[2px] cursor-pointer" (click)="selectItem(item, 'left')">
+          <app-item [item]="item"></app-item>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Arrow Buttons -->
+  <div class="flex flex-col items-center justify-center">
+    <button class="w-full mt-4 mb-4 px-4 py-2 bg-white text-[#5996DD] border-[1px] border-[#5996DD] rounded-[5px]">Remove</button>
+    <button class="w-full mb-4 px-4 py-2 bg-white text-[#5996DD] border-[1px] border-[#5996DD] rounded-[5px]">Add</button>
+  </div>
+
+  <!-- Right Section -->
+  <div class="w-full ml-4">
+    <div class="mb-4">
+      <label for="selected" class="block mb-2">Selected Items</label>
+      <input id="selected" type="text" [(ngModel)]="searchItemSelected" placeholder="Search..." class="w-full px-4 py-2 border rounded">
+    </div>
+    <div class="border overflow-y-auto h-80">
+      @for (item of selectedItems|filter:searchItemSelected:'name'; track item) {
+        <div class="px-[1px] mt-[2px] cursor-pointer" (click)="selectItem(item, 'right')">
+          <app-item [item]="item"></app-item>
+        </div>
+      }
+    </div>
+  </div>
+</div>

@@ -1,0 +1,35 @@
+<div class="flex h-full" [ngClass]="{ 'text-primary': isActive }">
+  <div class="flex-col justify-between flex flex-1">
+    <div class="flex align-items-center justify-content-between">
+      <div class="stat-name text-gray">{{ title }}</div>
+      @if (!showPercentageChart && showIcon) {
+        <div
+          class="stat-icon text-[iconColor]"
+          [style]="iconStyle"
+          >
+          <mat-icon>{{ icon }}</mat-icon>
+        </div>
+      }
+    </div>
+    <div class="mt-3 font-bold text-3xl">
+      <strong>{{ value }}</strong>
+    </div>
+  </div>
+  @if (showPercentageChart) {
+    <div class="h-full aspect-square">
+      @if (_showPercentageChart) {
+        <circular-progress-bar
+          progressRef
+          [value]="percentageChartValue"
+          [color]="percentageChartColor"
+          [backgroundColor]="percentageChartColor + '20'"
+          [showValue]="true"
+          [valueStyle]="'font-size:20px; color:#6c757d; margin-top:3px'"
+          [text]="''"
+          class=""
+          [style]="'width:100px'"
+        ></circular-progress-bar>
+      }
+    </div>
+  }
+</div>

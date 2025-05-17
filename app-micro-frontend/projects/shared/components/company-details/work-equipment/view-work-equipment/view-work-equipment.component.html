@@ -1,0 +1,107 @@
+@if (fetchingItem) {
+  <app-loader [message]="'Getting details kindly be patient...'"></app-loader>
+}
+
+@if (workEquipment) {
+  <div class="container-fluid" @fadeSmooth>
+    <div class="row">
+      <div class="col-sm-4">
+        <app-view-details-item key="Registration Number"
+          [value]="workEquipment?.traRegistrationNumber ?? 'Not registered'">
+        </app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item key="Equipment Type"
+          [value]="workEquipment?.equipmentType">
+        </app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item key="Original Equipment Manufacturer name"
+          [value]="workEquipment?.oem">
+        </app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item key="Model"
+          [value]="workEquipment.model">
+        </app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item key="Power Rating"
+          [value]="workEquipment.powerRating">
+        </app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item key="Quantity"
+          [value]="workEquipment?.quantity">
+        </app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item key="Year of Manufacture"
+          [value]="workEquipment.yearOfManufacturer">
+        </app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item key="Equipment Source"
+          [value]="workEquipment.workEquipmentSource">
+        </app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item key="Equipment Condition"
+          [value]="workEquipment.workEquipmentCondition">
+        </app-view-details-item>
+      </div>
+      @if (workEquipment.workEquipmentSource == 'LEASED' || workEquipment.workEquipmentSource == 'RENTED') {
+        <div class="col-sm-4">
+          <app-view-details-item key="Name of Owner"
+            [value]="workEquipment.ownerName">
+          </app-view-details-item>
+        </div>
+      }
+      @if (workEquipment.workEquipmentSource == 'LEASED' || workEquipment.workEquipmentSource == 'RENTED') {
+        <div class="col-sm-4">
+          <app-view-details-item key="Address of Owner"
+            [value]="workEquipment.ownerAddress">
+          </app-view-details-item>
+        </div>
+      }
+      @if (workEquipment.workEquipmentSource == 'LEASED' || workEquipment.workEquipmentSource == 'RENTED') {
+        <div class="col-sm-4">
+          <app-view-details-item key="Agreement/ Lease Details"
+            [value]="workEquipment.leaseDetails">
+          </app-view-details-item>
+        </div>
+      }
+      <div class="col-sm-4">
+        <app-view-details-item key="Capacity"
+          [value]="workEquipment?.capacity">
+        </app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item key="Commitment"
+          [value]="workEquipment?.commitment">
+        </app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item key="Current Location"
+          [value]="workEquipment?.currentLocation">
+        </app-view-details-item>
+      </div>
+      @if (workEquipment.workEquipmentSource == 'LEASED' || workEquipment.workEquipmentSource == 'RENTED') {
+        <div class="col-sm-4">
+          <div class="flex items-center attache border border-gray-100 rounded" (click)="view(workEquipment)">
+            <div class="grid place-items-center w-20">
+              <img src="assets/images/pdf-icon.png" style="height: 20px">
+            </div>
+            <div>Rent/Lease Document</div>
+            @if (fetchingAttachment) {
+              <div style="height: 50px">
+                <mat-progress-spinner [diameter]="30" mode="indeterminate"></mat-progress-spinner>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+}
+

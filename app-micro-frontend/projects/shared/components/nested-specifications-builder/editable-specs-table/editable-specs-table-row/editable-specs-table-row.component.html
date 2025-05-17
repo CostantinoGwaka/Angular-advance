@@ -1,0 +1,88 @@
+<div #parentEditorElement class="flex items-stretch group relative rounded text-gray-600 gap-0.5 overflow-hidden">
+  <div (click)="switchMode('edit', 'description')" [class]="
+      ' bg-white p-[10px] np flex-1' +
+      (mode == 'edit' ? ' !border !border-primary rounded' : '') +
+      (isClickable('description') ? ' hover:!bg-gray-100 ' : ' ')
+    ">
+    @if (mode != 'edit') {
+      <span>
+        {{ specification.description }}
+      </span>
+    }
+    @if (mode == 'edit') {
+      <input #descriptionInputRef [(ngModel)]="currentEditingItem.description"
+        class="outline-none p-[7px] w-full" placeholder="Description" (focus)="focusedInput = 'description'" />
+    }
+  </div>
+  @if (showValueColumn) {
+<div (click)="switchMode('edit', 'value')" [class]="
+      'bg-white p-[10px] flex-1  ' +
+      (mode == 'edit'
+        ? ' !border !border-primary rounded hover:bg-gray-100'
+        : '') +
+      (isClickable('value') ? ' hover:!bg-gray-100 ' : ' ')
+    ">
+      <div [class]="'w-full '">
+        @if (mode != 'edit') {
+          <span> {{ specification.value }} &nbsp; </span>
+        }
+        <!--      {{specification | json}}-->
+        @if (mode == 'edit' && !specification?.options) {
+          <textarea #valueInputRef [(ngModel)]="currentEditingItem.value"
+            class="outline-none w-full" (focus)="focusedInput = 'value'" placeholder="Quantity/Value/Description">
+          </textarea>
+        }
+        @if (specification?.options && mode === 'edit') {
+          <select [(ngModel)]="currentEditingItem.value"
+            (change)="onOptionChange($event)" class="w-full outline-none font-normal">
+            @for (option of specification.options; track option) {
+              <option value="{{option}}">{{option}}</option>
+            }
+          </select>
+        }
+      </div>
+    </div>
+  }
+  @if (showDeleteConfirmation) {
+<div [class]="
+      'absolute group-hover:flex hidden space-x-2  text-white right-0 top-0 bottom-0 '
+    ">
+      <div class="flex h-full my-2 px-4 bg-red-600 text-white rounded-sm space-x-3">
+        <div class="font-light">Are you sure you want to delete this item?</div>
+        <button class="py-1 bg-white" mat-stroked-button (click)="delete(2)">Yes</button>
+        <button mat-flat-button class="py-1 bg-white" (click)="showDeleteConfirmation = false">
+          No
+        </button>
+      </div>
+    </div>
+  }
+  @if (mode == 'edit') {
+    <div class="absolute flex space-x-2 text-white right-6 bottom-3">
+      <button (click)="save()" mat-ripple
+        class="rounded pt-1 text-sm !bg-accent flex items-center space-x-2 px-2 py-0.5">
+        <mat-icon inline>check</mat-icon> <span class="">Save</span>
+      </button>
+    </div>
+  }
+  @if (mode != 'edit') {
+    @if (
+      specification.isEditable &&
+      !showDeleteConfirmation &&
+      (initialMode == 'manage' ||
+      (initialMode == 'initiation' && specification.isEditable))
+      ) {
+<div [class]="
+        'absolute items-stretch group-hover:flex hidden space-x-2  text-white right-2 top-3 bottom-0 '
+      ">
+        <button (click)="switchMode('edit', 'description')" mat-ripple
+          class="rounded-full pt-1 h-6 grid place-content-center text-sm !bg-primary aspect-square">
+          <mat-icon inline>edit</mat-icon>
+        </button>
+        <button (click)="delete(1)" mat-ripple
+          class="rounded-full pt-1 grid place-content-center h-6 text-sm !bg-gray-500 aspect-square">
+          <mat-icon inline>delete</mat-icon>
+        </button>
+      </div>
+    }
+  }
+</div>

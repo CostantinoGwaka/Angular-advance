@@ -1,0 +1,89 @@
+<div class="!border-b !border-b-gray-200 hover:bg-gray-50 transition-all">
+  <div class="p-3">
+    <div class="flex spacex-[15px]" #contentWrapper>
+      <div class="w-[100px]">
+        <div class="aspect-square h-16 grid place-content-center" #logoWrapper>
+          @if (!loadingLogo && peLogo) {
+            <img
+              [src]="peLogo"
+              class="w-[100%] sm:w-auto"
+              onerror="this.src='/assets/images/emblen.png';"
+              />
+          }
+          @if (loadingLogo) {
+            <div
+              class="aspect-square h-14 animate-pulse bg-slate-300 rounded-full"
+            ></div>
+          }
+        </div>
+      </div>
+      <div class="items-center flex-1">
+        <a
+          [routerLink]="['/tenders/published-tenders']"
+          [queryParams]="{
+            peUuid: pe.uuid
+          }"
+          >
+          <h2 class="!text-gray-600 !text-[16px] cursor-pointer !leading-none !m-0">
+            {{ pe.name }} {{ pe.acronym ? " - " + pe.acronym : "" }} {{ showRegion ? " - " +
+            pe.region.areaName : ""}}
+          </h2>
+        </a>
+        <div class="mt-2">
+          @if (pe.website) {
+            <a
+              target="_blank"
+              [href]="setWebsiteAddress(pe.website)"
+              class="!text-primary !text-sm !mb-0 cursor-pointer"
+              >
+              {{ pe.website }}
+            </a>
+          }
+          @if (!pe.website) {
+            <div class="!text-primary !text-sm !mb-0">
+              Website not set
+            </div>
+          }
+        </div>
+        <div class="items-center justify-between sm:flex sm:space-x-4">
+          <div class="sm:flex items-center sm:space-x-2">
+            <div class="flex space-x-1">
+              <div class="text-gray-400">
+                <mat-icon inline>call</mat-icon>
+              </div>
+              <div class="">
+                {{ pe.phone ? pe.phone : "Phone number not set" }}
+              </div>
+            </div>
+            <div class="flex space-x-1">
+              <div class="text-gray-400">
+                <mat-icon inline>location_on</mat-icon>
+              </div>
+              <div class="">
+                {{ pe.physicalAddress ? pe.physicalAddress : "Physical address not set" }}
+              </div>
+            </div>
+          </div>
+          <div class="mt-[20px] flex space-x-2 text-[11px] sm:mt-auto">
+            <a
+              [routerLink]="['/tenders/published-tenders']"
+              [queryParams]="{
+                peUuid: pe.uuid
+              }"
+              class="!border-primary !text-primary whitespace-nowrap rounded !border px-2 py-1"
+              >Published Tenders</a
+              >
+              <a
+                [routerLink]="['/tenders/opened-tenders']"
+              [queryParams]="{
+                peUuid: pe.uuid
+              }"
+                class="!border-primary !text-primary whitespace-nowrap rounded !border px-2 py-1"
+                >Opened Tenders</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>

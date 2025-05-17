@@ -1,0 +1,199 @@
+@if (loading) {
+  <app-loader @fadeIn [message]="'Getting bid details, please wait...'"> </app-loader>
+}
+
+@if (!loading) {
+  <ng-container @fadeIn>
+    @if (!loading) {
+      <div @fadeIn class="pl-4 pr-4">
+        @if (submission?.reasonForNonResponsiveness && showEvaluationDetail) {
+          <div
+            class="rounded border !border-grey-300 bg-red-100 text-red-500 mt-2 mb-2 p-4"
+            @fadeIn
+            >
+            <div class="flex flex-row justify-between">
+              <div class="flex flex-col w-100">
+                <div class="flex flex-row justify-start items-center">
+                  <div class="mr-1 my-auto">
+                    <mat-icon>info</mat-icon>
+                  </div>
+                  <span class="text-lg mr-2">Non responsiveness reason</span>
+                </div>
+                <!--  justification message area-->
+                <p>{{ submission?.reasonForNonResponsiveness}}</p>
+                <!--  end of justification message area-->
+              </div>
+            </div>
+          </div>
+        }
+        <div class="mt-3 mb-2 p-2 bg-[#f4f6fa] rounded">
+          <div class="row">
+            <p class="reas">Appointed Power of Attorney</p>
+            <div class="{: col-sm-3">
+              <app-view-details-item [value]="powerOfAttorney?.fullName" key="Full name">
+              </app-view-details-item>
+            </div>
+            <div class="{: col-sm-3">
+              <app-view-details-item [value]="powerOfAttorney?.legalCapacity" key="Legal Capacity">
+              </app-view-details-item>
+            </div>
+            <div class="col-sm-3">
+              <app-view-details-item [value]="powerOfAttorney?.email" key="Email">
+              </app-view-details-item>
+            </div>
+            <div class="col-sm-3">
+              <div class="flex justify-end mt-3">
+                @if (checking) {
+                  <mat-spinner [diameter]="16"> </mat-spinner>
+                }
+                @if (submission?.signedTenderFormUuid && !checking) {
+                  <button
+                    (click)="showTenderForm()"
+                    class="!bg-primary btn-sm text-sm text-white"
+                    mat-button
+                    >
+                    View Tender Submission Form
+                  </button>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+        @if (!loading) {
+          <div class="!bg-[#fbfbfb] rounded col-sm-12 mt-2 mb-2 p-2">
+            <span class="text-lg text-base">
+              Evaluation criteria submitted of this tender
+            </span>
+            <form autocomplete="off" novalidate>
+              <mat-form-field appearance="outline">
+                <mat-label>Search...</mat-label>
+                <input
+                  [formControl]="searchFormControl"
+                  [matAutocomplete]="auto"
+                  [ngModel]="searchItem"
+                  matInput
+                  matInput
+                  placeholder="Search Evaluation Criteria"
+                  />
+                <mat-autocomplete
+                  #auto="matAutocomplete"
+                  (optionSelected)="onOptionSelected($event.option.value)"
+                  >
+                  @for (option of filteredOptions | async; track option) {
+                    <mat-option [value]="option">
+                      {{ option.name }}
+                    </mat-option>
+                  }
+                </mat-autocomplete>
+                @if (!searchItem) {
+                  <mat-icon matSuffix>search</mat-icon>
+                }
+                @if (searchItem) {
+                  <button (click)="clearSearch()" mat-icon-button matSuffix>
+                    <mat-icon>clear</mat-icon>
+                  </button>
+                }
+              </mat-form-field>
+            </form>
+          </div>
+        }
+        @for (submissionCriteria of evaluationCriteria; track submissionCriteria; let i = $index) {
+          <ng-container
+        [ngTemplateOutletContext]="{
+            data: {
+              criteria: submissionCriteria,
+              index: i
+            }
+          }"
+          [ngTemplateOutlet]="criteriaCard"
+          >
+        </ng-container>
+      }
+    </div>
+  }
+</ng-container>
+}
+
+<ng-template #criteriaCard let-itemData="data">
+  <div
+    @fadeIn
+    class="border rounded p-2 bg-white
+            {{
+      activeTabIndex === itemData.criteria.uuid
+        ? ' shadow mt-3 mb-3 border-2 border-black'
+        : 'zoom-on-hover mb-1 '
+    }}"
+    id="{{ itemData.criteria.uuid }}"
+    >
+    <div
+      (click)="setActiveIndex(itemData.criteria.uuid)"
+      class="flex flex-row justify-between
+                items-center cursor-pointer {{
+        activeTabIndex === itemData.criteria.uuid ? ' pb-2 border-b' : ''
+      }}"
+      >
+      <div class="flex flex-row justify-start items-center">
+        <div class="h-6 aspect-square flex justify-center">
+          <div
+            class="rounded-full h-6 w-6 bg-[#1394db] flex justify-center items-center text-white text-xs font-bold"
+            >
+            <span>{{ itemData.index + 1 }}</span>
+          </div>
+        </div>
+
+        <div class="flex ml-2 justify-start items-center">
+          <span>{{ itemData.criteria.name }}</span>
+          @if (itemData?.criteria?.evaluationCriteriaGroupName) {
+            <span
+              class="text-muted text-xs pl-2"
+              >
+              {{"(" + itemData?.criteria?.evaluationCriteriaGroupName + ")"}}
+            </span>
+          }
+        </div>
+      </div>
+      <a class="flex items-center px-3 text-xs font-medium text-center rounded-lg text-[#3a3a3a]">
+        @if (activeTabIndex === itemData.criteria.uuid) {
+          <mat-icon @fadeIn>
+            keyboard_arrow_up
+          </mat-icon>
+        }
+        @if (activeTabIndex !== itemData.criteria.uuid) {
+          <mat-icon @fadeIn>
+            keyboard_arrow_down
+          </mat-icon>
+        }
+      </a>
+    </div>
+
+    @if (activeTabIndex === itemData.criteria.uuid) {
+      <ng-container @fadeIn>
+        <app-submission-criteria-item
+          [viewOnly]="true"
+          [isEvaluating]="false"
+          [showSubmittedOnly]="true"
+          [tendererUuid]="submission.tendererUuid"
+          [submission]="submission"
+          [updateBidPrice]="updateBidPrice"
+          [powerOfAttorney]="powerOfAttorney"
+          [fromFramework]="true"
+          [submissionUuid]="submissionUuid"
+          [selectedWinner]="selectedWinner"
+          (dataCheck)="dataCheck($event)"
+          [objectForMainEntityDetail]="objectForMainEntityDetail"
+          [objectForEntityDetail]="objectForEntityDetail"
+          [submissionCriteriaUuid]="itemData.criteria.uuid">
+        </app-submission-criteria-item>
+        @if (showEvaluationDetail) {
+          <h4 class="text-black font-bold mt-3 mb-0">Evaluation Details</h4>
+          <app-evaluation-result-by-criteria
+            [submissionUuid]="submissionUuid"
+            [teamUuid]="teamUuid"
+            [submissionCriteriaUuid]="itemData.criteria.uuid"
+            >
+          </app-evaluation-result-by-criteria>
+        }
+      </ng-container>
+    }
+  </div>
+</ng-template>

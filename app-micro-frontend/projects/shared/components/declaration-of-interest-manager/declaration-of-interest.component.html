@@ -1,0 +1,242 @@
+<div class="bg-white p-4 rounded-[10px]">
+  @if (!htmlContent && !showPassPhrase) {
+    <div @fadeIn class="grid grid-cols-12 gap-4">
+      <div [ngClass]="{'col-span-6':true}">
+        <div class="rounded-[10px] border font-bold p-2 text-[13px] min-h-[102px]"
+          [ngClass]="{'animate-pulse':loadingTenderInfo,'bg-slate-200':loadingTenderInfo}">
+          <div class="text-[#ADADAD] py-1">#:{{tender?.tenderNumber}}</div>
+          <div class="text-[#000000] py-1">{{tender?.descriptionOfTheProcurement}}</div>
+          <div class="text-[#8AB9EF] py-1">{{pe?.name}}</div>
+        </div>
+      </div>
+      <div class="col-span-6" @fadeIn>
+        <div class="grid grid-cols-12 rounded-[10px] border  font-inter  font-bold py-4 pl-2 min-h-[102px]"
+          [ngClass]="{'animate-pulse':loadingConflicts,'bg-slate-200':loadingConflicts}">
+          @if (!loadingConflicts) {
+            <div
+              class="col-span-2 lg:col-span-2 xl:col-span-1 text-[74px] text-[#5AABF5] font-bold  py-3 pr-1">
+              {{conflictOfInterests?.length}}
+            </div>
+          }
+          @if (!loadingConflicts) {
+            <div class="col-span-10 lg:col-span-10 xl:col-span-11 text-[#787777] text-[16px]">
+              <p>Conflicted Tenderers</p>
+            </div>
+          }
+        </div>
+      </div>
+      <div class="col-span-12">
+        @if (!loadingConflicts  || saving) {
+          <mat-form-field appearance="outline">
+            <mat-label>Search</mat-label>
+            <input matInput [(ngModel)]="searchString" (ngModelChange)="changes()">
+          </mat-form-field>
+        }
+        @if (loadingConflicts) {
+          <app-loader [message]="'Loading details, please wait...'"></app-loader>
+        }
+      </div>
+      @if (!loadingConflicts || saving) {
+        <div class="col-span-12">
+          @if ((tenderPages[currentPage]||[]).length == 0) {
+            <div
+              class="p-2 rounded-[10px] text-md font-medium h-[100px] flex items-center justify-center bg-slate-200 text-slate-500">
+              <div>No tenderers</div>
+            </div>
+          }
+          @for (tenderer of tenderPages[currentPage]; track tenderer; let i = $index) {
+            <div class="p-2 rounded-[10px] border border-[#CCCCCC] mb-1  hover:shadow-md"
+              @fadeIn>
+              <div class="tenderer-slate">
+                <div class="flex items-start justify-start">
+                  <div
+                    class="inline-block h-[50px] w-[50px] flex items-center justify-center p-[2px] bg-slate-200 border border-[#cccccc] rounded-[5px]">
+                    <svg width="37" height="37" viewBox="0 0 37 37" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        d="M10.7222 22.3889V28.2222M18.5 22.3889V28.2222M26.2778 22.3889V28.2222M1 36H36M1 14.6111H36M1 8.77778L18.5 1L36 8.77778M2.94444 14.6111H34.0556V36H2.94444V14.6111Z"
+                        stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                </div>
+                <div class="pl-1">
+                  <div class="grid grid-cols-12">
+                    <div class="col-span-12 text-[12px] text-[#606060] " style="height:16px">
+                      <p>{{tenderer.name}}</p>
+                    </div>
+                    <div class="col-span-12 text-[12px] font-light text-[#606060]" style="height:16px">
+                      @if (tenderer.executiveLeaderTitle) {
+                        <div class="inline-block mr-6">
+                          <span>{{tenderer.executiveLeaderTitle}}:</span><span>{{tenderer.executiveLeaderName}}</span>
+                        </div>
+                      }
+                      <div class="inline-block mr-6">
+                        <button mat-button class="font-light inline-block text-[#606060] cursor-default"
+                          style="font-weight:300!important;line-height:20px!important;padding:0px 0px!important;cursor: default!important;">
+                          <mat-icon inline> email</mat-icon>&nbsp;{{tenderer.email}}</button>
+                        </div>
+                        <div class="inline-block mr-6">
+                          <button mat-button class="font-light inline-block text-[#606060] cursor-default"
+                            style="font-weight:300!important;line-height:20px!important;padding:0px 0px!important;cursor: default!important;">
+                            <mat-icon inline> phone</mat-icon>&nbsp;{{tenderer.phone}}</button>
+                          </div>
+                        </div>
+                        <div class="col-span-12 text-[12px]">
+                          <button mat-button (click)="otherPersonnel(tenderer.uuid)"
+                            class="font-medium text-[#5AABF5] mt-1 rounded-full px-1"
+                            style="font-weight:300!important;line-height:20px!important;padding:0px 0px!important;color:#5AABF5">
+                            Other Personnel&nbsp;@if (!otherPersonnelList[tenderer.uuid]) {
+                            <mat-icon inline> chevron_right
+                            </mat-icon>
+                          }
+                          @if (otherPersonnelList[tenderer.uuid]) {
+                            <mat-icon inline> expand_more</mat-icon>
+                          }
+                        </button>
+                      </div>
+                      @if (otherPersonnelList[tenderer.uuid]) {
+                        <div class="col-span-12" @fadeIn>
+                          <ul class="text-xs -ml-2">
+                            @for (personnel of tenderer.personnelInformationList; track personnel; let i = $index) {
+                              <li>
+                                <span class="font-medium">{{i + 1}}. {{personnel.jobTitle}}</span>: {{personnel.firstName}}
+                                {{personnel.middleName}} {{personnel.lastName}}
+                              </li>
+                            }
+                          </ul>
+                        </div>
+                      }
+                      @if (!availableConflict[tenderer.uuid].selection) {
+                        <div class="col-span-12">
+                          <div class="inline-block px-1 mt-1 rounded-full bg-green-600 text-white text-[12px] text-center">No
+                            Conflict
+                          </div>
+                        </div>
+                      }
+                      @if (availableConflict[tenderer.uuid].selection) {
+                        <div class="col-span-12">
+                          <div class="inline-block text-[12px]">Conflict Reason:&nbsp;</div>
+                          <div @fadeIn
+                            class="mt-1  px-3 py-1 min-w[50%] text-[#606060]   text-[12px] font-light inline-block rounded-full bg-[#D9D9D9]">
+                            <select @fadeIn class="w-full outline-none !bg-[#D9D9D9] cursor-pointer text-[#606060] font-light"
+                              id="reason_{{tenderer.uuid}}"
+                              [(ngModel)]="availableConflict[tenderer.uuid].reason"
+                              (change)="changedConflictForm(tenderer.uuid)">
+                              <option disabled selected>--Select--</option>
+                              @for (conflict of conflictReasonSettings; track conflict) {
+                                <option value="{{conflict.uuid}}"
+                                  >{{conflict.reason}}
+                                </option>
+                              }
+                            </select>
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  </div>
+                  <div class="selection flex items-center justify-center">
+                    <mat-checkbox @fadeIn (change)="onChange($event)" [(ngModel)]="availableConflict[tenderer.uuid].selection"
+                    color="primary"></mat-checkbox>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+          @if ((tenderPages[currentPage]||[]).length > 0) {
+            <div class="col-span-12" @fadeIn>
+              <mat-paginator [length]="tenderers.length" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"
+                (page)="onPageChange($event)" aria-label="Select page">
+              </mat-paginator>
+            </div>
+          }
+          @if ((tenderPages[currentPage]||[]).length > 0) {
+            <div @fadeIn class="col-span-12">
+              @if (saving) {
+                <div class="w-full" @fadeIn>
+                  <app-loader  [message]="'Saving conflict of interest...'"></app-loader>
+                </div>
+              }
+              <div class="w-full mb-2">
+                @if (!hasConflict && !attachmentUid) {
+                  <div
+                    (click)="!triggerTemplate ? getCreatedTemplate(hasConflictTemplate = false) : previewSignedDocument(attachmentUid) "
+            [class]="triggerTemplate ?  'inline-block bg-[#fdfbf7] cursor-pointer !hover:bg-primary !text-primary hover:text-white\n'+
+'                     py-2 px-4 border !border-primary hover:border-transparent rounded whitespace-nowrap' : 'inline-block cursor-pointer hover:bg-blue-500 !bg-primary text-white px-3 py-2 font-medium rounded-[5px] shadow-sm text-center' "
+                    >
+                    {{noConflictButtonLabel}}
+                  </div>
+                }
+                @if (hasConflict && !attachmentUid) {
+                  <div (click)="getCreatedTemplate(hasConflictTemplate = true)"
+                    class="inline-block cursor-pointer hover:bg-blue-500 !bg-primary text-white px-3 py-2 font-medium rounded-[5px] shadow-sm text-center">
+                    Save
+                  </div>
+                }
+                &nbsp;
+                @if (hasConflict && !attachmentUid) {
+                  <div (click)="close()"
+                    class="inline-block cursor-pointer hover:bg-red-500 border border-red-500  hover:text-white text-red-500 px-3 py-2 font-medium rounded-[5px] shadow-sm text-center">
+                    Close
+                  </div>
+                }
+                @if (attachmentUid && triggerTemplate) {
+                  <div (click)="previewSignedDocument(attachmentUid)"
+                    class="inline-block cursor-pointer hover:bg-blue-500 !bg-primary text-white px-3 py-2 font-medium rounded-[5px] shadow-sm text-center">
+                    View Signed Personal Covenant Form
+                  </div>
+                }
+              </div>
+              @if (loadingTemplate) {
+                <app-loader class="my-4" [message]="loadingMessage"></app-loader>
+              }
+            </div>
+          }
+        }
+      </div>
+    }
+    <!--    HTML TEMPLATE PREVIEW-->
+    @if (htmlContent) {
+      <div @fadeIn class="container">
+        <div [align]="'right'">
+          <button class="mx-3" (click)="getSign()" color="primary" mat-raised-button>Sign Covenant Form</button>
+          <button (click)="templateClose()" mat-raised-button>Close</button>
+        </div>
+        <br>
+          <div #container [innerHTML]="htmlContent| doNotSanitize" id="sectionToPrint">
+          </div>
+        </div>
+      }
+
+      @if (!htmlContent && showPassPhrase) {
+        <div @fadeIn class="container">
+          <div [align]="'right'">
+            <button mat-raised-button (click)="showPassPhrase=false">Exit</button>
+          </div>
+          <br>
+            <form autocomplete="off">
+              <div class="ml-6 p-4  w-1/2 mx-auto  text-center">
+                <mat-label class="font-size-18"><b>Enter Key phrase to sign Personal Covenant Form</b></mat-label>
+                <br>
+                  <mat-form-field appAutocomplete="off" class="my-3" appearance="outline">
+                    <mat-label>Key phrase</mat-label>
+                    <input  matInput placeholder="Placeholder" [type]="hide ? 'password' : 'text'" [(ngModel)]="passphrase">
+                    <mat-icon class="mx-2 cursor-pointer" matSuffix (click)="hide = !hide">{{
+                      hide ? "visibility_off" : "visibility"
+                    }}</mat-icon>
+                  </mat-form-field>
+                  <div [align]="'center'" class="">
+                    @if (passphrase) {
+                      <button @fadeIn mat-raised-button color="primary"
+                        (click)="getSignedHtmlDocument();showPassPhrase=false;" type="submit">
+                        <mat-icon>edit</mat-icon>
+                        Continue
+                      </button>
+                    }
+                    @if (loadingTemplate) {
+                      <app-loader [message]="loadingMessage"></app-loader>
+                    }
+                  </div>
+                </div>
+              </form>
+            </div>
+          }
+        </div>

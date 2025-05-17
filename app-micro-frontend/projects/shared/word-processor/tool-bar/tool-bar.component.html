@@ -1,0 +1,68 @@
+<div class="toolbar">
+  <div class="line">
+    @for (toolBarButtonLine of selectedToolBarButtons; track toolBarButtonLine) {
+      <div class="box">
+        @for (toolBarButton of toolBarButtonLine; track toolBarButton) {
+          <div
+            class="editor-btn icon smaller p-2"
+            matTooltip="{{ toolbarButtons[toolBarButton].title }}"
+            (click)="toolbarButtonClick($event, toolbarButtons[toolBarButton])"
+        [matMenuTriggerFor]="
+          toolbarButtons[toolBarButton].action == 'insertTable'
+            ? tableMenu
+            : null
+        "
+            >
+            @if (toolbarButtons[toolBarButton].icon) {
+              <mat-icon>{{
+                toolbarButtons[toolBarButton].icon
+              }}</mat-icon>
+            }
+            @if (toolbarButtons[toolBarButton].iconText) {
+              <button>
+                <b>{{ toolbarButtons[toolBarButton].iconText }}</b>
+              </button>
+            }
+          </div>
+        }
+      </div>
+    }
+    <div class="box">
+      @for (customToolBarButton of customToolBarButtons; track customToolBarButton) {
+        <div
+          class="editor-btn icon smaller p-2"
+          [matTooltip]="customToolBarButton.title"
+          (click)="customToolbarButtonClick($event, customToolBarButton)"
+          >
+          @if (customToolBarButton.icon) {
+            <mat-icon>{{
+              customToolBarButton.icon
+            }}</mat-icon>
+          }
+          @if (customToolBarButton.iconText) {
+            <button>
+              <b>{{ customToolBarButton.iconText }}</b>
+            </button>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</div>
+<mat-menu #fontSizeMenu="matMenu">
+  @for (fontSize of fontSizes; track fontSize; let i = $index) {
+    <button
+      mat-menu-item
+      (click)="setFontSize(fontSize)"
+      >
+      <span [style.font-size.px]="(5 - i) * 6">{{ fontSize.text }}</span>
+    </button>
+  }
+</mat-menu>
+
+<mat-menu #tableMenu="matMenu" class="w-[300px] h-[400px]">
+  <word-processor-table
+    (onTableGenerated)="insertTable($event)"
+  ></word-processor-table>
+</mat-menu>
+

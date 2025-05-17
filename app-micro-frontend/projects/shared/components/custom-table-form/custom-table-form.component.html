@@ -1,0 +1,89 @@
+<div class="w-full">
+  <div class="app-header font-bold divide-x  text-[14px] flex items-center justify-content-start border-[1px] border-[#0597EA] rounded-t-[10px]">
+    @for (header of headers; track header) {
+      @if (header.type != HeaderType.ACTION || (header.type == HeaderType.ACTION  && !isEvaluating)) {
+        <div
+        [ngClass]="{
+      'w-[75px]':header.type==HeaderType.SEQUENCY || header.type == HeaderType.ACTION,
+      'flex-1':header.type!=HeaderType.SEQUENCY && header.type != HeaderType.ACTION,
+      'text-[#0597EA]':header.type==HeaderType.ACTION,
+      'text-[#FFFFFF]':header.type!=HeaderType.ACTION
+      }" class="py-[20px]  text-center ">
+          {{header.label}}
+        </div>
+      }
+    }
+
+  </div>
+  <div class="app-body divide-y border-[1px] border-[#D9D9D9] rounded-b-[10px] text-[14px]">
+    @for (row of items; track row; let i = $index) {
+      <div class="flex items-center divide-x">
+        @for (header of headers; track header) {
+          <div
+        [ngClass]="{
+        'w-[75px]':header.type==HeaderType.SEQUENCY || header.type == HeaderType.ACTION,
+        'flex-1':header.type!=HeaderType.SEQUENCY && header.type != HeaderType.ACTION,
+        'py-[20px] ':isEvaluating}"
+            class=" text-center">
+            @if (header.type==HeaderType.SEQUENCY ) {
+              {{i+1}}
+            }
+            @if (header.type!=HeaderType.ACTION  && header.type!=HeaderType.SEQUENCY) {
+              @if (header.id != 'unitPrice') {
+                <div class="py-[20px]">
+                  @if (header.id != 'totalPrice') {
+                    <span>{{row[header.id]}}</span>
+                  }
+                  @if (header.id == 'totalPrice') {
+                    <span>{{row[header.id]|currency:"":""}}</span>
+                  }
+                </div>
+              }
+              @if (header.id == 'unitPrice') {
+                <div>
+                  <input class="custom-input text-right w-full px-2" type="number" [(ngModel)]="row[header.id]" (input)="onFieldChange(row)" placeholder="{{header.label}}"/>
+                </div>
+              }
+            }
+            @if (header.type==HeaderType.ACTION && !isEvaluating) {
+              <div class="flex items-center justify-center">
+                @if (false) {
+                  <span class="text-white">xgfht</span>
+                }
+                @if (updateSuccess[row.uuid]) {
+                  <div @fadeIn @fadeOut class="inline-block rounded-full bg-green-700 text-white stroke-white p-1">
+                    <svg width="12px" height="12px" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#ffffff">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M17 5L8 15l-5-4"/>
+                    </svg>
+                  </div>
+                }
+                @if (updateError[row.uuid]) {
+                  <div @fadeIn @fadeOut class="inline-block rounded-full bg-red-700 text-white stroke-white p-1">
+                    <svg width="12" height="12" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M25 35H25.025M25 15V25M25 47.5C37.4265 47.5 47.5 37.4265 47.5 25C47.5 12.5736 37.4265 2.5 25 2.5C12.5736 2.5 2.5 12.5736 2.5 25C2.5 37.4265 12.5736 47.5 25 47.5Z" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                }
+                @if (updateLoading[row.uuid]) {
+                  <div @fadeIn @fadeOut  class="inline-block ">
+                    <svg width="12px" height="12px" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25 stroke-blue-600" cx="12" cy="12" r="10"   stroke-width="4"></circle>
+                      <path class="opacity-75 fill-blue-600" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                  </div>
+                }
+                @if (!updateLoading[row.uuid]) {
+                  <div (click)="saveItem(row)" class="inline-block shadow-md active:shadow items-center cursor-pointer justify-center bg-[#0597EA] rounded-md p-[4px]">
+                    <svg width="16" height="16" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path fill-rule="evenodd" clip-rule="evenodd" d="M14.0495 0C14.4835 0 14.8997 0.172399 15.2066 0.479283L17.5207 2.79344C17.8276 3.10033 18 3.51654 18 3.95053V15.5455C18 16.9011 16.9011 18 15.5455 18H2.45455C1.09894 18 0 16.9011 0 15.5455V2.45455C0 1.09894 1.09894 0 2.45455 0H14.0495ZM2.45455 1.63636C2.00268 1.63636 1.63636 2.00268 1.63636 2.45455V15.5455C1.63636 15.9973 2.00268 16.3636 2.45455 16.3636H3.27273V11.4545C3.27273 10.0989 4.37167 9 5.72727 9H12.2727C13.6284 9 14.7273 10.0989 14.7273 11.4545V16.3636H15.5455C15.9973 16.3636 16.3636 15.9973 16.3636 15.5455V4.76872C16.3636 4.33472 16.1912 3.91851 15.8843 3.61163L14.3884 2.11565C14.0815 1.80876 13.6653 1.63636 13.2313 1.63636H13.0909V3.27273C13.0909 4.62833 11.992 5.72727 10.6364 5.72727H7.36364C6.00803 5.72727 4.90909 4.62833 4.90909 3.27273V1.63636H2.45455ZM13.0909 16.3636V11.4545C13.0909 11.0027 12.7246 10.6364 12.2727 10.6364H5.72727C5.27541 10.6364 4.90909 11.0027 4.90909 11.4545V16.3636H13.0909ZM6.54545 1.63636H11.4545V3.27273C11.4545 3.72459 11.0882 4.09091 10.6364 4.09091H7.36364C6.91177 4.09091 6.54545 3.72459 6.54545 3.27273V1.63636Z" fill="#ffffff"/>
+                    </svg>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>

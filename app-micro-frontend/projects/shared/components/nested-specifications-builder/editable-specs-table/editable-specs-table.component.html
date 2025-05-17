@@ -1,0 +1,34 @@
+<div class="p-3">
+  @if ((specifications || []).length > 0) {
+    <div class="space-y-0.5">
+      <div class="flex group relative rounded text-white gap-0.5 overflow-hidden">
+        <div class="flex-1 bg-gray-600 p-[10px] np">{{keyLabel}}</div>
+        <div [class]="'col-span-3 bg-gray-600 p-[10px] flex-1 '">
+          {{valueLabel}}
+        </div>
+      </div>
+      <ng-container>
+        @for (specification of (specifications || []); track specification) {
+          <div>
+            <app-editable-specs-table-row [initialMode]="viewMode" [saveFunction]="saveFunction"
+              [onItemRemove]="onItemRemove" (onTotalCalculated)="_onTotalCalculated($event)"
+              [items]="(specifications || [])" [deleteFunction]="deleteFunction"
+            [specification]="specification"></app-editable-specs-table-row>
+          </div>
+        }
+      </ng-container>
+    </div>
+  }
+  @if (canAddSpecs && viewMode != 'view') {
+    <div class="mt-1 flex mb-4 space-x-2">
+      <button mat-stroked-button color="primary" (click)="add()" class="text-xs">
+        <mat-icon>add</mat-icon> {{ addSpecificationText }}
+      </button>
+      @if (showImport) {
+        <button mat-stroked-button color="primary" (click)="import()" class="text-xs">
+          <mat-icon>publish</mat-icon> Import Specifications
+        </button>
+      }
+    </div>
+  }
+</div>

@@ -1,0 +1,84 @@
+<div class="border rounded-[10px] p-2">
+  <div class="text-sm mb-2">
+    <mat-icon >swap_horiz_outlined</mat-icon> &nbsp; &nbsp;
+    <span class="font-bold">REPLACING</span>: &nbsp; &nbsp;
+    {{memberToReplace?.firstName}}
+    {{memberToReplace?.middleName}}
+    {{memberToReplace?.lastName}}
+  </div>
+  <mat-divider></mat-divider>
+
+  <div class="mt-4">
+    <app-paginated-select [field]="institutionField" (fieldValue)="onSelectedInstitution($event)"
+    [(ngModel)]="institutionUuid"></app-paginated-select>
+  </div>
+  @if (!loadingInstitution && users.length==0 && institutionUuid) {
+    <div  class="p-2 rounded-[10px] mt-2 border-2 border-[#0246ac] bg-blue-300 text-[#0246ac] font-bold">
+      Selected instituion has no elligible users for replacement
+    </div>
+  }
+  @if (loadingInstitution) {
+    <div class="text-xs " @fadeIn>
+      <app-loader [message]="'Loading users please wait... '"></app-loader>
+    </div>
+  }
+
+  @if (users.length>0) {
+    <div  @fadeIn >
+      <mat-form-field appearance="outline">
+        <mat-label>Search</mat-label>
+        <input matInput [(ngModel)]="searchString">
+      </mat-form-field>
+    </div>
+  }
+  @if (users.length>0) {
+    <div class="border rounded-[10px] h-[200px] overflow-y-auto bg-slate-50 p-1" >
+      @for (user of users|search:'firstName,middleName,lastName,email,phone':searchString; track user) {
+        <div class="rounded-[10px] p-2 mb-1 bg-white shadow-sm border">
+          <div class="grid grid-cols-12">
+            <div class="col-span-11">
+              <div class="font-bold text-sm pl-2 ">
+                {{user.firstName}}
+                {{user.middleName}}
+                {{user.lastName}}
+              </div>
+              <div class="text-bold pl-2 text-xs text-blue-400 font-medium">
+                {{user.userGroups[0]?.name}}
+              </div>
+              <div class="text-xs pl-2">
+                {{user.email}}, {{user.phone}}
+              </div>
+            </div>
+            <div class="col-span-1 flex items-center justify-end pr-2">
+              <mat-checkbox class="example-margin" (change)="checkChanged($event)" value="{{user.uuid}}" [(ngModel)]="selected[user.uuid]"></mat-checkbox>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+  <div class="mt-4">
+    @if (selected[selectedUuid]) {
+      <div  @fadeIn>
+        <app-paginated-select [field]="replacementReasonField" (fieldValue)="onSelectedReplacement($event)"
+        [(ngModel)]="replacementReasonUuid"></app-paginated-select>
+      </div>
+    }
+  </div>
+  <div>
+    @if (replacingmember) {
+      <app-loader [message]="'Replacing member please wait..'"></app-loader>
+    }
+  </div>
+  <div class="flex items-center justify-end mt-2">
+    <div  (click)="closeForm()" class="inline-block p-2 py-1 text-sm font-medium text-white cursor-pointer  rounded-[10px] !bg-red-500">
+      Close
+    </div>
+    &nbsp;
+    &nbsp;
+    <div (click)="selected[selectedUuid] == true && replacementReasonUuid ?saveReplacement():null" [ngClass]="{'!bg-primary':selected[selectedUuid] == true && replacementReasonUuid,'bg-[#e5e7eb]':!selected[selectedUuid] || !replacementReasonUuid}" class="inline-block p-2 py-1 text-sm font-medium text-white cursor-pointer rounded-[10px]">
+      Save
+    </div>
+  </div>
+
+</div>

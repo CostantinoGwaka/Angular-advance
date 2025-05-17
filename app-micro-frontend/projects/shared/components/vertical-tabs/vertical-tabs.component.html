@@ -1,0 +1,15 @@
+<div class="bg-gray-100 rounded-lg">
+  <div class="flex pl-8 pt-8 border-b">
+    <span class="!text-base font-black text-word-primary mb-2">
+      {{tabTitle}}
+    </span>
+  </div>
+
+  @for (item of tabItems; track item; let i = $index) {
+    <vertical-tab-item
+      [useCheck]="useCheck"
+      [tab]="item"
+      (onClick)="onTabClick(i, item)">
+    </vertical-tab-item>
+  }
+</div>

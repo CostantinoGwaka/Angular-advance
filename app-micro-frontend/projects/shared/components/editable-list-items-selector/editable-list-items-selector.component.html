@@ -1,0 +1,57 @@
+<div class="p-3 !border border-gray bg-gray-50 rounded">
+  <div>{{ label }}</div>
+  @for (listItem of options; track listItem) {
+    @if (listItem.isSelected) {
+      <editable-list-item
+        [options]="options"
+        (onSelect)="onSelect($event)"
+        (onItemRemove)="onItemRemove($event)"
+        [item]="listItem"
+        [placeholderText]="'Search or add new ' + item_name"
+      ></editable-list-item>
+    }
+  }
+  @if (showAddNew) {
+    <editable-list-item
+      [options]="options"
+      (onSelect)="onSelect($event)"
+      (onAddNewItem)="onAddNewItem($event)"
+      (onClose)="onCloseAddNew($event)"
+      [editMode]="true"
+      [isNewEntryEditor]="true"
+      [placeholderText]="'Search for ' + item_name"
+    ></editable-list-item>
+  }
+
+  <div class="flex justify-between">
+    @if (loading) {
+      <app-loader
+      [message]="'Please wait...'"></app-loader>
+    }
+  </div>
+  <div class="flex justify-between">
+    <div>
+      @if (!showAddNew) {
+        <button
+          (click)="addNew(true)"
+          class="flex mt-2"
+          mat-stroked-button
+          color="primary"
+          >
+          <mat-icon inline>add</mat-icon>
+          Add {{ item_name }}
+        </button>
+      }
+    </div>
+    <div>
+      <button mat-icon-button matSuffix (click)="hintClicked()">
+        <mat-icon
+          class="text-gray-400 hover:!text-primary"
+          matSuffix
+          matTooltip="View Hint">
+          help_outline
+        </mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

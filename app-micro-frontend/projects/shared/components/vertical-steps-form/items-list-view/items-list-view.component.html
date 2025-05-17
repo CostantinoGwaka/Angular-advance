@@ -1,0 +1,34 @@
+<app-modal-header [title]="title" (closeModal)="close()"></app-modal-header>
+<div>
+  <input
+    type="text"
+    class="w-full p-2 mb-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+    placeholder="Search"
+    [(ngModel)]="searchTerm"
+    (input)="searchItems()"
+  />
+</div>
+<div class="text-black border devide-y rounded overflow-hidden">
+  <cdk-virtual-scroll-viewport
+    #itemsListViewPort
+    [itemSize]="40"
+    [style.width.%]="100"
+    [style.height.px]="300"
+    class=""
+  >
+    <div
+      *cdkVirtualFor="let field of filtered; let i = index"
+      class="flex w-full cursor-pointer even:bg-gray-50 odd:bg-white p-2 hover:bg-gray-100"
+      (click)="showItem(field)"
+    >
+      <div class="flex space-x-2 items-center">
+        <div>
+          <b>{{ i + 1 }}. {{ field.stepName }}:</b> {{ field.label }}
+        </div>
+        <div class="px-2 text-xs rounded-full border">
+          {{ getItemStatus(field) }}
+        </div>
+      </div>
+    </div>
+  </cdk-virtual-scroll-viewport>
+</div>

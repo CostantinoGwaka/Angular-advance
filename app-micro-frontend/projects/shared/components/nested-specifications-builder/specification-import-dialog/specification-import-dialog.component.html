@@ -1,0 +1,78 @@
+<app-modal-header [title]="'Specifications Uploads'" (closeModal)="closeSheet()"></app-modal-header>
+
+@if (loadingStatus) {
+  <app-loader [message]="'Kindly be patient while we are processing the file!'"></app-loader>
+}
+
+<div class="form-holder">
+  <div [hidden]="excelItems?.length!=0">
+    <div class="template-button" (click)="downloadData()">
+      <span><mat-icon>cloud_download</mat-icon>&nbsp;&nbsp;<span>Download Template</span></span>
+    </div>
+    @if (loadingTemplate) {
+      <app-loader @fadeIn [message]="'Downloading template please wait ....'"></app-loader>
+    }
+
+    <div class="mt-5"></div>
+
+    <div (click)="clickToSelectFiles()" appDnd (fileDropped)="onFileDropped($event)"
+      class="p-14 border-4 border-dotted border-spacing-3 rounded-md text-center text-lg border-blue-300 bg-blue-100 text-blue-500 cursor-pointer">
+      <div>
+        <mat-icon>cloud_upload</mat-icon>
+      </div>
+      <span class="font-medium">Drop</span> a file or <span class="font-medium">Click</span> to select for
+      uploading
+      <div>
+        <p class="p-6 text-xs">
+          This allows you to upload a Schedule of Requirements file,
+          however allowed file formats are
+          .CSV, .XLSX and .XLS,make sure you are aware of the file to upload.
+        </p>
+        <input type="file" id="fileInput" #fileInput class="d-none" onclick="this.value = null"
+          (change)="onFileSelected($event)" accept=".csv,.xlsx, .xls">
+      </div>
+    </div>
+  </div>
+  <div [hidden]="excelItems?.length==0 ">
+    <div class="w-full">
+
+      <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <tr>
+            @for (label of colLabels; track label) {
+              <th class="border border-gray-300 px-1 py-2">{{label}}</th>
+            }
+            <th class="border border-gray-300 px-1 py-2"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of excelItems; track item; let i = $index) {
+            <tr >
+              @for (label of colLabels; track label) {
+                <td class="border border-gray-300 px-1 py-2">
+                  <input type="text" [(ngModel)]="item[label]" class="w-full p-1 outline-none" (ngModelChange)="validateItem(item, label, i)"
+                    [ngClass]="{'outline-red-500': itemError[i+label]}">
+                </td>
+              }
+              <td class="border border-gray-300 px-1 py-2">
+                <button mat-icon-button color="warn" (click)="removeItem(item,i)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </tr>
+          }
+
+        </tbody>
+      </table>
+    </div>
+    <br>
+
+    </div>
+  </div>
+
+  <mat-dialog-actions>
+    @if (excelItems?.length>0  && !errorExists) {
+      <button (click)="uploadData()"  mat-raised-button  tabindex="1">Submit</button>
+    }
+    <button mat-button mat-dialog-close tabindex="-1">Cancel</button>
+  </mat-dialog-actions>

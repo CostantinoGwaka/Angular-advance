@@ -1,0 +1,92 @@
+<div
+	[class]="
+		'flex border rounded p-3 bg-white border-' +
+		(hasError ? 'red-500' : 'gray-300') +
+		' items-center'
+	"
+>
+	<div class="flex-1 flex space-x-3 items-center">
+		<div class="text-gray-500 text-4xl">
+			<mat-icon inline>description</mat-icon>
+		</div>
+		<div>
+			<div>
+				{{ attachment.title }}
+			</div>
+			<div class="text-sm text-gray-400">
+				{{ attachment.description ? attachment.description : attachment.title }}
+			</div>
+		</div>
+	</div>
+	@if (!(uploading || deleting)) {
+	<div class="flex items-center space-x-3">
+		@if (showPreviewButton && !_hideUnsignedDocumentAfterSigning) {
+		<button
+			mat-stroked-button
+			color="primary"
+			class="flex space-x-2 items-center"
+			(click)="onPreview()"
+		>
+			<mat-icon>visibility</mat-icon> {{ previewButtonText }}
+		</button>
+		} @if ( allowHTMLDocSignAgain && showViewDocumentButton &&
+		attachment?.signedDocumentUuid && attachment?.type == 'HTML' ) {
+		<button mat-stroked-button (click)="onSign()">
+			<mat-icon>edit</mat-icon> Sign again
+		</button>
+		} @if (showViewDocumentButton && attachment?.signedDocumentUuid) {
+		<button
+			mat-stroked-button
+			color="primary"
+			class="flex space-x-2 items-center"
+			(click)="onViewDocument()"
+		>
+			<mat-icon>visibility</mat-icon> {{ viewButtonText }}
+		</button>
+		} @if ( showSignButton && !autoSign && ((attachment?.documentUuid &&
+		!attachment?.signedDocumentUuid) || attachment?.type == 'HTML') ) {
+		<button
+			mat-flat-button
+			class="flex space-x-2 items-center !bg-primary text-white"
+			(click)="onSign()"
+		>
+			<mat-icon>edit</mat-icon> {{ singButtonText }}
+		</button>
+		} @if (uploadMode && !attachment?.documentUuid) {
+		<button
+			mat-flat-button
+			class="flex space-x-2 items-center !bg-primary text-white"
+			(click)="inputFile.click()"
+		>
+			<input
+				#inputFile
+				(change)="onFileSelected($event)"
+				[accept]="accept"
+				[disabled]="uploading"
+				type="file"
+				[multiple]="false"
+				hidden
+			/>
+			<mat-icon>cloud_upload</mat-icon> Upload attachment
+		</button>
+		} @if ( allowDelete && (attachment?.documentUuid ||
+		attachment?.signedDocumentUuid) ) {
+		<button
+			mat-icon-button
+			class="grid place-content-center !bg-red-500 text-white"
+			(click)="deleteAttachment()"
+			aria-label="Remove attachment"
+		>
+			<mat-icon>delete</mat-icon>
+		</button>
+		}
+	</div>
+	} @if (uploading || deleting) {
+	<div class="flex flex-row justify-end align-items-baseline">
+		<span class="mr-1 text-xs text-muted">
+			{{ uploading ? 'Uploading' : 'Deleting' }} document, please wait...</span
+		>
+		<mat-spinner [diameter]="25"></mat-spinner>
+	</div>
+	}
+</div>

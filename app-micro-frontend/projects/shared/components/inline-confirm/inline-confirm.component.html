@@ -1,0 +1,13 @@
+<div class="inline-flex gap-2 p-1 items-center">
+  @if (message.length > 0) {
+    <div class="font-semibold text-black leading-3">{{message}}</div>
+  }
+  <button type="button" mat-mini-fab class="text-white" title="Confirm to execute an action"
+    (click)="confirmYes.emit()">
+    <mat-icon>check</mat-icon>
+  </button>
+  <button type="button" mat-mini-fab color="warn" title="Cancel an action"
+    (click)="confirmCancel.emit()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>

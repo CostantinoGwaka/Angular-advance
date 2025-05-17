@@ -1,0 +1,17 @@
+<div
+  class="flex flex-col items-start justify-between w-full h-full p-3 rounded-lg relative"
+  [style.backgroundColor]="data.backgroundColor"
+>
+  <div class="flex items-start w-full space-x-3 mt-2">
+    @if (isSuccess) {
+    <mat-icon [svgIcon]="'succesIcon'" class="h-24"></mat-icon>
+    } @if (!isSuccess) {
+    <mat-icon [svgIcon]="'error_Icon'" class="h-24"></mat-icon>
+    }
+    <span class="text-white text-left">{{ data.message }}</span>
+  </div>
+
+  <div class="progress-container mt-2 w-full">
+    <div class="progress-bar" [style.width]="progress + '%'"></div>
+  </div>
+</div>

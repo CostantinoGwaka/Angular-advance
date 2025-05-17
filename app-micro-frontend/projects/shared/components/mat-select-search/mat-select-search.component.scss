@@ -1,0 +1,47 @@
+
+// $mat-menu-side-padding: 16px !default;
+// $scrollbar-width: 37px;
+// $clear-button-width: 40px;
+// $multiple-check-width: 33px;
+
+// .mat-mdc-select-search-hidden {
+//   visibility: hidden;
+// }
+// .mat-mdc-select-search-inner {
+//   position: absolute;
+//   top: 0;
+//   width: 100%;
+//   border-bottom: 1px solid #cccccc;
+//   background: white;
+//   z-index: 100;
+//   &.mat-mdc-select-search-inner-multiple {
+//     width: 100%;
+//   }
+// }
+
+// ///deep/
+// ::ng-deep .mat-mdc-select-search-panel {
+//   /* allow absolute positioning relative to outer options container */
+//   transform: none !important;
+//   overflow-x: hidden;
+// }
+
+// .mat-mdc-select-search-input {
+//   padding: 16px;
+//   padding-right: 16px + $clear-button-width;
+//   box-sizing: border-box;
+
+// }
+// .mat-mdc-elect-search-no-entries-found {
+//   padding: 16px;
+// }
+// .mat-mdc-select-search-clear {
+//   position: absolute;
+//   right: 0;
+//   top: 4px;
+// }
+// ///deep/
+// .cdk-overlay-pane-select-search {
+//   /* correct offsetY so that the selected option is at the position of the select box when opening */
+//   margin-top: -50px;
+// }

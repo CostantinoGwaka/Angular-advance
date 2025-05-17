@@ -1,0 +1,79 @@
+<div class="relative">
+  <div class="h-[40px] items-center">
+    <div class="h-[45px] ml-[8px] -mt-[5px] relative w-full">
+      <div class="absolute top-0 bottom-0 pl-2 grid place-content-center">
+        <mat-icon>search</mat-icon>
+      </div>
+      <input
+        (keyup)="search()"
+        [(ngModel)]="keyword"
+				autocomplete="new-password"
+				autocorrect="off"
+				autocapitalize="off"
+				spellcheck="false"
+        class="h-full pr-3 pl-10 w-full transition-all duration-200 !border border-[#EEEEEE] focus:outline-none {{
+          inSearchMode ? 'shadow bg-white rounded-t' : 'bg-[#F5F5F5] rounded'
+        }}"
+        placeholder="Search anything here..."
+        />
+    </div>
+    @if (inSearchMode) {
+      <div
+        class="absolute z-50 transition-all duration-200 left-[8px] -right-[8px] bg-white rounded-b shadow"
+        >
+        <div class="">
+          <div>
+            @if (results.length == 0 && isLoading == false) {
+              <div
+                class="overflow-y-auto max-h-[300px]"
+                >
+                @for (routeSearchResult of routeSearchResults; track routeSearchResult) {
+                  <div
+                    [routerLink]="routeSearchResult.route"
+                    class="py-2 px-3 cursor-pointer hover:bg-slate-100 text-black"
+                    matRipple
+                    (click)="exitSearchMode()"
+                    >
+                    @for (parent of routeSearchResult.parents; track parent) {
+                      <span>
+                        <span [innerHTML]="highlightKeyword(parent, keyword)"></span
+                          ><span> > </span>
+                        </span>
+                      }
+                      <span
+                        [innerHTML]="highlightKeyword(routeSearchResult.name, keyword)"
+                        >
+                      </span>
+                    </div>
+                  }
+                </div>
+              }
+              @if (results.length > 0 && isLoading == false) {
+                <div
+                  class="py-2 px-3"
+                  >
+                  No results found
+                </div>
+              }
+            </div>
+            <div class="flex text-sm px-3 !border-t items-center">
+              <div class="flex-1">
+                {{
+                routeSearchResults?.length ? routeSearchResults?.length : 0
+                }}
+                results found for
+                <b>"{{ keyword }}"</b>
+              </div>
+              <button
+                class="px-2 py-1 !text-primary"
+                matRipple
+                (click)="exitSearchMode()"
+                >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>

@@ -1,0 +1,50 @@
+<table class="table m-0">
+  <thead>
+    <tr>
+      <th style="width: 56px">S/N</th>
+      <th>Specification Name</th>
+      <th>Specification Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (spec of consultancySpecifications | sortBy: 'asc': 'id'; track spec; let i1 = $index) {
+      <tr style="--order: {{ (i1 + 1) * 0.7 }}" class="move-up">
+        <td class="relative align-middle">
+          {{1 + i1}}
+        </td>
+        <td class="align-middle" [colSpan]="spec?.consultancySubSpecifications?.length > 0 ? 2 : ''">{{spec.name}}</td>
+        @if (spec?.consultancySubSpecifications?.length === 0) {
+          <td class="align-middle"
+            [innerHTML]="spec.description"
+          ></td>
+        }
+      </tr>
+      @if (spec?.consultancySubSpecifications?.length > 0) {
+        <tr>
+          <td colspan="3" class="indent-left" style="padding-left: 56px !important;">
+            <table class="table m-0">
+              <thead>
+                <tr>
+                  <th style="width: 56px">S/N</th>
+                  <th>Name</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (subSpec of spec?.consultancySubSpecifications | sortBy: 'asc': 'id'; track subSpec; let i2 = $index) {
+                  <tr style="--order: {{ ((i1 + 1) + i2) * 0.7 }}" class="move-up">
+                    <td class="relative align-middle">
+                      {{i2 + 1}}
+                    </td>
+                    <td class="align-middle">{{subSpec?.subSpecificationName}}</td>
+                    <td class="align-middle" [innerHTML]="subSpec?.subSpecificationDescription"></td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      }
+    }
+  </tbody>
+</table>

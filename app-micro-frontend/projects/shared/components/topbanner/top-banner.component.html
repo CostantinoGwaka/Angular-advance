@@ -1,0 +1,107 @@
+<div class="px-2">
+  <div class="w-full sm:flex sm:flex-row justify-between items-center mr-0">
+    @if (!(subTitle || subTitleStyle || titleStyle)) { @if (twoPath) {
+    <h3 class="flex items-center gap-2">
+      @if (image) {
+      <mat-icon [svgIcon]="image" class="!h-6 !w-6 text-word-primary opacity-70"></mat-icon>
+      }
+      <span class="back__icon shadow-lg" (click)="goBack()">
+        <mat-icon svgIcon="s_back_icon"></mat-icon>
+      </span>
+      @if (check) {
+      <span class="text-2xl app-main-heading-title font-black tracking-wider text-word-primary">
+        {{ value | translate }} / {{ value2 | translate }}</span
+      >
+      } @if (!check) {
+      <span class="text-2xl app-main-heading-title font-black tracking-wider text-word-primary">
+        {{ value | translate }} / {{ value2 | translate }}</span
+      >
+      }
+    </h3>
+    } @if (!twoPath) {
+    <h3 class="flex items-center gap-2">
+      @if (image) {
+      <mat-icon [svgIcon]="image" class="!h-6 !w-6 text-word-primary opacity-70"></mat-icon>
+      }
+      <span class="back__icon shadow-lg" (click)="goBack()">
+        <mat-icon svgIcon="s_back_icon"></mat-icon>
+      </span>
+      @if (!check) {
+      <span class="text-2xl app-main-heading-title font-black tracking-wider text-word-primary">
+        {{ value | translate }}
+      </span>
+      }
+    </h3>
+    } } @if (subTitle || subTitleStyle || titleStyle) {
+    <div class="flex space-x-4">
+      <div
+        class="aspect-square pl-2 rounded-full border-2 cursor-pointer bg-white border-[#1394db] text-[#1394db] transition-all hover:shadow-lg shadow grid place-content-center h-[45px]"
+        (click)="goBack()"
+      >
+        <mat-icon> arrow_back_ios </mat-icon>
+      </div>
+      <div>
+        <h3 [class]="'text-2xl app-main-heading-title m-0 ' + titleStyle">
+          {{ value | translate }}
+        </h3>
+        <p [class]="'text-sm text-gray-500 ' + subTitleStyle">
+          {{ subTitle | translate }}
+        </p>
+      </div>
+    </div>
+    } @if(addFeatureAndPermission?.length > 0){
+    <div class="my-10 sm:my-auto text-right" *appHasAccessFeature="addFeatureAndPermission || ''">
+      <ng-container *ngTemplateOutlet="permissionControls"></ng-container>
+    </div>
+    } @else {
+    <div class="my-10 sm:my-auto text-right" *appHasPermission="addPermission || ''">
+      <ng-container *ngTemplateOutlet="permissionControls"></ng-container>
+    </div>
+    }
+  </div>
+</div>
+
+@if (loading) {
+<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+}
+
+<ng-template #permissionControls>
+  @if (!useDropdownOnCreate) { @if (!hideAdd && !viewDetails) {
+  <button
+    @fadeIn
+    [ngClass]="routeAnimationsElements"
+    mat-flat-button
+    color="primary"
+    (click)="add()"
+    style="padding-right: 25px; padding-bottom: 5px; padding-top: 5px;"
+    class="mx-auto py-1 items-center flex flex-wrap gen__button btn__primary"
+  >
+    @if (!hideButtonIcon) {
+    <mat-icon>{{ btnAddIcon }}</mat-icon>
+    } {{ btnAddText | translate }}
+  </button>
+  } } @if (useDropdownOnCreate == true) { @if (!hideAdd && !viewDetails) {
+  <button
+    @fadeIn
+    [ngClass]="routeAnimationsElements"
+    mat-flat-button
+    [matMenuTriggerFor]="menu"
+    color="primary"
+    style="padding-right: 25px; padding-bottom: 5px; padding-top: 5px;"
+    class="!m-0 py-1 items-center flex flex-wrap gen__button btn__primary"
+  >
+    @if (!hideButtonIcon) {
+    <mat-icon>add</mat-icon>
+    } {{ btnAddText | translate }}
+  </button>
+  }
+  <mat-menu #menu="matMenu">
+    @for (menuItem of dropMenuOnCreate; track menuItem) {
+    <button mat-menu-item (click)="buttonMenuAction(menuItem)">
+      <mat-icon>{{ menuItem.icon }}</mat-icon>
+      <span>{{ menuItem.label | translate }}</span>
+    </button>
+    }
+  </mat-menu>
+  }
+</ng-template>

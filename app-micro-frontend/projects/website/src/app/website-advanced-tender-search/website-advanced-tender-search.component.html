@@ -1,0 +1,14 @@
+<web-layout id="tender_search_container">
+  <parallax-container
+    [title]="pageTitle"
+    [description]="pageDescription"
+    [seo_description]="seoDescription"
+  >
+    <app-advanced-tender-search
+      (setSubTitle)="setSubTitle($event)"
+      (setTitle)="setTitle($event)"
+      [from]="'website'"
+    >
+    </app-advanced-tender-search>
+  </parallax-container>
+</web-layout>

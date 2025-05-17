@@ -1,0 +1,14 @@
+mat-icon {
+  animation-name: color_change;
+  animation-duration: 0.2s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  /* animation-fill-mode: both; */
+  // animation-direction: alternate;
+  // animation-fill-mode: both;
+}
+@keyframes color_change {
+  0% { color: #1394DB; }
+  50% {color: #1394DB;}
+  100% { color: #000; }
+}

@@ -1,0 +1,167 @@
+@if (lotItems) {
+<div class="w-full">
+  @for (reqItem of lotItems; track reqItem; let i1 = $index) {
+  <div @fadeIn class="level-one">
+    <div class="flex items-center gap-3 mb-3">
+      <div
+        class="w-[45px] h-[45px] border-[3px] !border-primary rounded-[50%] flex items-center justify-center font-bold shadow-sm"
+      >
+        {{ i1 + 1 }}
+      </div>
+      <div class="!bg-primary py-3 px-4 rounded-3 text-white font-medium flex-1 grid grid-cols-2">
+        <div>
+          {{ reqItem?.gfsCode?.description }} - {{ reqItem?.gfsCode?.code }}
+        </div>
+        @if (reqItem.totalCost || requisitionItemTotalObj[reqItem.uuid]) {
+        <div class="text-right" *appHasPermission="['ROLE_PPRA_DASH_VIEW_ESTIMATED_BUDGET']">
+          @if (reqItem.totalCost) {
+          <span class="font-small">Estimated Cost </span>
+          } {{ reqItem.totalCost || requisitionItemTotalObj[reqItem.uuid] | number }}/=
+        </div>
+        }
+      </div>
+    </div>
+    @if (!loadingItemization[reqItem.uuid] && (lotItemItemization[reqItem.uuid] || []).length == 0)
+    {
+    <div class="flex bg-slate-50 rounded-md mt-2 p-2">
+      <button
+        (click)="getLotItemItemization(reqItem.uuid)"
+        class="flex-1 hover:mx-1 px-4 py-2 text-center rounded-md hover:bg-slate-100 hover:font-semibold"
+      >
+        View Itemizations
+      </button>
+    </div>
+    } @if (loadingItemization[reqItem.uuid]) {
+    <app-loader [message]="'Preparing Itemizations, Please wait...'"></app-loader>
+    } @if (!loadingItemization[reqItem.uuid] && (lotItemItemization[reqItem.uuid] || []).length > 0)
+    {
+    <div class="level-two ml-[61px]">
+      <div class="mb-2">
+        <table class="table m-0">
+          <thead>
+            <tr>
+              <th style="width: 56px;">S/N</th>
+              <th>From (Department)</th>
+              <th>Description</th>
+              <th>Unit Of Measure</th>
+              <th class="item-number">Quantity</th>
+              <th *appHasPermission="['ROLE_PPRA_DASH_VIEW_ESTIMATED_BUDGET']" class="item-number">
+                Estimated Unit Cost
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (itemization of lotItemItemization[reqItem.uuid] || []; track itemization; let i2 =
+            $index) {
+
+            <tr class="move-up" [style.--order]="(i1 + 1 + i2) * 0.7">
+              <td class="relative align-middle">
+                <div class="inline-flex items-center justify-center gap-[5px]">
+                  {{ i2 + 1 }}
+                  <!--                        <div (click)="openUnmerge(reqItem,itemization.requisitionItemization?.departmentId,itemization?.requisitionItemization?.uuid)"-->
+                  <!--                          *ngIf="showUnmergeButton"-->
+                  <!--                          class="inline-flex bg-gray-300 shadow-sm w-[25px] h-[25px] rounded-full items-center justify-center cursor-pointer text-red-700"-->
+                  <!--                          title="Unmerge these items">-->
+                  <!--                          <mat-icon>remove</mat-icon>-->
+                  <!--                        </div>-->
+                </div>
+              </td>
+              <td class="align-middle">
+                {{ itemization?.mergedProcurementRequisitionItem?.departmentName }}
+              </td>
+              <td class="align-middle">
+                @if (itemization.unspscCode.commodityTitleCode) {
+                <span class="font-small">{{ itemization.unspscCode.commodityTitleCode }} - </span>
+                } {{ itemization.description }}
+              </td>
+              <td class="align-middle">
+                {{ itemization.unitOfMeasure }}
+              </td>
+              <td class="align-middle item-number">
+                {{ itemization.quantity }}
+              </td>
+              <td
+                *appHasPermission="['ROLE_PPRA_DASH_VIEW_ESTIMATED_BUDGET']"
+                class="align-middle item-number"
+              >
+                {{ itemization.estimatedUnitCost | number }}
+              </td>
+            </tr>
+            <tr>
+              <td colspan="6">
+                @if (showAttachmentDetails[itemization.uuid]) { @if
+                (attachmentSharable[itemization.uuid] | withLoading | async; as data) { @if
+                (data.loading) {
+                <app-loader [message]="'Checking Attachments, Please wait...'"></app-loader>
+                } @if ((data.value || []).length == 0 && !data.loading) {
+                <p class="text-slate-500">No Attachment Found</p>
+                } @if ((data.value || []).length > 0 && !data.loading) {
+                <app-sharable-attachment-form [attachmentList]="data.value" [viewMode]="true">
+                </app-sharable-attachment-form>
+                } } }
+                <button
+                  class="mb-2"
+                  mat-stroked-button
+                  (click)="showAttachmentDetails[itemization.uuid] = true"
+                >
+                  Show attachment details
+                </button>
+
+                @if (showSpecifications[itemization.uuid]) { @if
+                (loadingSpecifications[itemization.uuid]) {
+                <app-loader [message]="'Loading Specifications, Please wait...'"></app-loader>
+                } @if (!loadingSpecifications[itemization.uuid] && (specifications[itemization.uuid]
+                || []).length == 0) {
+                <p class="text-slate-500">No Specifications Found</p>
+                } @if ((specifications[itemization.uuid] || []).length > 0) {
+                <app-editable-specs-table
+                  [specifications]="specifications[itemization.uuid] || []"
+                  [viewMode]="'view'"
+                ></app-editable-specs-table>
+                } }
+                <div class="flex mb-3 justify-between gap-2">
+                  @if (totalSpecRecords && (((currentSpecPage[itemization.uuid] - 1) * 10) <
+                  totalSpecRecords)) {
+                  <p class="font-semibold">
+                    Currently Viewed Specifications: {{ (currentSpecPage[itemization.uuid] - 1) * 10
+                    }} / {{ totalSpecRecords }}
+                  </p>
+                  } @if (!loadingSpecifications[itemization.uuid]) {
+                  <button
+                    mat-stroked-button
+                    color="primary"
+                    (click)="itemSpecsSelected(itemization)"
+                  >
+                    View @if (totalSpecRecords && (((currentSpecPage[itemization.uuid] - 1) * 10) <
+                    totalSpecRecords)) {
+                    <span> More 10 </span>
+                    } Specifications
+                  </button>
+                  }
+                </div>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- <div class="flex bg-slate-300 rounded-md mt-2 p-2">
+									<button (click)="itemSpecsSelected(reqItemization)"
+										class="flex-1 hover:mx-1 px-4 py-2 text-center rounded-md hover:bg-slate-100 hover:font-semibold"
+									[ngClass]="{'bg-slate-200 font-bold':showSpecifications[reqItemization.uuid]}">Specifications</button>
+									<button (click)="viewNeedAfterSales(reqItemization)"
+										class="flex-1 hover:mx-1 px-4 py-2 text-center rounded-md hover:bg-slate-100 hover:font-semibold"
+										[ngClass]="{'bg-slate-200 font-bold': showNeedAfterSale[reqItemization.uuid]}">Associated
+									Services</button>
+									<button (click)="viewInspectionTests(reqItemization)"
+										class="flex-1 hover:mx-1 px-4 py-2 text-center rounded-md hover:bg-slate-100 hover:font-semibold"
+										[ngClass]="{'bg-slate-200 font-bold': showInspectionTests[reqItemization.uuid]}">Inspection
+									Tests</button>
+								</div> -->
+    </div>
+    }
+  </div>
+  }
+</div>
+}

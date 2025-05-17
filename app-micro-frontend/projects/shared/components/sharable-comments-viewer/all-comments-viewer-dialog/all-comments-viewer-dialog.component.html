@@ -1,0 +1,18 @@
+<div class="flex">
+  <div class="flex-1">
+    <h2 mat-dialog-title>All Activities</h2>
+  </div>
+  <button mat-icon-button mat-dialog-close>
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<mat-dialog-content class="mat-typography">
+  <ol class="relative border-l border-gray-200 mt-4 ml-2">
+    <app-all-comments-viewer
+      [comments]="comments"
+      [assignedUser]="assignedUser"
+      [approvalStartDate]="approvalStartDate"
+    >
+    </app-all-comments-viewer>
+  </ol>
+</mat-dialog-content>

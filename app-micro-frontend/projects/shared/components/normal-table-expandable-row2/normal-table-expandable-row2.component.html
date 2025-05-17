@@ -1,0 +1,344 @@
+<div class="table-cover overflow-x-auto">
+  <div class="top-area">
+    <div class="search-area">
+      @if (tableConfigurations.showSearch) {
+        <mat-form-field>
+          <mat-label>
+            <mat-icon>search</mat-icon>
+            Search
+          </mat-label>
+          <!--<input matInput [(ngModel)]="searchQuery" placeholder="Search">-->
+          <input (keyup)="applyFilter($event.target)" autocomplete="off" matInput placeholder="Search"/>
+        </mat-form-field>
+      }
+    </div>
+
+  </div>
+  @if (loading) {
+    <app-loader @fadeIn message="{{ loadingMessage || 'Please Wait...' }}"></app-loader>
+  }
+  <mat-card appearance="outlined" class="p-0 overflow-x-hidden">
+    @if (tableList?.length != 0) {
+      <table [dataSource]="dataSource"
+        [ngClass]="{ 'table-bordered': tableConfigurations.showBorder }"
+        class="mat-elevation-z2" mat-table matSort multiTemplateDataRows>
+        <!-- Number Column -->
+        <ng-container matColumnDef="position">
+          <th *matHeaderCellDef class="w-16" mat-header-cell>@if (!expandRow) {
+            <span>No</span>
+          }</th>
+          <td *matCellDef="let element; let i = index" mat-cell>
+            @if (expandRow) {
+              <a class="mr-4 flex items-center" class="px-3 text-xs font-medium text-center rounded-lg">
+                @if (!isDetailRow(element)) {
+                  <mat-icon>keyboard_arrow_right</mat-icon>
+                }
+                @if (isDetailRow(element)) {
+                  <mat-icon>keyboard_arrow_down</mat-icon>
+                }
+              </a>
+            }
+            @if (!expandRow) {
+              <span> {{element.appRowId + 1 }}</span>
+            }
+          </td>
+        </ng-container>
+        @if (tableConfigurations.allowDataEdition) {
+          @for (column of tableConfigurations.tableColumns; track column) {
+            <ng-container matColumnDef="{{ column.name }}">
+              <th *matHeaderCellDef mat-header-cell mat-sort-header>{{ column.label }}</th>
+              <td *matCellDef="let element" mat-cell style="max-width: 250px;">
+                @if (column && column.type == 'html') {
+                  <span>
+                    <div [innerHTML]="element[column.name]"></div>
+                  </span>
+                }
+                @if (column.type == 'number') {
+                  <span>
+                    {{ element[column.name] | number }}
+                  </span>
+                }
+                @if (column.type == 'color') {
+                  <span [style.backgroundColor]="element[column.name]">
+                    {{ element[column.name] }}
+                  </span>
+                }
+                @if (column.type == 'date') {
+                  <span>
+                    {{ element[column.name] | safeDate : "mediumDate" }}
+                  </span>
+                }
+                @if (column.type == 'dateTime') {
+                  <span>
+                    <!--              {{ element[column.name] | safeDate : "medium" : "UTC +3" }}-->
+                    {{ element[column.name] | safeDate : "medium" : 'en-US': "UTC +3" }}
+                  </span>
+                }
+                @if (column.type == 'image') {
+                  <span>
+                    <img [src]="element[column.name]" style="height: 60px; width: 60px;"/>
+                  </span>
+                }
+                @if (!column.case &&column.type != 'date' &&column.type != 'dateTime' &&column.type != 'number' &&column.type != 'image' && column.type != 'color' ) {
+                  <span
+                    >
+                    {{ element[column.name] }}
+                  </span>
+                }
+                @if (column.case=='titlecase') {
+                  {{ element[column.name] | removeUnderScore | titlecase}}
+                }
+                @if (column.case == 'uppercase') {
+                  {{ element[column.name] | removeUnderScore | uppercase}}
+                }
+                @if (column.case == 'lowercase') {
+                  {{ element[column.name] | removeUnderScore | lowercase}}
+                }
+              </td>
+            </ng-container>
+          }
+        }
+        @if (!tableConfigurations.allowDataEdition) {
+          @for (column of tableConfigurations.tableColumns; track column) {
+            <ng-container matColumnDef="{{ column.name }}">
+              <th *matHeaderCellDef mat-header-cell mat-sort-header>{{ column.label }}</th>
+              <td *matCellDef="let element"
+                [ngStyle]="{ backgroundColor: column.type == 'color' ? element[column.name]?.color : '',   'text-align': column.align ? column.align : '', 'padding-right': '5px' }"
+                mat-cell
+                style="max-width: 250px;">
+                @if (column && column.type == 'html') {
+                  <span>
+                    <div [innerHTML]="element[column.name]"></div>
+                  </span>
+                }
+                @if (column.type == 'number') {
+                  <span>
+                    {{ element[column.name] | number }}
+                  </span>
+                }
+                @if (column.type == 'date') {
+                  <span>
+                    {{ element[column.name] | safeDate : "mediumDate" }}
+                  </span>
+                }
+                @if (column.type == 'dateTime') {
+                  <span>
+                    <!--              {{ element[column.name] | safeDate : "medium" : "UTC +6" }}-->
+                    {{ element[column.name] | safeDate : "medium" : 'en-US': "UTC +3" }}
+                  </span>
+                }
+                @if (column.type == 'image') {
+                  <span>
+                    <img [src]="element[column.name]" style="height: 60px; width: 60px;"/>
+                  </span>
+                }
+                @if (column.type == 'color') {
+                  <span>
+                    {{ element[column.name]?.text }}
+                  </span>
+                }
+                @if (!column.case &&
+                  column.type != 'date' &&
+                  column.type != 'dateTime' &&
+                  column.type != 'number' &&
+                  column.type != 'image' &&
+                  column.type != 'color' &&
+                  column.type != 'html' &&
+                  column.type != 'star') {
+                  <span
+                    >
+                    {{ element[column.name] }}
+                  </span>
+                }
+                @if (column.case=='titlecase') {
+                  {{ element[column.name] | removeUnderScore | titlecase}}
+                }
+                @if (column.case == 'uppercase') {
+                  {{ element[column.name] | removeUnderScore | uppercase}}
+                }
+                @if (column.case == 'lowercase') {
+                  {{ element[column.name] | removeUnderScore | lowercase}}
+                }
+              </td>
+            </ng-container>
+          }
+        }
+        <!--Action Icons-->
+        <ng-container matColumnDef="actions">
+          <th *matHeaderCellDef mat-header-cell></th>
+          <td *matCellDef="let tableListItem"
+            [ngClass]="{active: tableConfigurations.active[tableListItem[propertyToUse]],
+          error: tableListItem?.hasError,
+           success: tableListItem?.hasSuccess}"
+            mat-cell>
+            <div
+              aria-label="Basic table"
+              class="float-right btn__group"
+              role="group">
+              @if (!isDetailRow(tableListItem)) {
+                <button
+                  class="cursor btn-sm mr-2"
+                  mat-raised-button
+              style="color: white; background-color: #00405d;
+                   line-height: 30px; padding: 0 10px !important;
+                   white-space: nowrap;
+                  font-size: 10px; border-radius: 5px !important;"
+                  title="{{ tableConfigurations.customPrimaryMessage }}">
+                  {{tableConfigurations.customPrimaryMessage}}
+                </button>
+              }
+            </div>
+          </td>
+        </ng-container>
+        <!-- <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let tableListItem"
+          [ngClass]="{active: tableConfigurations.active[tableListItem[propertyToUse]],error: tableListItem?.hasError, success: tableListItem?.hasSuccess}">
+          <div class="float-right btn__group" role="group" aria-label="Basic table"
+            *ngIf="tableConfigurations.actionIcons.edit ||tableConfigurations.actionIcons.print || tableConfigurations.actionIcons.delete ||tableConfigurations.actionIcons.more ||tableConfigurations.actionIcons.cancel ||tableConfigurations.actionIcons.download ||tableConfigurations.actionIcons.customPrimary ||actionButtons.length > 0">
+            <ng-container *appHasPermission="permissions?.customPrimary || ''">
+              <button mat-raised-button class="cursor btn-sm mr-2"
+                title="{{ tableConfigurations.customPrimaryMessage }}"
+                style="color: white; background-color: #00405d; line-height: 30px; padding: 0px 10px !important; font-size: 10px; border-radius: 5px !important;"
+                (click)="customPrimaryItem(tableListItem)"
+                *ngIf="tableConfigurations?.actionIcons?.customPrimary &&!showDelete[tableListItem[propertyToUse]] &&(tableListItem | showButton : 'customPrimary')">
+                {{ tableListItem.customPrimaryMessage ? tableListItem.customPrimaryMessage :
+                tableConfigurations.customPrimaryMessage }}
+              </button>
+            </ng-container>
+            <ng-container>
+              <a @fadeIn mat-icon-button title="print" (click)="printItem(tableListItem)" style="border-radius: 50%;"
+                *ngIf="tableConfigurations?.actionIcons?.print &&!showDelete[tableListItem[propertyToUse]]">
+                <mat-icon style="padding: 2px; font-size: 18px;">print</mat-icon>
+              </a>
+            </ng-container>
+            <ng-container>
+              <a mat-icon-button title="view details" (click)="viewItemDetails(tableListItem)"
+                style="border-radius: 50%;"
+                *ngIf="tableConfigurations?.actionIcons?.more &&!showDelete[tableListItem[propertyToUse]] &&(tableListItem | showButton : 'more')">
+                <mat-icon svgIcon="s_view"></mat-icon>
+              </a>
+            </ng-container>
+            <ng-container *appHasPermission="permissions?.edit || ''">
+              <a mat-icon-button title="edit" (click)="editItem(tableListItem)" style="color: #00405d;"
+                *ngIf="tableConfigurations?.actionIcons?.edit &&!showDelete[tableListItem[propertyToUse]] && (tableListItem | showButton : 'edit')">
+                <mat-icon svgIcon="edit">mode_edit</mat-icon>
+              </a>
+            </ng-container>
+            <ng-container *appHasPermission="permissions['download'] || ''">
+              <a mat-icon-button title="Download" (click)="downloadItem(tableListItem)" style="border-radius: 50%;"
+                *ngIf=" tableConfigurations?.actionIcons?.download">
+                <mat-icon color="primary">mode_edit</mat-icon>
+              </a>
+            </ng-container>
+            <ng-container *appHasPermission="permissions['delete'] || ''">
+              <a mat-icon-button (click)="showDelete[tableListItem[propertyToUse]] = true" style="color: #00405d;" title="delete"
+                *ngIf=" tableConfigurations?.actionIcons?.delete && !showDelete[tableListItem[propertyToUse]] && (tableListItem | showButton : 'delete') ">
+                <mat-icon svgIcon="trash_delete">delete</mat-icon>
+              </a>
+            </ng-container>
+            <button @fadeIn mat-flat-button (click)="showDelete[tableListItem[propertyToUse]] = true" title="Cancel"
+              *ngIf="  tableConfigurations?.actionIcons?.cancel &&  !showDelete[tableListItem[propertyToUse]]  ">
+              <mat-icon>cancel</mat-icon>
+              Cancel
+            </button>
+            <p @fadeIn *ngIf="showDelete[tableListItem[propertyToUse]] &&!tableConfigurations.deleting[tableListItem[propertyToUse]]">
+              Are You sure?
+            </p>
+            <p @fadeIn *ngIf="showDelete[tableListItem[propertyToUse]] &&tableConfigurations.deleting[tableListItem[propertyToUse]]">
+              <span *ngIf="tableConfigurations?.actionIcons?.cancel">Canceling</span>
+              <span *ngIf="tableConfigurations?.actionIcons?.delete">Deleting</span>
+            </p>
+            <p @fadeIn *ngIf="showDelete[tableListItem[propertyToUse]]">
+              <mat-progress-bar mode="indeterminate" @fadeIn *ngIf="tableConfigurations.deleting[tableListItem[propertyToUse]]">
+              </mat-progress-bar>
+              <button mat-mini-fab style="color: white; background-color: red; border-radius: 50% !important;" @fadeIn
+                *ngIf="!tableConfigurations.deleting[tableListItem[propertyToUse]]" (click)="showDelete = {}">
+                <mat-icon>clear</mat-icon>
+              </button>
+              <button mat-mini-fab style="color: white; background-color: green; border-radius: 50% !important;" @fadeIn
+                *ngIf="!tableConfigurations.deleting[tableListItem[propertyToUse]]" (click)="deleteItem(tableListItem)">
+                <mat-icon>done</mat-icon>
+              </button>
+            </p>
+          </div>
+        </td>
+      </ng-container> -->
+      <ng-container matColumnDef="expandedDetail">
+        <td *matCellDef="let element" [attr.colspan]="displayedColumns.length" mat-cell>
+          <div [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'" class="table-element-detail">
+            @if (isDetailRow(element) && expandRow) {
+              <div class="w-full p-2 bg-gray-100">
+                <ng-container [ngTemplateOutletContext]="{data : element}" [ngTemplateOutlet]="expandedRowTpl">
+                </ng-container>
+              </div>
+            }
+          </div>
+        </td>
+      </ng-container>
+      <tr *matHeaderRowDef="displayedColumns" mat-header-row
+      style="background-color: rgba(0, 0, 0, 0.1); opacity: 0.8;"></tr>
+      <tr (click)="toggleExpansion(element)" *matRowDef="let element; columns: displayedColumns; let i = index"
+          [ngClass]="{
+         'cursor-pointer':true,
+         'active': tableConfigurations.active[element[propertyToUse]],
+         'table-expanded-row':expandedElement === element,
+         'selected-row':isDetailRow(element) && expandRow,
+         'error': element?.hasError,
+         'success': element?.hasSuccess,
+         'blurred': tableConfigurations.deleting[element[propertyToUse]]  }"
+      [title]="element?.tableToolTip || ''" class="element-row" mat-row></tr>
+      <tr *matRowDef="let element; columns: ['expandedDetail'];" class="table-detail-row" mat-row>
+      </tr>
+    </table>
+  } @else {
+    <table [dataSource]="dataSource" [ngClass]="{ 'table-bordered': tableConfigurations.showBorder }"
+      class="mat-elevation-z2"
+      mat-table matSort>
+      <!-- Number Column -->
+      <ng-container matColumnDef="position">
+        <th *matHeaderCellDef mat-header-cell mat-sort-header>No</th>
+        <td *matCellDef="let element; let i = index" mat-cell>{{ i + 1 }}</td>
+      </ng-container>
+      <!-- Position Column -->
+      @for (column of tableConfigurations.tableColumns; track column) {
+        <ng-container matColumnDef="{{ column.name }}">
+          <th *matHeaderCellDef mat-header-cell mat-sort-header>
+            {{ column.label }}
+          </th>
+          <td *matCellDef="let element" mat-cell>{{ element[column.name] }}</td>
+        </ng-container>
+      }
+      <!--Action Icons-->
+      <ng-container matColumnDef="actions">
+        <th *matHeaderCellDef mat-header-cell></th>
+        <td *matCellDef="let tableListItem" mat-cell>&nbsp;</td>
+      </ng-container>
+      <!-- Disclaimer column -->
+      <ng-container matColumnDef="disclaimer">
+        <td *matFooterCellDef [attr.colspan]="displayedColumns.length" mat-footer-cell>
+          @if (!loading) {
+            <p class="text-center text-base text-muted pt-2">
+              {{ tableConfigurations.empty_msg || "No data" }}
+            </p>
+          }
+        </td>
+      </ng-container>
+      <tr *matHeaderRowDef="displayedColumns" mat-header-row
+      style="background-color: rgba(0, 0, 0, 0.1); opacity: 0.8;"></tr>
+      <tr *matRowDef="let row; columns: displayedColumns; let i = index" class="hover:scale-x-105" mat-row
+      style="--order: {{ i * 0.7 }}"></tr>
+      <tr *matFooterRowDef="['disclaimer']" class="table-second-footer-row" mat-footer-row></tr>
+    </table>
+  }
+  <!--Pagination-->
+
+  <mat-paginator
+    [ngClass]="{ hidden: !tableConfigurations.allowPagination }"
+    [pageSizeOptions]="[10, 20, 25, 50, 100]"
+		(page)="onPage($event)"
+		showFirstLastButtons
+	>
+  </mat-paginator>
+</mat-card>
+</div>

@@ -1,0 +1,11 @@
+<div ngProjectAs="table">
+  <div class="flex justify-between">
+    <span class="text-lg">Financial Resources</span>
+  </div>
+  <app-full-data-table
+    [tableList]="tendererIncomeStatements$ | async"
+    [tableConfigurations]="tableConfigurations"
+    [loading]="loading$ | async"
+    [title]="'Financial Resources'">
+  </app-full-data-table>
+</div>

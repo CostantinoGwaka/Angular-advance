@@ -1,0 +1,53 @@
+<div class="p-6 rounded-lg bg-white">
+	@if (comments?.length > 0) {
+	<div @fadeIn class="space-y-4">
+		<!-- Header Section -->
+		@if(title.length > 0 || assignedUser) {
+		<div class="flex items-center justify-between border-b pb-4">
+			<h3 class="text-lg font-medium text-gray-900">{{ title }}</h3>
+			@if (assignedUser) {
+			<div class="flex items-center space-x-2">
+				<span class="text-sm font-medium text-gray-600">Assigned to:</span>
+				<span
+					class="bg-blue-50 text-blue-700 text-sm font-medium px-3 py-1 rounded-full"
+				>
+					{{ assignedUser }}
+				</span>
+			</div>
+			}
+		</div>
+		}
+		<!-- Comments Timeline -->
+		<ol class="relative border-l border-gray-200 ml-3 space-y-6">
+			@if (showMinimumComments && comments?.length > minimumCommentsCount) {
+			<ng-container [ngTemplateOutlet]="previousComments"></ng-container>
+			}
+
+			<app-all-comments-viewer
+				[comments]="commentsToShow"
+				[assignedUser]="assignedUser"
+				[approvalStartDate]="approvalStartDate"
+			>
+			</app-all-comments-viewer>
+		</ol>
+	</div>
+	}
+
+	<!-- Show All Comments Template -->
+	<ng-template #previousComments>
+		<li class="relative pl-6">
+			<div
+				class="absolute flex items-center justify-center w-8 h-8 bg-gray-100 rounded-full -left-4 ring-4 ring-white"
+			>
+				<mat-icon class="text-gray-500 text-lg">history</mat-icon>
+			</div>
+			<button
+				class="flex items-center space-x-2 text-sm text-primary hover:text-primary-dark transition-colors duration-200"
+				(click)="showAll()"
+			>
+				<span>Show all {{ comments?.length }} activities</span>
+				<mat-icon class="text-sm">expand_more</mat-icon>
+			</button>
+		</li>
+	</ng-template>
+</div>

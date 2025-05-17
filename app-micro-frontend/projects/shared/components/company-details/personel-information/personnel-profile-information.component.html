@@ -1,0 +1,42 @@
+@if (viewType != 'view') {
+  <div ngProjectAs="table">
+    @if (showTitle) {
+      <div class="flex justify-between">
+        <span class="text-lg">Personnel Information</span>
+      </div>
+    }
+    @if (tendererUuid) {
+      <app-paginated-data-table
+        [query]="forNegotiation? queryForNego:query"
+        [apolloNamespace]="uaaApolloNamespace"
+        [additionalVariables]="{tendererUuid: tendererUuid, entityUuid: objectForMainEntityDetail?.objectUuid, entityType: objectForMainEntityDetail?.objectType}"
+        [tableConfigurations]="tableConfigurations" [loading]="loading" [filters]="filterToUse" [mapFunction]="mapFunction"
+        (rowPreview)="viewItem($event)" (rowPrint)="viewTendererCv($event)"
+        (rowCheckBox)="itemSelected($event.selectedItems)" (rowCustomPrimary)="viewTendererCv($event)"
+        [title]="'Personnel Information'">
+      </app-paginated-data-table>
+    }
+  </div>
+}
+
+<!--<div ngProjectAs="form" *ngIf="viewType == 'view'">-->
+
+<!--  <app-loader @fadeIn *ngIf="loading$ | async" message="{{  'Please Wait...' }}"></app-loader>-->
+
+<!--  <mat-card *ngIf="!(loading$ | async)">-->
+<!--    <div class="flex justify-between">-->
+<!--      <span class="text-lg">{{ viewDetailsTitle }}</span>-->
+<!--      <div class="">-->
+<!--        <button mat-button class="!border-2 !border-gray-100 !border-solid" (click)="closeDetails()">-->
+<!--          <mat-icon>close</mat-icon> Close-->
+<!--        </button>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  <app-view-personnel-information-->
+<!--    (closeView)="closeDetails($event)"-->
+<!--    [enableActions]="false"-->
+<!--    [selectedUuid]="selectedUuid"-->
+<!--  >-->
+<!--  </app-view-personnel-information>-->
+<!--  </mat-card>-->
+<!--</div>-->

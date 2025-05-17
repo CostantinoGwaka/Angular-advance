@@ -1,0 +1,31 @@
+<app-modal-header (closeModal)="closeModal()" [title]="'List of Pending criteria'"></app-modal-header>
+<div class="container-fluid">
+  <table class="table table-auto table-bordered
+   table-striped rounded">
+    <tbody>
+      @for (criteria of criteriaList; track criteria; let i = $index) {
+        <tr>
+          <td>
+            {{i + 1}}
+          </td>
+          <td>
+            <div class="flex flex-col">
+              <div class="flex flex-row justify-between">
+                <span>{{criteria.name}}</span>
+                <div>
+                  <button
+                    (click)="goToIncompleteCriteria(criteria)"
+                    @fadeIn
+                    class="p-0.5 px-2 rounded border text-xs text-white !bg-primary"
+                    matRipple>
+                    Open
+                  </button>
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

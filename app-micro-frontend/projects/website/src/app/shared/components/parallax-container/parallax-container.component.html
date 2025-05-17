@@ -1,0 +1,18 @@
+<div
+  class="flex-1 flex pb-80 !bg-gradient-to-t from-[#096ca2] !via-primary !to-primary justify-between"
+></div>
+<div class="-mt-80 mb-20">
+  <div class="web-container py-8">
+    <h1 class="!text-3xl !font-bold text-white">
+      {{ title }}
+    </h1>
+    <p class="!text-md text-white">
+      {{ description }}
+    </p>
+  </div>
+  <div class="web-container !p-0 bg-white rounded-xl overflow-hidden shadow-lg">
+    <div class="min-h- min-h-[500px]">
+      <ng-content></ng-content>
+    </div>
+  </div>
+</div>

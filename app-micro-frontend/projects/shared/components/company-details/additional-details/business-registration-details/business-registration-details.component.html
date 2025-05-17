@@ -1,0 +1,185 @@
+
+@if (!hideTitle) {
+  <div class="flex justify-between">
+    <span class="text-lg">Business Registration Details</span>
+  </div>
+}
+
+@if (loading) {
+  <app-loader message="Fetching business registration details..."></app-loader>
+}
+
+@if (!loading) {
+  <div class="mt-4">
+    <mat-card appearance="outlined">
+      @if (businessRegistration) {
+        <div class="row">
+          @if (businessRegistration.name) {
+            <div class="col-sm-4">
+              <app-view-details-item key="Name"
+                [value]="businessRegistration.name">
+              </app-view-details-item>
+            </div>
+          }
+          @if (businessRegistration.registrationCertificateName) {
+            <div class="col-sm-4">
+              <app-view-details-item key="Certificate Name"
+                [value]="businessRegistration.registrationCertificateName">
+              </app-view-details-item>
+            </div>
+          }
+          @if (businessRegistration.registrationNumber) {
+            <div class="col-sm-4">
+              <app-view-details-item key="Registration Number"
+                [value]="businessRegistration.registrationNumber">
+              </app-view-details-item>
+            </div>
+          }
+          @if (businessRegistration.registrationDate) {
+            <div class="col-sm-4">
+              <app-view-details-item valueType="date" key="Registration Date"
+                [value]="businessRegistration.registrationDate">
+              </app-view-details-item>
+            </div>
+          }
+          @if (businessRegistration.phoneNumber) {
+            <div class="col-sm-4">
+              <app-view-details-item key="Phone Number"
+                [value]="businessRegistration.phoneNumber">
+              </app-view-details-item>
+            </div>
+          }
+          @if (businessRegistration.email) {
+            <div class="col-sm-4">
+              <app-view-details-item key="Email"
+                [value]="businessRegistration.email">
+              </app-view-details-item>
+            </div>
+          }
+          @if (businessRegistration.physicalAddress) {
+            <div class="col-sm-4" >
+              <app-view-details-item key="Physical Address"
+                [value]="businessRegistration.physicalAddress">
+              </app-view-details-item>
+            </div>
+          }
+          @if (businessRegistration.postalAddress) {
+            <div class="col-sm-4" >
+              <app-view-details-item key="Postal Address"
+                [value]="businessRegistration.postalAddress">
+              </app-view-details-item>
+            </div>
+          }
+          @if (businessRegistration.website) {
+            <div class="col-sm-4" >
+              <app-view-details-item key="Website"
+                [value]="businessRegistration.website">
+              </app-view-details-item>
+            </div>
+          }
+          @if (businessRegistration.isCertificateExpiring) {
+            <div class="col-sm-4">
+              <app-view-details-item key="Certificate Expiring"
+                [value]="(businessRegistration.isCertificateExpiring)? 'YES': 'NO'">
+              </app-view-details-item>
+            </div>
+          }
+          @if (businessRegistration.validFrom) {
+            <div class="col-sm-4">
+              <app-view-details-item valueType="date" key="Valid From" [value]="businessRegistration.validFrom"></app-view-details-item>
+            </div>
+          }
+          @if (businessRegistration.validUntil) {
+            <div class="col-sm-4">
+              <app-view-details-item valueType="date" key="Valid Until" [value]="businessRegistration.validUntil"></app-view-details-item>
+            </div>
+          }
+          @if (businessRegistration.businessRegistrationCertificateUuid) {
+            <div class="col-sm-4">
+              <div class="flex-col">
+                <span class="text-grey  mb-2 mr-2">Business Registration Certificate</span>
+                @if (!fetchingAttachment) {
+                  <button
+                    class="py-1 whitespace-nowrap px-2 !border !border-grey-300 rounded !text-grey"
+                    (click)="viewDocument(businessRegistration.businessRegistrationCertificateUuid)" >
+                    <div class="flex">
+                      <img src="assets/images/pdf-icon.png" class="h-[20px] w-[20px] pr-1"/>
+                      <span class="text-grey">View Certificate</span>
+                    </div>
+                  </button>
+                }
+                @if (fetchingAttachment) {
+                  <div class="flex mt-[20px] sm:mt-auto space-x-2">
+                    <mat-progress-spinner [diameter]="30" mode="indeterminate"></mat-progress-spinner>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+          @if (fetchingItem && embassy) {
+            <div class="col-sm-12">
+              @if (fetchingItem && embassy) {
+                <app-loader message="Fetching Comments..."></app-loader>
+              }
+            </div>
+          }
+          @if (!fetchingItem && embassy && !ppra &&  comments == null) {
+            <div class="col-sm-12 pt-4">
+              <div class="w-full flex justify-between items-center">
+                <span>Please help us to verify this business registration information.</span>
+                <div class="justify-end">
+                  <div class="flex space-x-4">
+                    <div>
+                      <button
+                        (click)="openFormSheetSheet()"
+                        class="mx-auto border-primary !bg-primary hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs w-20 h-10 rounded">
+                        Respond
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+          @if (!fetchingItem && embassy && !ppra && comments) {
+            <div class="col-sm-12 pt-4">
+              <div class="grid grid-cols-12 mt-2">
+                <div class="col-span-12 border border-grey p-2 font-bold items-center">Embassy Business Registration Comment</div>
+                <ng-container>
+                  <div class="col-span-12 border border-grey pl-3 pt-3 pb-3">
+                    <h3 class="flex items-center mb-1 text-sm font-semibold text-gray-900">
+                      Commented on {{comments.approvedAt | date :'medium'}}
+                    </h3>
+                    <div class="mb-4 !text-[14px] text-gray-500">
+                      {{comments.comments}}
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+          }
+          @if (!fetchingItem && embassy && ppra && comments) {
+            <div class="col-sm-12 pt-4">
+              <div class="grid grid-cols-12 mt-2">
+                <div class="col-span-12 border border-grey p-2 font-bold items-center">Embassy Business Registration Comment</div>
+                <ng-container>
+                  <div class="col-span-12 border border-grey pl-3 pt-3 pb-3">
+                    <h3 class="flex items-center mb-1 text-sm font-semibold text-gray-900">
+                      Commented on {{comments.approvedAt | date :'medium'}}
+                    </h3>
+                    <div class="mb-4 !text-[14px] text-gray-500">
+                      {{comments.comments}}
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+          }
+        </div>
+      }
+      @if (!businessRegistration) {
+        <div> No details found</div>
+      }
+    </mat-card>
+  </div>
+}

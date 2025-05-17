@@ -1,0 +1,78 @@
+<app-modal-header
+	[title]="generalStatus.title"
+	(closeModal)="closeDetails(true)">
+</app-modal-header>
+
+<div class="w-full m-auto">
+	@if(requestKeyPhrase) {
+		<app-custom-alert-box
+			[alertClass]="'bg-red-100 border-red-300  rounded'"
+			[alertButtonClass]="'border-grey !bg-white'"
+			[alertTextClass]="'text-[#302e2e] text-lg'"
+			[alertInfo]="noDataAlert">
+		</app-custom-alert-box>
+
+
+		<div class="flex flex-row justify-center pt-3">
+			<mat-form-field  appearance="outline">
+				<mat-label>Key phrase</mat-label>
+				<input
+					matInput placeholder="enter your key phrase"
+					[type]="hide ? 'password' : 'text'"
+					[(ngModel)]="generalStatus.keyPhrase">
+				<mat-icon class="mx-2 cursor-pointer" matSuffix
+									(click)="hide = !hide">
+					{{hide ? "visibility_off" : "visibility"}}
+				</mat-icon>
+			</mat-form-field>
+			<div class="ml-2 pt-2">
+				@if (generalStatus.keyPhrase) {
+					<button
+						@fadeIn
+						mat-raised-button color="primary"
+						(click)="signAppointmentLetters();" type="submit">
+						<mat-icon>edit</mat-icon>
+						Sign Document
+					</button>
+				}
+			</div>
+		</div>
+	}
+
+	@if (!requestKeyPhrase) {
+		<div class="flex flex-col justify-center items-center mt-6">
+			<app-attention-message
+				type="warning"
+				[message]="
+          'Please do not close this page until the process is complete.\nThis dialog will close automatic if process is completed successfully'
+        "
+			>
+			</app-attention-message>
+
+
+			<!--		@if (generalStatus.isLoading) {-->
+			<app-progress-circular-loader
+				[mainLoaderMessage]="generalStatus.loadingMessage"
+				[mainLoaderProgress]=" (isNaN(mainLoaderProgress))?
+				1: mainLoaderProgress"
+				[useLargeTextDisplay]="true"
+				[mainLoading]="generalStatus.isLoading">
+			</app-progress-circular-loader>
+
+			<!--		<div-->
+			<!--			class="bg-gray-200 !border rounded-->
+			<!--       p-2 max-w-[600px] text-center">{{ generalStatus.loadingMessage }}-->
+			<!--		</div>-->
+			<!--		}-->
+			@if (generalStatus.hasError) {
+				<span class="text-red-500 mt-4">{{ generalStatus.errorMessage }}</span>
+				<div class="mt-2">
+					<button mat-flat-button color="primary"
+									(click)="initializer(true)">
+						Try again
+					</button>
+				</div>
+			}
+		</div>
+	}
+</div>

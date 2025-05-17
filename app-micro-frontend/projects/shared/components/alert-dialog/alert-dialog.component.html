@@ -1,0 +1,47 @@
+<!-- <div class="custom-dialog">
+<div class="custom-dialog-content">
+  <h2 class="custom-dialog-title">{{ data.title }}</h2>
+  <p class="custom-dialog-message">{{ data.message }}</p>
+</div>
+<div class="custom-dialog-actions">
+  <button mat-button class="custom-dialog-cancel" (click)="onNoClick()">Cancel</button>
+  <button mat-raised-button [color]="data.color || 'primary'" class="custom-dialog-confirm"
+  [mat-dialog-close]="true">OK</button>
+</div>
+</div> -->
+
+
+
+
+<div class="w-full max-w-142.5 rounded-lg bg-white px-2 text-center dark:bg-boxdark md:px-17.5">
+  <div class="w-full flex justify-center">
+    @if (data.status == 'warning') {
+      <svg width="60" height="60" viewBox="0 0 60 60" fill="none"
+        xmlns="http://www.w3.org/2000/svg">
+        <rect opacity="0.1" width="60" height="60" rx="30" fill="#DC2626"></rect>
+        <path
+          d="M30 27.2498V29.9998V27.2498ZM30 35.4999H30.0134H30ZM20.6914 41H39.3086C41.3778 41 42.6704 38.7078 41.6358 36.8749L32.3272 20.3747C31.2926 18.5418 28.7074 18.5418 27.6728 20.3747L18.3642 36.8749C17.3296 38.7078 18.6222 41 20.6914 41Z"
+        stroke="#DC2626" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+    }
+    @if (data.status == 'info') {
+      <svg class="fill-current h-8 w-8 text-[#1394db]" xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 20 20">
+        <!-- <rect opacity="0.1" width="20" height="20" rx="10" fill="#CFE2F3"></rect> -->
+        <path
+          d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z" />
+      </svg>
+    }
+  </div>
+  <h3 class="mt-3 pb-2 text-xl font-bold text-black">{{ data.title }}</h3>
+
+  <p class="mb-10 font-medium" [innerHTML]="data.message"></p>
+</div>
+
+<mat-dialog-actions [align]="'center'">
+  @if (data.showCancelBtn) {
+    <button mat-stroked-button class="custom-dialog-cancel" (click)="onNoClick()">{{data.cancelBtnText}}</button>
+  }
+  <button mat-raised-button [color]="data.status == 'warning'?'warn':'primary'" class="custom-dialog-confirm"
+  cdkFocusInitial [mat-dialog-close]="true">{{data.okBtnText}}</button>
+</mat-dialog-actions>

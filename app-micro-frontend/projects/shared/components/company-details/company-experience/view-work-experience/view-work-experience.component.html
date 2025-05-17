@@ -1,0 +1,78 @@
+<div class="container-fluid">
+  @if (selectedWorkExperience) {
+    <div class="row">
+      <div class="col-sm-4">
+        <app-view-details-item key="Employer Type" [value]="(selectedWorkExperience.employerType == 'PRIVATE_INSTITUTION') ? 'PRIVATE INSTITUTION' : 'PUBLIC INSTITUTION'"></app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        @if (selectedWorkExperience.employerType == 'PRIVATE_INSTITUTION') {
+          <app-view-details-item key="Employer Name" [value]="selectedWorkExperience.employerName"></app-view-details-item>
+        }
+        @if (selectedWorkExperience.employerType == 'PUBLIC_INSTITUTION') {
+          <app-view-details-item key="Institution Worked with" [value]="selectedWorkExperience.procuringEntity.name"></app-view-details-item>
+        }
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item key="Employer Postal Address" [value]="selectedWorkExperience.employerAddress"></app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item key="Employer Email" [value]="selectedWorkExperience.employerEmail"></app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item key="Employer Phone Number" [value]="selectedWorkExperience.employerPhone"></app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item key="Contract Number" [value]="selectedWorkExperience.contractNumber"></app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item key="Contract Description" [value]="selectedWorkExperience.contractDescription"></app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item valueType="date" key="Contract Start Date" [value]="selectedWorkExperience.fromDate"></app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item valueType="date" key="Contract End Date" [value]="selectedWorkExperience.toDate"></app-view-details-item>
+      </div>
+      @if (selectedWorkExperience?.currencyUuid) {
+        <div class="col-sm-4">
+          <app-view-details-item key="Currency" [value]="selectedWorkExperience.currencyUuid"></app-view-details-item>
+        </div>
+      }
+      @if (selectedWorkExperience.contractStatus == 'COMPLETE') {
+        <div class="col-sm-4">
+          <app-view-details-item valueType="number" key="Contract Value" [value]="selectedWorkExperience.totalContractValue"></app-view-details-item>
+        </div>
+      }
+      @if (selectedWorkExperience.contractStatus == 'ON_PROGRESS') {
+        <div class="col-sm-4">
+          <app-view-details-item valueType="number" key="Average Monthly Invoicing" [value]="selectedWorkExperience.averageMonthlyInvoicing"></app-view-details-item>
+        </div>
+      }
+      @if (selectedWorkExperience.contractStatus == 'ON_PROGRESS') {
+        <div class="col-sm-4" >
+          <app-view-details-item valueType="number" key="Value of Outstanding Work" [value]="selectedWorkExperience.valueOfOutstandingWork"></app-view-details-item>
+        </div>
+      }
+      @if (selectedWorkExperience.role) {
+        <div class="col-sm-4" >
+          <app-view-details-item key="Tender Role" [value]="selectedWorkExperience.role"></app-view-details-item>
+        </div>
+      }
+      <div class="col-sm-4">
+        <app-view-details-item key="Contract Status" [value]="selectedWorkExperience.contractStatus|replace: '_': ' '"></app-view-details-item>
+      </div>
+      @if (selectedWorkExperience?.tendererContractRoleList?.length != 0) {
+        <div class="col-sm-12">
+          <p>Work/Activities Performed</p>
+          <app-full-data-table
+            [tableList]="selectedWorkExperience.tendererContractRoleList"
+            [tableConfigurations]="tableConfigurations"
+            [loading]="false"
+            [mapFunction]="mapFunction"
+            [title]="'Work/Activities Performed'"
+          ></app-full-data-table>
+        </div>
+      }
+    </div>
+  }
+</div>

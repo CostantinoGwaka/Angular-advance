@@ -1,0 +1,78 @@
+<div class="border-[1px] rounded-[16px] grid grid-cols-12 divide-x mb-2">
+  <div class="col-span-2 px-2 py-3">
+    <div class="flex items-center justify-center text-[14px] font-[900] ">{{calenderItem.calendarDay}}</div>
+    <div class="flex items-center justify-center text-[24px] font-[900] ">{{calenderItem.calendarDate}}</div>
+    <div class="flex items-center justify-center text-[10px] font-[700] ">{{calenderItem.calendarMonth}}
+    {{calenderItem.calendarYear}}</div>
+  </div>
+  <div class="col-span-10 flex items-center">
+    <div class="font-[700] text-[14px] text-[#909498] px-[16px]">
+      {{calenderItem.stageName}}
+      @if (isCurrentStage(calenderItem)) {
+        <div>
+          <span class="font-[700] text-[12px] text-[#0774a0]">{{calenderItem.daysToNextStage}} days to</span>&nbsp;<span
+        class="text-[#6ec3e4] text-[10px] font-[700]">{{calenderItem.nextState}}</span>
+      </div>
+    }
+  </div>
+  <div class="field-editable px-4 flex items-center justify-end flex-1 gap-2">
+    @if (!onSaving[calenderItem.stageUuid]) {
+      @if (showEditForm[calenderItem.stageUuid]) {
+        <div class="flex items-center justify-between gap-4">
+          <div class="flex items-center justify-between gap-1">
+            <div @fadeIn class="flex items-center justify-center">
+              <div (click)="showEditForm[calenderItem.stageUuid] = false" class="w-8 h-8 rounded-full flex p-1 items-center justify-center bg-blue-500">
+                <mat-icon  class="text-white text-2xl">close</mat-icon>
+              </div>
+            </div>
+            @if (calenderItem.stageName != 'Invitation') {
+              <mat-form-field appearance="outline">
+                <input matInput [matDatepickerFilter]="calenderDisplayDateFilters" [matDatepickerFilter]="dateFilters"
+                  [matDatepicker]="picker" [value]="calenderItem.fullDate" (dateChange)="onDateChange($event)">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+            }
+          </div>
+          <div (click)="onSave()"
+            class="cursor-pointer hover:bg-[#CEEAFE] bg-[#E1F0FB]  px-[20px] py-[2px] text-[10px] font-[700] text-[#0F69F0] flex items-center rounded-[10px]">
+          Save</div>
+        </div>
+      }
+      @if (!!calenderItem.editable && !showEditForm[calenderItem.stageUuid]) {
+        <div>
+          <div (click)="editAttempt(calenderItem)"
+            class="rounded-[10px] inline-block px-3 py-2 cursor-pointer hover:bg-[#CEEAFE]">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M7.6728 3.99113L1 10.6639V14.0003H4.3364L11.0092 7.32752M7.6728 3.99113L10.0655 1.59838L10.067 1.59696C10.3963 1.26759 10.5613 1.10262 10.7515 1.04083C10.919 0.986392 11.0995 0.986392 11.267 1.04083C11.457 1.10257 11.6219 1.26736 11.9507 1.59626L13.4019 3.04743C13.7322 3.37775 13.8974 3.54298 13.9593 3.73343C14.0138 3.90096 14.0137 4.08141 13.9593 4.24893C13.8975 4.43924 13.7325 4.60423 13.4027 4.93407L13.4019 4.93478L11.0092 7.32752M7.6728 3.99113L11.0092 7.32752"
+                stroke="#287CDE" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </div>
+        </div>
+      }
+    }
+    @if (onSaving[calenderItem.stageUuid]) {
+      <div>
+        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 !text-primary" xmlns="http://www.w3.org/2000/svg" fill="none"
+          viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+          </path>
+        </svg>
+      </div>
+    }
+    @if (isStagePassed(calenderItem) && !isCurrentStage(calenderItem)) {
+      <div
+        class=" bg-[#ececec]  px-[15px] py-[1px] text-[10px] font-[700] text-[#828282] flex items-center rounded-full">
+      Passed</div>
+    }
+    @if (isCurrentStage(calenderItem)) {
+      <div
+        class=" bg-[#b1eab2]  px-[15px] py-[1px] text-[10px] font-[700] text-[#059749] flex items-center rounded-full">
+      Current</div>
+    }
+  </div>
+</div>
+</div>

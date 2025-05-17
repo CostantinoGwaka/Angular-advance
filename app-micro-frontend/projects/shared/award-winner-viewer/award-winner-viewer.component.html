@@ -1,0 +1,275 @@
+<div>
+	<div @fadeIn class="flex items-center justify-center bg-[#1394db] rounded-t-lg">
+		<div class="h-[200px] mt-4">
+			<div class="flex justify-center items-center">
+				<div class="grid grid-cols-7 gap-2">
+					@for (i of [1, 2, 3]; track i) {
+						<div class="col-span-1  flex items-center justify-center">
+							<svg width="32" height="32" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M21.9645 8.34613C21.8826 8.1017 21.6709 7.92362 21.4162 7.88443L14.6529 6.851L11.6226 0.395356C11.5092 0.154017 11.2665 0 11 0C10.7336 0 10.4913 0.154017 10.3775 0.395356L7.34718 6.851L0.583927 7.88477C0.329196 7.92362 0.11778 8.10204 0.0356197 8.34648C-0.0461967 8.59056 0.0153375 8.86009 0.195471 9.04471L5.10926 14.0836L3.94802 21.2014C3.90539 21.4613 4.01506 21.7229 4.2306 21.8742C4.34885 21.9577 4.48739 22 4.62627 22C4.7404 22 4.85522 21.9711 4.95904 21.9141L10.9997 18.5728L17.0404 21.9141C17.1442 21.9711 17.259 22 17.3731 22C17.512 22 17.6509 21.9577 17.7688 21.8742C17.9843 21.7229 18.094 21.4613 18.0514 21.2014L16.8901 14.0836L21.8039 9.04471C21.9844 8.85975 22.0463 8.59022 21.9645 8.34613Z"
+									fill="#ffffff" />
+							</svg>
+						</div>
+					}
+					<div class="col-span-1 flex items-center justify-center">
+						<svg fill="none" height="102" viewBox="0 0 61 52" width="91" xmlns="http://www.w3.org/2000/svg">
+							<path
+								d="M58.2204 2.19722C56.8683 0.842663 54.9822 -0.0011788 52.9159 1.23601e-06H49.488H47.7491H12.6686H10.9309H7.50183C5.43653 -0.0011788 3.54942 0.842781 2.19734 2.19722C0.842781 3.54931 -0.0011788 5.43641 1.23584e-06 7.50171V11.4309C1.23584e-06 16.2665 2.94407 20.6148 7.4335 22.4105L7.50065 22.437L15.2965 24.8254C15.6843 25.3279 16.0931 25.8198 16.5491 26.2898C19.4446 29.2674 22.2589 31.2669 24.1981 32.8899C25.1682 33.698 25.9069 34.4099 26.3399 35.0155C26.5587 35.3177 26.7033 35.5873 26.7949 35.8363C26.8853 36.0864 26.928 36.3155 26.928 36.5829C26.928 40.357 26.928 38.176 26.928 41.9501C26.928 42.7303 26.818 43.4006 26.6351 43.954C26.3562 44.7864 25.9325 45.3501 25.4114 45.7346C24.8857 46.1143 24.2306 46.3412 23.3553 46.3446C20.2343 46.3446 20.2042 46.3446 20.2018 46.3446H18.4629V51.7337H41.9548V46.3446H40.2159C40.2159 46.3446 40.1846 46.3446 37.0634 46.3446C36.4799 46.3446 35.9926 46.2393 35.5793 46.0611C34.9621 45.789 34.484 45.363 34.1078 44.7007C33.7374 44.0397 33.4897 43.1228 33.4897 41.9501C33.4897 38.176 33.4897 40.357 33.4897 36.5829C33.4908 36.3155 33.5337 36.0864 33.6228 35.8363C33.779 35.4044 34.1159 34.8904 34.6903 34.2896C35.5434 33.3866 36.891 32.3378 38.4979 31.0585C40.1046 29.7746 41.9674 28.2453 43.8683 26.29C44.3245 25.82 44.7342 25.328 45.1211 24.8255L52.918 22.4372L52.9841 22.4106C57.4748 20.6149 60.4177 16.2665 60.4177 11.4309V7.50171C60.4189 5.43641 59.576 3.54931 58.2204 2.19722ZM8.67915 19.1632C5.53483 17.8839 3.4765 14.8287 3.4765 11.4309V7.50171C3.47768 6.38563 3.92456 5.38898 4.655 4.65606C5.39016 3.92432 6.38457 3.47756 7.50183 3.47638H10.9251C10.9216 4.28565 10.9168 5.09598 10.9168 5.90182C10.9192 9.62955 11.0037 13.3064 11.7377 16.7841C12.0016 18.0297 12.3547 19.2488 12.8179 20.4307L8.67915 19.1632ZM21.4451 22.2206C21.4451 22.2206 16.4068 17.4787 16.4068 12.7368C16.4068 7.99496 16.4068 3.54931 16.4068 3.54931H21.4451V22.2206ZM56.9423 11.4309C56.9423 14.8287 54.8828 17.8839 51.7384 19.1632L47.5974 20.4307C48.3847 18.4256 48.8477 16.3105 49.1175 14.141C49.4497 11.4645 49.4994 8.69756 49.5006 5.9017C49.5006 5.09598 49.4959 4.28553 49.4925 3.47626H52.9158C54.033 3.47744 55.0285 3.9242 55.7625 4.65594C56.493 5.38874 56.9411 6.38434 56.9423 7.50159V11.4309Z"
+								fill="#f8f8f8" />
+						</svg>
+					</div>
+					@for (i of [1, 2, 3]; track i) {
+						<div class="col-span-1  flex items-center justify-center">
+							<svg width="32" height="32" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M21.9645 8.34613C21.8826 8.1017 21.6709 7.92362 21.4162 7.88443L14.6529 6.851L11.6226 0.395356C11.5092 0.154017 11.2665 0 11 0C10.7336 0 10.4913 0.154017 10.3775 0.395356L7.34718 6.851L0.583927 7.88477C0.329196 7.92362 0.11778 8.10204 0.0356197 8.34648C-0.0461967 8.59056 0.0153375 8.86009 0.195471 9.04471L5.10926 14.0836L3.94802 21.2014C3.90539 21.4613 4.01506 21.7229 4.2306 21.8742C4.34885 21.9577 4.48739 22 4.62627 22C4.7404 22 4.85522 21.9711 4.95904 21.9141L10.9997 18.5728L17.0404 21.9141C17.1442 21.9711 17.259 22 17.3731 22C17.512 22 17.6509 21.9577 17.7688 21.8742C17.9843 21.7229 18.094 21.4613 18.0514 21.2014L16.8901 14.0836L21.8039 9.04471C21.9844 8.85975 22.0463 8.59022 21.9645 8.34613Z"
+									fill="#ffffff" />
+							</svg>
+						</div>
+					}
+				</div>
+			</div>
+			<div class="liner my-10"></div>
+			<div class="flex justify-center items-center mt-4">
+				<div class="report-title flex items-center justify-center">
+					Award for # {{ selectedAward?.entityNumber }}
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div @fadeIn class="p-[26px]">
+		<div class="award-details mt-[36px] mb-10">
+			<div class="w-full">
+				<div class="transform transition cursor-pointer hover:-translate-y-2
+                           ml-6 relative flex items-center px-3 py-2 !bg-gray-100
+                           rounded mb-4 flex-col md:flex-row space-y-2 md:space-y-0">
+					<div class="w-5 h-5 bg-[#1095db] absolute -left-10
+                           transform -translate-x-2/4 rounded-full z-10 mt-1 md:mt-0">
+					</div>
+					<div class="w-10 h-1 bg-[#d7f1fa] absolute -left-10 z-0"></div>
+					<div class="flex flex-row w-full">
+						<span class="label py-3">Tender Details : </span>
+
+
+						@if(multipleSelectedAward().length > 0){
+							<div class="ml-auto" *appHasPermission="['ROLE_TNDR_AWRD_ISSUE_AWARD_CANCEL']">
+								<button [matMenuTriggerFor]="menu" aria-label="menu" [matTooltip]="'View More'" mat-icon-button>
+									<mat-icon>more_vert</mat-icon>
+								</button>
+								<mat-menu #menu="matMenu">
+									<button (click)="revertIntentionOfAward()" mat-menu-item>
+										<mat-icon>keyboard_return</mat-icon>
+										Withdraw Intention
+									</button>
+								</mat-menu>
+							</div>
+						}
+					</div>
+
+
+				</div>
+			</div>
+			<div class="ml-6">
+				<div class="mode my-3"><span class="data-label">Description :</span> &nbsp;<span
+					class="data-value">{{ selectedAward?.entityDescription }}</span></div>
+				@if (!isMultiple && selectedAward.entityType == 'TENDER') {
+					<div class="mode my-3"><span class="data-label">Contract Amount : </span>
+						<span class="data-value">{{ selectedAward?.contractAmount | number: '1.0-2' }}</span>&nbsp;
+					</div>
+				}
+				@if (!isMultiple && selectedAward.entityType == 'TENDER') {
+					<div class="mode my-3"><span class="data-label">Currency : </span>
+						<span class="data-value">{{ selectedAward?.financialCurrency }}</span>&nbsp;
+					</div>
+				}
+				<div class="mode my-3"><span class="data-label">Tender Sub Category : </span> <span
+					class="data-value">{{ selectedAward?.entitySubCategoryAcronym | removeUnderScore }}</span>&nbsp;
+				</div>
+
+				<div class="mode my-3"><span class="data-label">Cool Off End-date : </span> <span
+					class="data-value">{{ selectedAward?.coolOffPeriodEndDate | safeDate : "medium" : 'en-US': "UTC +3" }}</span>&nbsp;
+				</div>
+
+				<!--        <div *ngIf="isMultiple && selectedAward.entityType != 'TENDER'" class="mode my-3">-->
+				@if (selectedAward.entityType != 'TENDER') {
+					<div class="mode my-3">
+						<button mat-stroked-button color="primary"
+										class="mt-3 !border !border-[#1394DB]" (click)="viewCommodities()">
+							<mat-icon>add_shopping_cart</mat-icon>
+							{{ ' Scheduler of Requirement (SOR)' }}
+						</button>
+					</div>
+				}
+			</div>
+		</div>
+
+		<div class="award-details font-medium mt-[36px] mb-3">
+			<div class="w-full">
+				<div class="transform transition cursor-pointer hover:-translate-y-2
+                           ml-6 relative flex items-center px-3 py-2 !bg-gray-100
+                           rounded mb-4 flex-col md:flex-row space-y-2 md:space-y-0">
+					<div class="w-5 h-5 bg-[#1095db] absolute -left-10
+                           transform -translate-x-2/4 rounded-full z-10 mt-1 md:mt-0">
+					</div>
+					<div class="w-10 h-1 bg-[#d7f1fa] absolute -left-10 z-0"></div>
+					<div class="flex flex-row">
+						<span class="label py-3">Tenderer (s) Details : </span>
+					</div>
+				</div>
+			</div>
+
+			@if (loadingDocument) {
+				<app-loader
+					[message]="docLoadingMessage"
+				></app-loader>
+			}
+
+			@if (!isMultiple) {
+				<mat-card appearance="outlined" class="my-3 ml-6">
+					<div class="data-value flex items-center gap-2">
+						<mat-icon svgIcon="winner_badge"></mat-icon>
+						{{ selectedAward?.tendererName | uppercase }}
+					</div>
+					@if (jvcDetail?.useJvcCheck) {
+						<div class="mode my-3">
+							<span class="data-label">JVCA Name:</span><span
+							class="data-value"> {{ jvcDetail?.name }}</span>
+						</div>
+					}
+					<div class="mode my-3">
+						<span class="data-label">Tenderer Email:</span><span class="data-value">  {{ selectedAward?.email }}</span>
+					</div>
+					<div class="mode my-3">
+						<span class="data-label">Intention Reference Number:</span><span
+						class="data-value"> {{ selectedAward?.referenceNumber }}</span>
+					</div>
+					<ng-container
+						[ngTemplateOutletContext]="{
+            data: { selectedAward: selectedAward}
+            }"
+						[ngTemplateOutlet]="awardedActionButton">
+					</ng-container>
+				</mat-card>
+			} @else {
+				@for (userDetail of displayedMultipleSelectedAward; track userDetail; let i = $index) {
+					<div>
+						<ng-container
+							[ngTemplateOutletContext]="{
+            data: { userDetail: userDetail, index: i }
+            }"
+							[ngTemplateOutlet]="awardedListUserCardMultiple">
+						</ng-container>
+					</div>
+				}
+				<div class="w-full flex flex-row justify-end p-2">
+					@if (multipleSelectedAward().length > 10) {
+						<mat-paginator
+							(page)="pageEvent($event)"
+							@fadeIn
+							[length]="multipleSelectedAward().length"
+							[pageSizeOptions]="[10, 20, 50, 100]"
+							[pageSize]="pageSize"
+							aria-label="Select page"
+							class="w-[50%]">
+						</mat-paginator>
+					}
+				</div>
+			}
+
+		</div>
+	</div>
+</div>
+
+
+<ng-template #awardedListUserCardMultiple let-itemData="data">
+	<div
+		@fadeIn
+		class="border rounded p-2 bg-white
+    {{
+      activeTabIndex === itemData.userDetail.uuid
+        ? ' mt-3 mb-3 border-2 border-black'
+        : 'zoom-on-hover mb-1 '
+    }}"
+		id="{{ itemData.userDetail.uuid }}">
+		<div
+			(click)="setActiveIndex(itemData.userDetail.uuid)"
+			class="flex flex-row justify-between
+                items-center cursor-pointer {{
+        activeTabIndex === itemData.userDetail.uuid ? ' pb-2 border-b' : ''
+      }}">
+
+			<div class="flex flex-row justify-start items-center">
+				<div class="h-6 aspect-square flex justify-center">
+					<div class="rounded-full h-6 w-6 bg-[#1394db]
+             flex justify-center items-center
+              text-white text-xs font-bold">
+						<span>{{ itemData.index + 1 + (pageSize * (pageNumber - 1)) }}</span>
+					</div>
+				</div>
+				<div class="flex ml-2 justify-start items-center">{{ itemData.userDetail.tendererName }}</div>
+			</div>
+			<a class="flex items-center px-3 text-xs font-medium
+         text-center rounded-lg text-[#3a3a3a]">
+				@if (activeTabIndex === itemData.userDetail.uuid) {
+					<mat-icon @fadeIn>
+						keyboard_arrow_up
+					</mat-icon>
+				}
+				@if (activeTabIndex !== itemData.userDetail.uuid) {
+					<mat-icon @fadeIn>
+						keyboard_arrow_down
+					</mat-icon>
+				}
+			</a>
+		</div>
+
+		@if (activeTabIndex === itemData.userDetail.uuid) {
+			<div class="p-3">
+				<div class="data-value flex items-center gap-2">
+					<mat-icon svgIcon="winner_badge"></mat-icon>
+					{{ itemData.userDetail?.tendererName | uppercase }}
+				</div>
+				<div class="mode my-3">
+					<span class="data-label">Tenderer Email:</span><span
+					class="data-value">  {{ itemData.userDetail?.email }}</span>
+				</div>
+				<div class="mode my-3">
+					<span class="data-label">Intention Reference Number:</span><span
+					class="data-value"> {{ itemData.userDetail?.referenceNumber }}</span>
+				</div>
+				<!--      <div class="mode my-3">-->
+				<!--        <button mat-stroked-button color="primary"-->
+				<!--                class="mt-3 !border !border-[#1394DB]" (click)="viewSubmission(itemData.userDetail)">-->
+				<!--          <mat-icon>visibility</mat-icon>-->
+				<!--          {{ 'View Submission' }}-->
+				<!--        </button>-->
+				<!--      </div>-->
+				<ng-container
+					[ngTemplateOutletContext]="{
+            data: { selectedAward: itemData.userDetail}
+            }"
+					[ngTemplateOutlet]="awardedActionButton">
+				</ng-container>
+			</div>
+		}
+	</div>
+</ng-template>
+
+<ng-template #awardedActionButton let-data="data">
+	<div class="mode my-3 flex flex-row-reverse gap-2">
+		<div class="mt-3">
+			<button (click)="viewAwardLetter(data.selectedAward)" color="primary"
+							mat-raised-button>
+				{{ data.selectedAward?.attachmentUuid ? 'View Signed Document' : 'Preview  unsigned document' }}
+			</button>
+		</div>
+
+		<button (click)="viewSubmission(data.selectedAward)" class="mt-3 !border !border-[#1394DB]"
+						color="primary" mat-stroked-button>
+			<mat-icon>visibility</mat-icon>
+			{{ 'View Submission' }}
+		</button>
+	</div>
+</ng-template>

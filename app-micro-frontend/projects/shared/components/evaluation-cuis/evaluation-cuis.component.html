@@ -1,0 +1,151 @@
+<!-- <pre>
+submissionCriteria {{ submissionCriteria | json}}
+</pre> -->
+@if (savingData || loading) {
+  <app-loader
+    [message]=" (loading)? 'Checking evaluation status, please wait ....' : 'Saving evaluation score,please wait...'"
+  ></app-loader>
+}
+@if (!savingData && !loading) {
+  <ng-container>
+    @if (showConfirm) {
+      <div @fadeIn class="mt-4">
+        <app-confirm-area
+          [title]="'You are about to evaluate this criteria. Do you want to continue?'"
+          [emitValue]="true"
+          (confirm)="saveCriteriaMarks()"
+          >
+        </app-confirm-area>
+      </div>
+    }
+    @if ((saveDataCriteria == null || saveDataCriteria.justification == null) && selectedWinner && !submissionCriteria.hasAutomaticEvaluation && !showConfirm && scoreType == 'TRUE_FALSE') {
+      <div
+        class="flex flex-col mt-4"
+        >
+        <div class="row" @fadeIn>
+          <div class="col-md-6">
+            <mat-form-field appearance="outline">
+              <mat-label>Select evaluation status</mat-label>
+              <mat-select [(ngModel)]="selectedAction" placeholder="select options">
+                <mat-option>select options</mat-option>
+                <mat-option [value]="true">
+                  <span class="text-accent">Comply</span>
+                </mat-option>
+                <mat-option [value]="false">
+                  <span class="text-danger">Not Comply</span>
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            @if (selectedAction != null) {
+              <mat-form-field
+                appearance="outline"
+                class="material-form"
+                @fadeIn
+                >
+                <mat-label>Justification</mat-label>
+                <textarea
+                  [(ngModel)]="justification"
+                  matInput
+                  [placeholder]="'Justification'"
+                ></textarea>
+              </mat-form-field>
+            }
+          </div>
+        </div>
+        @if (selectedAction != null && justification) {
+          <div
+            class="flex flex-row items-start justify-start"
+            @fadeIn
+            >
+            @if (evaluationScore?.evaluated) {
+              <button
+                mat-stroked-button
+                class="no-button zoom-on-hover items-center comply-btn"
+                color="warn"
+                @fadeIn
+                (click)="alreadyEvaluation = true"
+                >
+                <mat-icon>clear</mat-icon>
+                Cancel
+              </button>
+            }
+            <button
+              @fadeIn
+              class="zoom-on-hover items-center comply-btn"
+              mat-flat-button
+              (click)="showConfirm = true"
+              color="primary"
+              >
+              <mat-icon>save</mat-icon>
+              Save
+            </button>
+          </div>
+        }
+      </div>
+    }
+    @if ((submissionCriteria.hasAutomaticEvaluation == false || submissionCriteria.hasAutomaticEvaluation == null) && saveDataCriteria && saveDataCriteria.justification != null) {
+      <div
+        class="flex flex-col mt-4"
+        >
+        <div
+          class="flex flex-row border-green justify-between bg-[#f4f6fa] rounded border text-black px-4 py-3 mt-3"
+          >
+          <div class="flex flex-row justify-between">
+            <div class="flex flex-col">
+              <p class="m-0 font-sem text-black pb-2">
+                You have already evaluate this criteria.
+              </p>
+              <div class="flex space-x-3 items-center pr-2">
+                <div class="pt-1 text-center h-8 w-8 rounded-full !bg-accent text-white">
+                  <mat-icon>check_outline</mat-icon>
+                </div>
+                <div class="hidden md:block">
+                  <span class="font-bold">{{ saveDataCriteria.justification }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-col justify-end">
+            <button
+              mat-stroked-button
+              mat-button
+              class="m-2 !text-[#1394db] !border-[#1394db]"
+              (click)="updateCriteria()"
+              >
+              <mat-icon inline>edit</mat-icon>
+              Update
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+    @if (getResult) {
+      <app-loader
+        [message]="'Please wait,while updating result of this criteria'"
+      ></app-loader>
+    }
+    @if (saveDataCriteria && submissionCriteria.hasAutomaticEvaluation) {
+      <div
+        class="flex flex-col mt-4"
+        >
+        <div
+          class="flex flex-row border-green justify-start bg-[#f4f6fa] rounded border text-black px-4 py-3 mt-3"
+          >
+          <div class="flex flex-col">
+            <p class="m-0 font-sem text-black pb-2">
+              Auto Evaluated.
+            </p>
+            <div class="flex space-x-3 items-center pr-2">
+              <div class="pt-1 text-center h-8 w-8 rounded-full !bg-accent text-white">
+                <mat-icon>check_outline</mat-icon>
+              </div>
+              <div class="hidden md:block">
+                <span class="font-bold">Criteria automatically evaluated</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  </ng-container>
+}

@@ -1,0 +1,50 @@
+<div
+  class="p-3 w-full rounded-sm position-absolute bg-white"
+  (click)="$event.stopPropagation()"
+  >
+  <div class="font-bold mb-2">Table</div>
+  <div class="flex items-end space-x-2">
+    <div class="flex-1">
+      <label>Rows</label>
+      <input
+        type="number"
+        class="p-2 border w-full"
+        placeholder="Rows"
+        [(ngModel)]="rows"
+        min="1"
+        max="100"
+        />
+    </div>
+    <div class="flex-1">
+      <label>Columns</label>
+      <input
+        min="1"
+        max="100"
+        type="number"
+        class="p-2 border w-full"
+        placeholder="Columns"
+        [(ngModel)]="columns"
+        />
+    </div>
+    <button mat-flat-button color="primary" (click)="insertTable()">
+      Insert
+    </button>
+  </div>
+
+  <div class="!mt-5 border-top border-t-gray-400">
+    <div class="!mt-5 font-bold">Predefined Table</div>
+    <div class="!mt-3">
+      @for (prededefinedTable of prededefinedTables; track prededefinedTable) {
+        <button
+          (click)="insertPredefinedTable(prededefinedTable)"
+          matRipple
+          class="p-2 mb-1 w-full !text-left rounded-md border border-gray-400 hover:bg-gray-200 bg-gray-100 cursor-pointer"
+          >
+          <span class="font-bold">{{ prededefinedTable.name }}</span
+            ><br />
+            {{ prededefinedTable.description }}
+          </button>
+        }
+      </div>
+    </div>
+  </div>

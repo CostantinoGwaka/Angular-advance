@@ -1,0 +1,23 @@
+<!-- @if(loadingDocument){
+<app-loader [message]="'Loading document please wait...'"></app-loader>
+} -->
+
+<div [ngStyle]="{'display:none':loadingDocument}">
+  @if (!isBlob) {
+    <div [style.height]="'85vh'">
+      <div #iframeContainer style="height: 100%;"></div>
+    </div>
+  }
+  @if (isBlob) {
+    <div [style.height]="'85vh'">
+      <!-- <div id="pdf-container" style="height: 100%;"></div> -->
+      <object
+        [data]="url | safeUrl"
+        onplay="onLoading()"
+        height="{{ height }}"
+        title="{{ title }}"
+        width="{{ width }}"
+      ></object>
+    </div>
+  }
+</div>

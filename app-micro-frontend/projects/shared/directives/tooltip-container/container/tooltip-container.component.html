@@ -1,0 +1,16 @@
+<!--@let data = tooltipData;-->
+
+<!--@if (isString(data)) {-->
+<!--	{{ data }}-->
+<!--} @else {-->
+<!--	<ng-template [ngTemplateOutlet]="data"/>-->
+<!--}-->
+
+@if(isString(tooltipData.appTooltip)){
+<ng-container>{{ tooltipData.appTooltip }}</ng-container>
+} @else {
+	<ng-container
+		[ngTemplateOutlet]="tooltipData.appTooltip"
+		[ngTemplateOutletContext]="tooltipData.appTooltipContext">
+	</ng-container>
+}

@@ -1,0 +1,13 @@
+.public-style{
+@apply p-2 bg-slate-100
+}
+
+.search-area-wrapper{
+  ::ng-deep{
+    .mat-mdc-form-field-wrapper {
+      padding-bottom: 0 !important
+    }
+  }
+}
+
+

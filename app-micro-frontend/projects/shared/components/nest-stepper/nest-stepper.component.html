@@ -1,0 +1,104 @@
+<div class="bg-slate-50 p-2 rounded-md overflow-y-auto 100% -z-50 ">
+  <div class="flex items-center gap-0 justify-between relative">
+    @for (step of steps; track step; let i = $index) {
+      <div class="w-1/{{ steps.length }} flex items-center "
+           [ngClass]="{'justify-start':i==0,'justify-center':i>=1 && i<steps.length-1 && steps.length-1>=2, 'justify-end':i==steps.length-1}">
+        <button [ngClass]="{'px-2':showStepLabel,'px-4':!showStepLabel}"
+                class=" py-2 rounded-full z-30 text-gray-600 stepper-button flex items-center justify-between gap-1"
+                [class.active]="step.index === currentStepIndex"
+                (click)="goToStep(step.index)">
+          @if (showStepLabel) {
+            <div
+              class="flex items-center justify-center w-6 h-6 rounded-full bg-slate-50 text-blue-700 stroke-white p-1 text-xs">{{ i + 1 }}
+            </div>
+          }
+          <div class="inline-block text-xs">
+            {{ step.stepTitle }}
+          </div>
+          <!--          @fadeIn @fadeOut-->
+          @if (!useAsRadio && step.stepDone || (useAsRadio && step.stepTitle == selectedRadioValue)) {
+            <div class="inline-block rounded-full bg-green-700 text-white stroke-white p-1">
+              <svg width="12px" height="12px" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="none">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M17 5L8 15l-5-4"/>
+              </svg>
+            </div>
+          }
+          @if (step.hasErrors == true && step.stepDone == false) {
+            <div @fadeIn @fadeOut
+                 [ngClass]="{'bg-red-700':step.index === currentStepIndex,'bg-red-400':step.index !== currentStepIndex}"
+                 class="w-6 h-6 rounded-full  flex items-center justify-center text-white text-xs text-[8px]">
+              {{ step.errorsCount }}
+            </div>
+          }
+          <!--          @if (step.hasErrors == false && step.stepDone == false && i<steps.length-1) {-->
+          <!--            <div @fadeIn @fadeOut   class="w-6 h-6 rounded-full  flex items-center justify-center text-white text-xs text-[8px]">&nbsp;-->
+          <!--            </div>-->
+          <!--          }-->
+        </button>
+        <div class="border-b-2 border-slate-500 absolute w-1/{{ steps.length }}"></div>
+      </div>
+    }
+  </div>
+  <div class="mt-2 stepper-content py-2">
+    <div class="overflow-auto">
+      <ng-content></ng-content>
+    </div>
+    @if (!saveAttempted) {
+      <div class="stepper-actions flex justify-end mt-4">
+        <ng-container *appHasPermission="currentStep?.permissions">
+          @if (useSaveAndContinue && !currentStep?.hideButton) {
+            <button class="px-4 py-2 flex items-center justify-between rounded-full "
+                    [ngClass]="{'active':!!currentStep?.stepDone,'inactive':!currentStep?.stepDone}"
+                    (click)="currentStep?.hasErrors == true || currentStep?.stepDone == false ?null: attemptSave()">
+              @if (currentStepIndex < steps.length) {
+                <svg @fadeIn width="20px" height="20px" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
+                     fill="none">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l6-6-6-6"/>
+                </svg>
+              }
+              @if (currentStepIndex == steps.length) {
+                <svg width="20px" height="20px" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+                  <g fill-rule="evenodd">
+                    <path
+                      d="M65.456 48.385c10.02 0 96.169-.355 96.169-.355 2.209-.009 5.593.749 7.563 1.693 0 0-1.283-1.379.517.485 1.613 1.67 35.572 36.71 36.236 37.416.665.707.241.332.241.332.924 2.007 1.539 5.48 1.539 7.691v95.612c0 7.083-8.478 16.618-16.575 16.618-8.098 0-118.535-.331-126.622-.331-8.087 0-16-6.27-16.356-16.1-.356-9.832.356-118.263.356-126.8 0-8.536 6.912-16.261 16.932-16.261zm-1.838 17.853l.15 121c.003 2.198 1.8 4.003 4.012 4.015l120.562.638a3.971 3.971 0 0 0 4-3.981l-.143-90.364c-.001-1.098-.649-2.616-1.445-3.388L161.52 65.841c-.801-.776-1.443-.503-1.443.601v35.142c0 3.339-4.635 9.14-8.833 9.14H90.846c-4.6 0-9.56-4.714-9.56-9.14s-.014-35.14-.014-35.14c0-1.104-.892-2.01-1.992-2.023l-13.674-.155a1.968 1.968 0 0 0-1.988 1.972zm32.542.44v27.805c0 1.1.896 2.001 2 2.001h44.701c1.113 0 2-.896 2-2.001V66.679a2.004 2.004 0 0 0-2-2.002h-44.7c-1.114 0-2 .896-2 2.002z"/>
+                    <path
+                      d="M127.802 119.893c16.176.255 31.833 14.428 31.833 31.728s-14.615 31.782-31.016 31.524c-16.401-.259-32.728-14.764-32.728-31.544s15.735-31.963 31.91-31.708zm-16.158 31.31c0 9.676 7.685 16.882 16.218 16.843 8.534-.039 15.769-7.128 15.812-16.69.043-9.563-7.708-16.351-15.985-16.351-8.276 0-16.045 6.52-16.045 16.197z"/>
+                  </g>
+                </svg>
+              }
+              {{ currentStep?.buttonLabel ? currentStep?.buttonLabel : 'Save and Continue' }}
+            </button>
+          }
+        </ng-container>
+      </div>
+    }
+
+    @if (saveAttempted) {
+      <div style="text-align: center" @fadeIn>
+        <div class="">
+          <p class="lead">You are about to save and continue</p>
+          <p class="confirm-div">
+            <button
+              [type]="'submit'"
+              mat-raised-button
+              class="yes-button zoom-on-hover"
+              @fadeIn
+              (click)="saveAndContinue()">
+              <mat-icon>done</mat-icon>
+              {{ "SYSTEM_YES" | translate }}
+            </button>
+            <button
+              mat-raised-button
+              class="no-button zoom-on-hover"
+              @fadeIn
+              (click)="saveAttempted = false"
+            >
+              <mat-icon>clear</mat-icon>
+              {{ "SYSTEM_NO" | translate }}
+            </button>
+          </p>
+        </div>
+      </div>
+    }
+  </div>
+</div>

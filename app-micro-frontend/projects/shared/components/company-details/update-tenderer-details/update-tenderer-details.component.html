@@ -1,0 +1,462 @@
+<div class="container-fluid p-3">
+  <div class="flex flex-wrap justify-content-between items-center mb-4">
+    <h2>Update Company {{ tenderer.name }}</h2>
+    <button
+      mat-flat-button
+      color="primary text-white"
+      (click)="close(true)"
+      class="!m-0 py-1 pb-1 pl-3 pr-3 cursor-pointer items-center flex flex-wrap"
+    >
+      <mat-icon>close</mat-icon> Close
+    </button>
+  </div>
+
+  <div class="row">
+    @if(tenderer){
+    <div>
+      <app-info-wrapper
+        [title]="'Company Informations'"
+        [subTitle]="'Click to view company informations'"
+      >
+        <table class="table sample-table">
+          <tbody>
+            <tr>
+              <td>Company Name</td>
+              <th>{{ tenderer?.name }}</th>
+            </tr>
+            <tr>
+              <td>Brela Number</td>
+              <th>{{ tenderer?.brelaNumber }}</th>
+            </tr>
+            @if (tenderer?.tendererType) {
+            <tr>
+              <td>Company Type</td>
+              <th>{{ tenderer?.tendererType | replace: "_":" " }}</th>
+            </tr>
+            } @if (tenderer?.tendererZone) {
+            <tr>
+              <td>Tenderer Zone</td>
+              <th>{{ tenderer?.tendererZone | replace: "_":" " }}</th>
+            </tr>
+            } @if (tenderer?.physicalAddress) {
+            <tr>
+              <td>
+                <span>Physical Address</span>
+              </td>
+              <th>{{ tenderer?.physicalAddress }}</th>
+            </tr>
+            } @if (tenderer?.businessType) {
+            <tr>
+              <td>
+                <span>Business Type</span>
+              </td>
+              <th>{{ tenderer?.businessType | replace: "_":" " }}</th>
+            </tr>
+            } @if (tenderer?.businessType) {
+            <tr>
+              <td>
+                <span>Operating Country</span>
+              </td>
+              <th>{{ tenderer?.operatingCountry?.name }}</th>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </app-info-wrapper>
+    </div>
+
+    @if (businessOwnersList.length > 0) {
+    <div class="mt-2">
+      <app-info-wrapper
+        [title]="'Company ShareHolders'"
+        [subTitle]="'Click to view company shareholders'"
+      >
+        <div class="col-sm-12" id="sectionToPrint">
+          <div class="mt-2 mb-2 border rounded overflow-hidden text-gray-800">
+            <div class="p-2 text-xl">Company Share Details</div>
+
+            <div class="bg-gray-100 flex justify-between border-top p-2">
+              <div class="flex">
+                <div>Capital Type&nbsp;</div>
+              </div>
+              <div>{{ firstbrelaData?.issuedShareCapital?.ordinary }}</div>
+            </div>
+
+            <div class="bg-gray-100 flex justify-between border-top p-2">
+              <div class="flex">
+                <div>No of shares issued&nbsp;</div>
+              </div>
+              <div>{{ firstbrelaData?.issuedShareCapital?.no_of_shares_issued | number }}</div>
+            </div>
+
+            <div class="bg-gray-100">
+              <div class="flex justify-between border-top p-2 items-center">
+                <div class="flex items-center">
+                  <div>
+                    Value
+                  </div>
+                </div>
+                <div class="">
+                  {{ firstbrelaData?.issuedShareCapital?.value | number}}
+                </div>
+              </div>
+              <div class="flex justify-between border-top p-2 items-center">
+                <div class="flex items-center">
+                  <div>
+                    Aggregate Nominal Value
+                  </div>
+                </div>
+                <div class="">
+                  {{ firstbrelaData?.issuedShareCapital?.aggregate_nominal_value | number}}
+                </div>
+              </div>
+              <div class="flex justify-between border-top p-2 items-center">
+                <div class="flex items-center">
+                  <div>
+                    Currency
+                  </div>
+                </div>
+                <div class="">
+                  {{ firstbrelaData?.issuedShareCapital?.currency }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <p>List of shareholders</p>
+          <hr class="h-px bg-black border-0 dark:bg-gray-700" />
+          @if (businessOwnersList.length > 0) {
+          <table class="table sample-table">
+            <thead>
+              <tr class="p-2">
+                <th class="border p-2">S/N</th>
+                <th class="border p-2">Company Number</th>
+                <th class="border p-2">Full Name</th>
+                <th class="border p-2">Email</th>
+                <th class="border p-2">National ID</th>
+                <th class="border p-2">Ownership Value</th>
+                <th class="border p-2">Percentage (%)</th>
+                <th class="border p-2">Country</th>
+                <th class="border p-2">Phone</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for(value of businessOwnersList;track value; let i = $index){
+              <tr class="p-2">
+                <td>{{ i + 1 }}</td>
+                <td class="border p-2">
+                  {{ value?.company_number || value?.incorporation_number || "Not Company" }}
+                </td>
+                <td class="border p-2">{{ value?.name}}</td>
+                <td class="border p-2">{{ value?.email}}</td>
+                <td class="border p-2">{{ value?.identificationNumber ?? "Not Found"}}</td>
+                <td class="border p-2">{{ value?.ownershipValue | number}}</td>
+                <td class="border p-2">
+                  {{ value?.percentage }}%
+                </td>
+                <td class="border p-2">{{ value?.countryCode}}</td>
+                <td class="border p-2">+{{ value?.phoneNumber}}</td>
+              </tr>
+              }
+            </tbody>
+          </table>
+          <div class="mt-2 mb-2 border rounded overflow-hidden text-gray-800">
+            <div class="p-2">Summary</div>
+
+            <div class="bg-gray-100 flex justify-between border-top p-2">
+              <div class="flex">
+                <div>📌 Local Ownership Number&nbsp;</div>
+                <div></div>
+              </div>
+              <div>{{ calculateOwnershipStats(businessOwnersList).localCount }}</div>
+            </div>
+
+            <div class="bg-gray-100 flex justify-between border-top p-2">
+              <div class="flex">
+                <div>🌍 Foregin Ownership Number&nbsp;</div>
+                <div></div>
+              </div>
+              <div>{{ calculateOwnershipStats(businessOwnersList).foreignCount }}</div>
+            </div>
+
+            <div class="bg-gray-100">
+              <div class="flex justify-between border-top p-2 items-center">
+                <div class="flex items-center">
+                  <div>
+                    📊 Local Ownership Percentage
+                  </div>
+                </div>
+                <div class="">
+                  {{ calculateOwnershipStats(businessOwnersList).localPercentage }}%
+                </div>
+              </div>
+              <div class="flex justify-between border-top p-2 items-center">
+                <div class="flex items-center">
+                  <div>
+                    🌎 Foregin Ownership Percentage
+                  </div>
+                </div>
+                <div class="">
+                  {{ calculateOwnershipStats(businessOwnersList).foreignPercentage }}%
+                </div>
+              </div>
+            </div>
+          </div>
+          } @if (publicnotRemovedbusinessOwnersListaLLocal.length > 0) {
+          <p>List of shareholders from company</p>
+          <hr class="h-px bg-black border-0 dark:bg-gray-700" />
+          @for(singleCompany of publicnotRemovedbusinessOwnersListaLLocal;track singleCompany; let i
+          = $index){
+          <div class="py-2 px-2 rounded-[10px] mb-2 shadow-sm">
+            <div class="grid grid-cols-12 gap-4 font-bold text-lg">
+              <div class="col-span-12">
+                <strong class="text-black">{{ singleCompany.companyName }}</strong>
+              </div>
+            </div>
+          </div>
+          <table class="table sample-table">
+            <thead>
+              <tr class="p-2">
+                <th>S/N</th>
+                <th class="border p-2">Share ID</th>
+                <th class="border p-2">Share Company</th>
+                <th class="border p-2">Company Number</th>
+                <th class="border p-2">Full Name</th>
+                <th class="border p-2">Email</th>
+                <th class="border p-2">National ID</th>
+                <th class="border p-2">Shares</th>
+                <th class="border p-2">Percentage (%)</th>
+                <th class="border p-2">Level</th>
+                <th class="border p-2">Country</th>
+                <th class="border p-2">Phone</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for(value of singleCompany.values;track value; let i = $index){
+              <tr class="p-2">
+                <td>{{ i + 1}}</td>
+                <td class="border p-2">{{ value?.shareId }}</td>
+                <td class="border p-2">{{ value?.companyName }}</td>
+                <td class="border p-2">
+                  {{ value?.company_number || value?.incorporation_number || "Not Company" }}
+                </td>
+                <td class="border p-2">{{ value?.name ?? value?.other_name}}</td>
+                <td class="border p-2">{{ value?.email}}</td>
+                <td class="border p-2">{{ value?.identificationNumber ?? value?.national_id}}</td>
+                <td class="border p-2">{{ value?.ownershipValue | number}}</td>
+                <td class="border p-2">
+                  {{ value?.percentage }}%
+                </td>
+                <td class="border p-2">
+                  {{ value?.level }}
+                </td>
+                <td class="border p-2">{{ value?.countryCode ?? value?.country }}</td>
+                <td class="border p-2">+{{ value?.phoneNumber ?? value?.mob_phone }}</td>
+              </tr>
+              }
+            </tbody>
+          </table>
+          <div class="mt-2 mb-2 border rounded overflow-hidden text-gray-800">
+            <div class="p-2">Summary</div>
+
+            <div class="bg-gray-100 flex justify-between border-top p-2">
+              <div class="flex">
+                <div>📌 Local Ownership Number&nbsp;</div>
+                <div></div>
+              </div>
+              <div>{{ calculateOwnershipStats(singleCompany.values).localCount }}</div>
+            </div>
+
+            <div class="bg-gray-100 flex justify-between border-top p-2">
+              <div class="flex">
+                <div>🌍 Foregin Ownership Number&nbsp;</div>
+                <div></div>
+              </div>
+              <div>{{ calculateOwnershipStats(singleCompany.values).foreignCount }}</div>
+            </div>
+
+            <div class="bg-gray-100">
+              <div class="flex justify-between border-top p-2 items-center">
+                <div class="flex items-center">
+                  <div>
+                    📊 Local Ownership Percentage
+                  </div>
+                </div>
+                <div class="">
+                  {{ calculateOwnershipStats(singleCompany.values).localPercentage }}%
+                </div>
+              </div>
+              <div class="flex justify-between border-top p-2 items-center">
+                <div class="flex items-center">
+                  <div>
+                    🌎 Foregin Ownership Percentage
+                  </div>
+                </div>
+                <div class="">
+                  {{ calculateOwnershipStats(singleCompany.values).foreignPercentage }}%
+                </div>
+              </div>
+            </div>
+          </div>
+          } }
+        </div>
+        <!-- <svg id="ownershipTree" width="500" height="400"></svg> -->
+        <!-- <svg width="500" height="400">
+          <line x1="100" y1="200" x2="200" y2="150" stroke="black" stroke-width="3" />
+          <line x1="100" y1="200" x2="200" y2="250" stroke="black" stroke-width="3" />
+          <line x1="200" y1="150" x2="300" y2="100" stroke="black" stroke-width="3" />
+          <line x1="200" y1="150" x2="300" y2="200" stroke="black" stroke-width="3" />
+          <line x1="300" y1="100" x2="400" y2="50" stroke="black" stroke-width="3" />
+          <line x1="300" y1="100" x2="400" y2="150" stroke="black" stroke-width="3" />
+
+          <circle cx="100" cy="200" r="30" class="node" />
+          <circle cx="200" cy="150" r="30" class="node" />
+          <circle cx="200" cy="250" r="30" class="node" />
+          <circle cx="300" cy="100" r="30" class="node" />
+          <circle cx="300" cy="200" r="30" class="node" />
+          <circle cx="400" cy="50" r="30" class="node" />
+          <circle cx="400" cy="150" r="30" class="node" />
+
+          <text x="100" y="205" class="text">L</text>
+          <text x="200" y="155" class="text">L 51%</text>
+          <text x="200" y="255" class="text">F 49%</text>
+          <text x="300" y="105" class="text">L 51%</text>
+          <text x="300" y="205" class="text">F 49%</text>
+          <text x="400" y="55" class="text">L 10%</text>
+          <text x="400" y="155" class="text">F 90%</text>
+        </svg> -->
+        <hr class="h-px bg-black border-2 dark:bg-gray-700" />
+        @if(summaryAfterValidate && !fetching){
+        <div class="mt-2 mb-2 border rounded overflow-hidden text-gray-800">
+          <div class="p-2 text-xl">Final Summary</div>
+
+          <div class="bg-gray-100 flex justify-between border-top p-2">
+            <div class="flex">
+              <div>Local Ownership&nbsp;</div>
+            </div>
+            <div>{{ summaryAfterValidate?.localOwnership }}%</div>
+          </div>
+
+          <div class="bg-gray-100 flex justify-between border-top p-2">
+            <div class="flex">
+              <div>Status&nbsp;</div>
+            </div>
+            <div>{{ summaryAfterValidate?.status }}</div>
+          </div>
+
+          <div class="bg-gray-100">
+            <div class="flex justify-between border-top p-2 items-center">
+              <div class="flex items-center">
+                <div class="">
+                  <h3>Reason</h3>
+                  <p>
+                    @for(reasonSingle of summaryAfterValidate?.reason; track reasonSingle; let i =
+                    $index) { {{ reasonSingle }} @if(i < summaryAfterValidate?.reason.length - 1){
+                    <ng-container>, </ng-container>
+                    }@else{
+                    <ng-container>.</ng-container>
+                    } }
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          @if(allReasonCaluation){
+          <div class="bg-gray-100">
+            <div class="flex justify-between border-top p-2 items-center">
+              <div class="flex items-center">
+                <div class="">
+                  <h3>Detailed Calculations</h3>
+                  <ul class="list-disc text-gray-700 space-y-1">
+                    @for(calculation of allReasonCaluation; track calculation) {
+                    <li class="">
+                      {{ calculation }}
+                    </li>
+                    }
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          }
+
+          <div class="bg-gray-100">
+            <div class="flex justify-between border-top p-2 items-center">
+              <div class="flex items-center">
+                <div class="">
+                  <h3>Formulas Used:</h3>
+                  <ul class="list-disc text-gray-700 space-y-1">
+                    <li>
+                      Total Local Ownership: <code>totalLocalOwnership = Σ(ownerContribution)</code>
+                    </li>
+                    <li>
+                      Owner Contribution:
+                      <code>Owner Contribution = (localOwnership * owner.percentage) / 100</code>
+                    </li>
+                    <li>
+                      Overall Contribution:
+                      <code>Contribution = (localOwnership * company.percentage) / 100</code>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        }
+        <div class="w-full col-sm-12 tender-container">
+          @if(!isDownloding && !fetching){
+          <button mat-flat-button color="primary" (click)="print()">
+            <mat-icon>file_download</mat-icon> Download PDF
+          </button>
+          } @if(isDownloding){
+          <div class="m-3 p-3">
+            <app-loader [message]="'Loading report, please wait...'"></app-loader>
+          </div>
+          }
+        </div>
+      </app-info-wrapper>
+    </div>
+    } }
+    <!-- <div class="col-sm-9"></div> -->
+
+    @if (!fetching && brelaData == null && businessOwnersList.length == 0) {
+
+    <div class="flex flex-wrap justify-content-between items-center mb-4">
+      <h2></h2>
+      <button
+        mat-flat-button
+        color="primary text-white"
+        style="height: 50px; margin-top: 5px; width: 20%; border-radius: 10px;"
+        (click)="checkMethod()"
+      >
+        <mat-icon>
+          check_circle_outline
+        </mat-icon>
+        Verify
+      </button>
+    </div>
+
+    <!-- <div class="col-sm-3">
+      <button
+        (click)="checkMethod()"
+        style="height: 50px; margin-top: 5px; width: 80%; border-radius: 10px;"
+        mat-raised-button
+        color="primary"
+      >
+        <mat-icon>
+          check_circle_outline
+        </mat-icon>
+        Update
+      </button>
+    </div> -->
+    }
+    <div>
+      @if (fetching) {
+      <div class="col-sm-12 mt-3">
+        <app-loader [message]="loaderMessage"></app-loader>
+      </div>
+      }
+    </div>
+  </div>
+</div>

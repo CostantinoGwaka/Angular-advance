@@ -1,0 +1,268 @@
+@if (fetchingItem || fetchingExp || fetchingAcademic) {
+  <app-loader
+    [message]="'Fetching information, kindly be patient...'">
+  </app-loader>
+}
+
+@if (!fetchingItem && !fetchingExp && !fetchingAcademic) {
+  <div class="h-full">
+    <div class="container mx-auto">
+      <div class="block bg-white p-3 mb-2 md:rounded-md">
+        <div class="flex">
+          <h2>Basic Details</h2>
+        </div>
+        <div class="grid md:grid-cols-3 gap-4">
+          <app-item-detail-with-icon [icon]="'account_circle'" [label]="'Full Name'"
+         [title]="personnelInformation?.firstName + ' ' +
+         personnelInformation?.middleName + ' ' +
+          personnelInformation?.lastName">
+          </app-item-detail-with-icon>
+          @if (personnelInformation?.jobTitle) {
+            <app-item-detail-with-icon [icon]="'work'" [label]="'Job Title'" [title]="personnelInformation?.jobTitle"></app-item-detail-with-icon>
+          }
+          @if (personnelInformation?.email) {
+            <app-item-detail-with-icon [icon]="'mail'" [label]="'Email'" [title]="personnelInformation?.email"></app-item-detail-with-icon>
+          }
+          @if (personnelInformation?.dateOfBirth) {
+            <app-item-detail-with-icon [icon]="'cake'" [label]="'Date of Birth'" [title]="personnelInformation?.dateOfBirth | date"></app-item-detail-with-icon>
+          }
+          @if (personnelInformation?.address) {
+            <app-item-detail-with-icon [icon]="'home_pin'" [label]="'Address'" [title]="personnelInformation?.address?.toString()"></app-item-detail-with-icon>
+          }
+          @if (personnelInformation?.gender) {
+            <app-item-detail-with-icon [icon]="'wc'" [label]="'Gender'" [title]="personnelInformation?.gender.toString()"></app-item-detail-with-icon>
+          }
+          @if (personnelInformation?.dateOfEmployment) {
+            <app-item-detail-with-icon [icon]="'date_range'" [label]="'Date of Employment'" [title]="personnelInformation?.dateOfEmployment | date"></app-item-detail-with-icon>
+          }
+          @if (personnelInformation?.phone) {
+            <app-item-detail-with-icon [icon]="'phone'" [label]="'Phone number'" [title]="personnelInformation?.phone"></app-item-detail-with-icon>
+          }
+          @if (personnelInformation?.languageProficiency) {
+            <app-item-detail-with-icon [icon]="'language'" [label]="'Language Proficiency'" [title]="personnelInformation?.languageProficiency"></app-item-detail-with-icon>
+          }
+        </div>
+      </div>
+      <div class="block bg-white p-3 mb-2 md:rounded-md">
+        <div class="flex flex-wrap items-center justify-content-between">
+          <div class="flex  flex-wrap items-center">
+            <h2>Academic Qualification <span class="text-black font-bold">(*{{"TENDERER_CV_DETAILS_REQUIRED"|translate}})</span></h2>
+          </div>
+          @if (enableActions) {
+            <div class="place-items-end">
+              <button
+                mat-flat-button
+                color="primary"
+                (click)="openEdFormSheetSheet()"
+                style="padding-right: 25px; padding-bottom: 5px; padding-top: 5px"
+                class="!m-0 py-1 items-center flex flex-wrap gen__button btn__primary">
+                <mat-icon>add</mat-icon> Add
+              </button>
+            </div>
+          }
+        </div>
+        <div>
+          <app-full-data-table
+            [tableList]="userAcademicQualifications"
+            [tableConfigurations]="aQTableConfigurations"
+            [loading]="fetchingAcademic"
+            (rowDelete)="deleteAcademicQualification($event)"
+            (rowUpdate)="openEdFormSheetSheet($event)"
+            [mapFunction]="UserAcademicQualificationMapFunction"
+            [title]="'Academic Qualification'">
+          </app-full-data-table>
+        </div>
+      </div>
+      <div class="block bg-white p-3 mb-2 md:rounded-md">
+        <div class="flex flex-wrap items-center justify-content-between">
+          <div class="flex  flex-wrap items-center">
+            <h2>Work Experience <span class="text-black font-bold">(*{{"TENDERER_CV_DETAILS_REQUIRED"|translate}})</span></h2>
+          </div>
+          @if (enableActions) {
+            <div class="place-items-end">
+              <button
+                mat-flat-button
+                color="primary"
+                (click)="openXpFormSheetSheet()"
+                style="padding-right: 25px; padding-bottom: 5px; padding-top: 5px"
+                class="!m-0 py-1 items-center flex flex-wrap gen__button btn__primary">
+                <mat-icon>add</mat-icon> Add
+              </button>
+            </div>
+          }
+        </div>
+        <div>
+          <app-full-data-table
+            [tableList]="personnelWorkExperiences"
+            [tableConfigurations]="workExperienceTableConfigurations"
+            [loading]="fetchingExp"
+            (rowDelete)="deleteWorkExperience($event)"
+            (rowUpdate)="openXpFormSheetSheet($event)"
+            [mapFunction]="WorkExperienceMapFunction"
+            [title]="'Work Experience'">
+          </app-full-data-table>
+        </div>
+      </div>
+      <div class="block bg-white p-3 mb-2 md:rounded-md">
+        <div class="flex flex-wrap items-center justify-content-between">
+          <div class="flex  flex-wrap items-center">
+            <h2>Competency <span class="text-black font-bold">({{"TENDERER_CV_DETAILS_OPTIONAL" | translate}})</span></h2>
+          </div>
+          @if (enableActions) {
+            <div class="place-items-end">
+              <button
+                mat-flat-button
+                color="primary"
+                (click)="openCompFormSheetSheet()"
+                style="padding-right: 25px; padding-bottom: 5px; padding-top: 5px"
+                class="!m-0 py-1 items-center flex flex-wrap gen__button btn__primary">
+                <mat-icon>add</mat-icon> Add
+              </button>
+            </div>
+          }
+        </div>
+        <div>
+          <app-paginated-data-table
+            [query]="queryCompetency"
+            [apolloNamespace]="uaaApolloNamespace"
+            [resetTable]="refreshCompetency"
+            [additionalVariables]="{personnelInformationUuid: selectedUuid}"
+            [tableConfigurations]="competencyQTableConfigurations"
+            [loading]="fetchingCompetency"
+            (rowUpdate)="openCompFormSheetSheet($event)"
+            [mapFunction]="UserCompetencyMapFunction"
+            [title]="'Other Competency'">
+          </app-paginated-data-table>
+        </div>
+      </div>
+      <div class="block bg-white p-3 mb-2 md:rounded-md">
+        <div class="flex flex-wrap items-center justify-content-between">
+          <div class="flex  flex-wrap items-center">
+            <h2>Language Proficiency <span class="text-black font-bold">(*{{"TENDERER_CV_DETAILS_REQUIRED"|translate}})</span></h2>
+          </div>
+          @if (enableActions) {
+            <div class="place-items-end">
+              <button
+                mat-flat-button
+                color="primary"
+                (click)="openLangFormSheetSheet()"
+                style="padding-right: 25px; padding-bottom: 5px; padding-top: 5px"
+                class="!m-0 py-1 items-center flex flex-wrap gen__button btn__primary">
+                <mat-icon>add</mat-icon> Add
+              </button>
+            </div>
+          }
+        </div>
+        <div>
+          <app-paginated-data-table
+            [query]="queryLanguage"
+            [apolloNamespace]="uaaApolloNamespace"
+            [resetTable]="refreshLanguage"
+            [tableConfigurations]="languageConfigurations"
+            [additionalVariables]="{personnelInformationUuid: selectedUuid}"
+            [loading]="fetchingLanguage"
+            (rowUpdate)="openLangFormSheetSheet($event)"
+            [mapFunction]="UserLanguageMapFunction"
+            [title]="'Language Proficiency'">
+          </app-paginated-data-table>
+        </div>
+      </div>
+      <div class="block bg-white p-3 mb-2 md:rounded-md">
+        <div class="flex flex-wrap items-center justify-content-between">
+          <div class="flex  flex-wrap items-center">
+            <h2>Professional Qualification <span class="text-black font-bold">({{"TENDERER_CV_DETAILS_OPTIONAL" | translate}})</span></h2>
+          </div>
+          @if (enableActions) {
+            <div class="place-items-end">
+              <button
+                mat-flat-button
+                color="primary"
+                (click)="openProfessionalFormSheetSheet()"
+                style="padding-right: 25px; padding-bottom: 5px; padding-top: 5px"
+                class="!m-0 py-1 items-center flex flex-wrap gen__button btn__primary">
+                <mat-icon>add</mat-icon> Add
+              </button>
+            </div>
+          }
+        </div>
+        <div>
+          <app-paginated-data-table
+            [query]="queryProfessional"
+            [apolloNamespace]="uaaApolloNamespace"
+            [resetTable]="refreshProfessional"
+            [additionalVariables]="{personnelInformationUuid: selectedUuid}"
+            [tableConfigurations]="profesionalQTableConfigurations"
+            [loading]="fetchingProfessional"
+            (rowUpdate)="openProfessionalFormSheetSheet($event)"
+            [mapFunction]="UserProfessionMapFunction"
+            [title]="'Professional Qualification'">
+          </app-paginated-data-table>
+        </div>
+      </div>
+      <div class="block bg-white p-3 mb-2 md:rounded-md">
+        <div class="flex flex-wrap items-center justify-content-between">
+          <div class="flex  flex-wrap items-center">
+            <h2>Training and Workshop <span class="text-black font-bold">({{"TENDERER_CV_DETAILS_OPTIONAL" | translate}})</span></h2>
+          </div>
+          @if (enableActions) {
+            <div class="place-items-end">
+              <button
+                mat-flat-button
+                color="primary"
+                (click)="openTrainingFormSheetSheet()"
+                style="padding-right: 25px; padding-bottom: 5px; padding-top: 5px"
+                class="!m-0 py-1 items-center flex flex-wrap gen__button btn__primary">
+                <mat-icon>add</mat-icon> Add
+              </button>
+            </div>
+          }
+        </div>
+        <div>
+          <app-paginated-data-table
+            [query]="queryTraining"
+            [apolloNamespace]="uaaApolloNamespace"
+            [resetTable]="refreshTraing"
+            [tableConfigurations]="traingQTableConfigurations"
+            [additionalVariables]="{personnelInformationUuid: selectedUuid}"
+            [loading]="fetchingTraing"
+            (rowUpdate)="openTrainingFormSheetSheet($event)"
+            [mapFunction]="UserTraingMapFunction"
+            [title]="'Training and Workshop'">
+          </app-paginated-data-table>
+        </div>
+      </div>
+      <div class="block bg-white p-3 mb-2 md:rounded-md">
+        <div class="flex flex-wrap items-center justify-content-between">
+          <div class="flex  flex-wrap items-center">
+            <h2>Referee <span class="text-black font-bold">({{"TENDERER_CV_DETAILS_OPTIONAL" | translate}})</span></h2>
+          </div>
+          @if (enableActions) {
+            <div class="place-items-end">
+              <button
+                mat-flat-button
+                color="primary"
+                (click)="openRefereeFormSheetSheet()"
+                style="padding-right: 25px; padding-bottom: 5px; padding-top: 5px"
+                class="!m-0 py-1 items-center flex flex-wrap gen__button btn__primary">
+                <mat-icon>add</mat-icon> Add
+              </button>
+            </div>
+          }
+        </div>
+        <div>
+          <app-paginated-data-table
+            [query]="queryReferee"
+            [apolloNamespace]="uaaApolloNamespace"
+            [resetTable]="refreshReferee"
+            [tableConfigurations]="refereeQTableConfigurations"
+            [additionalVariables]="{personnelInformationUuid: selectedUuid}"
+            [loading]="fetchingReferee"
+            (rowUpdate)="openRefereeFormSheetSheet($event)"
+            [title]="'Referees'">
+          </app-paginated-data-table>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+

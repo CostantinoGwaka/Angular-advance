@@ -1,0 +1,72 @@
+@if (savingData) {
+  <app-loader [message]="loadingMessage" @fadeIn></app-loader>
+}
+@if (!savingData && !showConfirm && !showCancelConfirm) {
+  <div [ngStyle]="{ 'text-align': buttonPosition }" class="button-div"
+    @fadeIn>
+    @if (showCancel) {
+      <button @fadeIn [disabled]="cancelDisabled" class="zoom-on-hover items-center" mat-stroked-button
+    color="{{cancelColor}}" style="
+      margin-right: 6px;
+      border-radius: 5px;
+      margin-top: 10px;
+      padding: 5px 25px;
+      font-size: 15px;
+    " (click)="onClose(true)">
+        <mat-icon inline>{{closeIcon}}</mat-icon>
+        {{ cancelText | translate }}
+      </button>
+    }
+    @if (!hideSave) {
+      <button @fadeIn [disabled]="saveDisabled" [type]="isSubmit && !confirmFirst ? 'submit' : 'button'"
+    class="zoom-on-hover items-center" mat-flat-button color="{{saveColor}}" style="
+      border-radius: 5px;
+      margin-top: 6px;
+      padding: 5px 25px;
+      font-size: 15px;
+    " (click)="onSave(true)">
+        <mat-icon class="pt-[3px]">{{ saveIcon }}</mat-icon>
+        {{ saveText | translate }}
+      </button>
+    }
+    <!--<p class="text-right">Your About Save Data, Confirm</p>-->
+  </div>
+}
+
+@if (showConfirm) {
+  <div style="text-align: center" @fadeIn>
+    <div class="">
+      <p class="lead">{{ confirmText }}</p>
+      <p class="confirm-div">
+        <button [type]="isSubmit && confirmFirst ? 'submit' : 'button'" mat-raised-button class="yes-button zoom-on-hover"
+          @fadeIn (click)="isSubmit && confirmFirst ? null : onSave(false)">
+          <mat-icon>done</mat-icon> {{ "SYSTEM_YES" | translate }}
+          <!-- <mat-icon>done</mat-icon> Yes  -->
+        </button>
+        <button mat-raised-button class="no-button zoom-on-hover" @fadeIn (click)="onCancelShowConfirm()">
+          <mat-icon>clear</mat-icon> {{ "SYSTEM_NO" | translate }}
+          <!-- <mat-icon>clear</mat-icon> No -->
+        </button>
+        &nbsp;
+      </p>
+    </div>
+  </div>
+}
+
+@if (showCancelConfirm) {
+  <div style="text-align: center" @fadeIn>
+    <div class="">
+      <p class="lead">{{ cancelConfirmText }}</p>
+      <p class="confirm-div">
+        <button [type]="isSubmit && cancelConfirmFirst ? 'submit' : 'button'" mat-raised-button
+          class="yes-button zoom-on-hover" @fadeIn (click)="isSubmit && cancelConfirmFirst ? null : onClose(false)">
+          <mat-icon>done</mat-icon> {{ "SYSTEM_YES" | translate }}
+        </button>
+        <button mat-raised-button class="no-button zoom-on-hover" @fadeIn (click)="onCancelShowCancelConfirm()">
+          <mat-icon>clear</mat-icon> {{ "SYSTEM_NO" | translate }}
+        </button>
+        &nbsp;
+      </p>
+    </div>
+  </div>
+}

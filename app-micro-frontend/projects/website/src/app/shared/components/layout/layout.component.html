@@ -1,0 +1,14 @@
+<div class="relative w-full">
+  <div class="web-container !p-0">
+    <div>
+      <web-nav-bar></web-nav-bar>
+    </div>
+    <common-realtime-clock [xPosition]="'right'"></common-realtime-clock>
+  </div>
+  <div>
+    <div class="mb-10">
+      <ng-content></ng-content>
+    </div>
+  </div>
+</div>
+<web-footer></web-footer>

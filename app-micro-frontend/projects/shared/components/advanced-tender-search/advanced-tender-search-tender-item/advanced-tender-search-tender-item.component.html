@@ -1,0 +1,220 @@
+<div class="!border-b !border-b-gray-200 hover:bg-gray-50 transition-all">
+  <div class="p-3">
+    <div class="flex flex-1" #contentWrapper>
+      <div class="w-[100px]">
+        <div class="aspect-square h-16 grid place-content-center" #logoWrapper>
+          @if (!loadLogo && peLogo) {
+          <img
+            [src]="peLogo"
+            alt="NeST Procuring Entity Logo"
+            class="w-[100%] sm:w-auto"
+            onerror="this.src='/assets/images/emblen.png';"
+          />
+          } @if (loadLogo) {
+          <div class="aspect-square h-14 animate-pulse bg-slate-300 rounded-full"></div>
+          }
+        </div>
+      </div>
+      <div class="items-center flex-1 w-1/3">
+        <div>
+          @if (allowHeaderClick) {
+          <!-- [routerLink]="generateRouterLink(requisitionItem)"
+              [queryParams]="generateQueryParams(requisitionItem)" -->
+          <div (click)="navigateViewDetails(requisitionItem)" class="">
+            <h2 class="!text-gray-600 truncate !text-[16px] cursor-pointer !leading-none !m-0">
+              {{ trimmedDescription }}
+            </h2>
+          </div>
+          } @if (!allowHeaderClick) {
+          <div>
+            <h2 class="!text-gray-600 truncate !text-[16px] !leading-none !m-0">
+              {{ trimmedDescription }}
+            </h2>
+          </div>
+          }
+        </div>
+        <div class="mt-2">
+          <div class="!text-primary !text-sm !mb-0 cursor-pointer">
+            {{ requisitionItem.procuringEntityName }}
+          </div>
+        </div>
+        <div class="!text-sm items-center">
+          <div class="sm:flex sm:space-x-4 items-center">
+            @if (showAwardedTo) {
+            <div class="flex sm:block xl:flex">
+              <div class="text-gray-400 whitespace-nowrap">
+                Awarded To:&nbsp;
+              </div>
+              <div class="whitespace-nowrap">
+                {{ requisitionItem?.tendererName }}
+              </div>
+            </div>
+            } @if (showAwardDate) {
+            <div class="flex sm:block xl:flex">
+              <div class="text-gray-400 whitespace-nowrap">
+                Award Date:&nbsp;
+              </div>
+              <div class="whitespace-nowrap">
+                {{ formatDate(requisitionItem?.letterDate) }}
+              </div>
+            </div>
+            } @if (showInvitationDate) {
+            <div class="flex sm:block xl:flex">
+              <div class="text-gray-400 whitespace-nowrap">
+                {{ "INVITATION_DATE" | translate }}:&nbsp;
+              </div>
+              <div class="whitespace-nowrap">
+                {{ formatDate(requisitionItem?.invitationDate) }}
+              </div>
+            </div>
+            } @if (showSubmissionDeadline) {
+            <div class="flex sm:block xl:flex">
+              <div class="text-gray-400 whitespace-nowrap">
+                {{ "DEADLINE" | translate }}:&nbsp;
+              </div>
+              <div
+                [class]="
+                  isClosingSoon
+                    ? '!text-warning  whitespace-nowrap'
+                    : '!text-accent  whitespace-nowrap'
+                "
+              >
+                {{ formatDate(requisitionItem?.submissionOrOpeningDate, true) }}
+              </div>
+            </div>
+            } @if (showEntityNumber) {
+            <div class="flex sm:block xl:flex">
+              <div class="text-gray-400 whitespace-nowrap">
+                <!-- {{ "TENDER" | translate }} #:&nbsp; -->
+                Number:&nbsp;
+              </div>
+              <div class="whitespace-nowrap">
+                {{ requisitionItem.entityNumber }}
+              </div>
+            </div>
+            }
+          </div>
+          <div class="flex-1 mt-[10px] sm:mt-0">
+            <div class="sm:flex justify-between items-center">
+              <div class="flex items-center space-x-2">
+                <div class="flex text-[10px] items-center">
+                  <div
+                    [ngClass]="{
+                      'inline-block px-2 py rounded-full': true,
+                      'bg-orange-200 text-orange-800':
+                        requisitionItem.entityType === 'PLANNED_TENDER',
+                      'bg-green-200 text-green-800':
+                        requisitionItem.entityType === 'TENDER',
+                      'bg-yellow-200 text-yellow-800':
+                        requisitionItem.entityType === 'FRAMEWORK',
+                      'bg-indigo-200 text-indigo-800':
+                        requisitionItem.entityType === 'CONTRACT'
+                    }"
+                  >
+                    {{ entityTypeLabels[requisitionItem.entityType] }}
+                  </div>
+                </div>
+                <div
+                  class="rounded-full text-[10px] items-center whitespace-nowrap px-2 py !bg-gray-200"
+                  [title]="requisitionItem.entitySubCategoryName"
+                >
+                  {{ subStringTitle(requisitionItem?.entitySubCategoryName) }}
+                </div>
+
+                @if (requisitionItem?.hasAddendum) {
+                <div
+                  class="rounded-full text-[10px] items-center whitespace-nowrap px-2 py !bg-red-200"
+                >
+                  Pending Modification
+                </div>
+                }
+              </div>
+              @if (showAmount) {
+              <div class="font-extrabold text-left text-[16px] text-[#21a43f] mt-[10px] sm:mt-0">
+                TZS {{ roundNumber(requisitionItem.tzAmount) | number }}
+              </div>
+              } @if (showActionButtons) {
+              <div class="flex mt-[20px] sm:mt-auto space-x-2 text-[11px]">
+                <button
+                  (click)="navigateViewDetails(requisitionItem)"
+                  class="py-1 whitespace-nowrap px-2 !border !border-primary rounded !text-primary"
+                >
+                  {{ "VIEW_DETAILS" | translate }}
+                </button>
+                @if (showApplyBtn && !requisitionItem?.hasAddendum) {
+                <!-- apply/continue btn -->
+                <ng-container *appHasPermission="['ROLE_TNDRR_BID_SUBMISSION_CREATE']">
+                  @if ( (isEligible && requisitionItem.entityStatus !== 'OPENED' &&
+                  requisitionItem.entityStatus !== 'EVALUATION_COMPLETED') || overrideActionButtons
+                  ) {
+                  <button
+                    (click)="confirmSubmission(requisitionItem)"
+                    class="py-1 whitespace-nowrap w-[96px] justify-center px-2 !border !border-primary !bg-primary rounded !text-white !cursor-pointer"
+                  >
+                    {{ submissionButtonText }}
+                  </button>
+                  }
+                  <!-- end of apply/continue btn -->
+                </ng-container>
+                <!-- not eligible btn -->
+                @if (!isEligible && !overrideActionButtons) {
+                <button
+                  (click)="submitNotEligible(requisitionItem)"
+                  class="py-1 whitespace-nowrap px-2 !bg-yellow-200 rounded !text-black !cursor-pointer"
+                >
+                  Not Eligible
+                </button>
+                }
+                <!-- end of not eligible btn -->
+                } @if ( requisitionItem.entityStatus == 'OPENED' || requisitionItem.entityStatus ==
+                'EVALUATION_STARTED' || requisitionItem.entityStatus == 'EVALUATION_COMPLETED' ||
+                requisitionItem.entityStatus == 'INTENTION_STARTED' || requisitionItem.entityStatus
+                == 'INTENTION_TO_AWARD' || requisitionItem.entityStatus == 'CONTRACT_CREATION' ||
+                requisitionItem.entityStatus == 'AWARDED' ) {
+                <button
+                  (click)="navigateToOpeningReport(requisitionItem)"
+                  class="py-1 whitespace-nowrap px-2 !border !border-primary !bg-primary rounded !text-white"
+                >
+                  Opening Report
+                </button>
+                }
+              </div>
+              }
+
+              <!--              for Award -->
+              @if (showAwardButtons) {
+              <div class="flex mt-[20px] sm:mt-auto space-x-2 text-[11px]">
+                @if ( requisitionItem?.isWinner && requisitionItem?.signedAwardDocumentUuid != null
+                ) {
+                <button
+                  (click)="
+                      viewDocument(
+                        requisitionItem?.isWinner && true
+                          ? requisitionItem?.signedAwardDocumentUuid
+                          : requisitionItem?.awardDocumentUuid
+                      )
+                    "
+                  class="py-1 whitespace-nowrap px-2 !border !border-primary rounded !text-primary"
+                >
+                  {{ "VIEW_AWARD_LETTER" | translate }}
+                </button>
+                } @if (showIntention) {
+                <button
+                  (click)="viewDocument(requisitionItem?.awardDocumentUuid)"
+                  class="py-1 whitespace-nowrap px-2 !border !border-primary rounded !text-primary"
+                >
+                  {{ "VIEW_INTENTION_LETTER" | translate }}
+                </button>
+                } @if (loadingAward) {
+                <mat-spinner [diameter]="20"></mat-spinner>
+                }
+              </div>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--</div>-->

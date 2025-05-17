@@ -1,0 +1,48 @@
+.reject {
+  @apply hover:bg-red-600 border-2 border-red-600 hover:text-white text-red-600 font-medium text-lg inline-block p-2 pl-4 pr-4 rounded-full  cursor-pointer
+}
+
+.approve {
+  @apply hover:bg-green-600 border-2 border-green-600 hover:text-white text-green-600 font-medium text-lg inline-block p-2 pl-4 pr-4  rounded-full  cursor-pointer
+}
+
+.approve:empty {
+  display: none;
+}
+
+.reject:empty {
+  display: none;
+}
+
+.disable-approve {
+  @apply border-2 border-slate-600 text-slate-600 font-medium text-lg inline-block p-2 pl-4 pr-4  rounded-full  cursor-not-allowed
+}
+
+
+.continue {
+  @apply hover:border-green-600 transition-all hover:shadow-none border-2 text-green-600 font-medium text-lg text-center p-2 rounded-full bg-white cursor-pointer shadow-sm flex-1
+}
+
+.selected-continue {
+  box-shadow: 0px 1px 2px 0px rgba(22, 163, 74, 0.12),
+  1px 2px 4px 0px rgba(22, 163, 74, 0.12),
+  2px 4px 8px 0px rgba(22, 163, 74, 0.12),
+  2px 4px 16px 0px rgba(22, 163, 74, 0.12);
+  @apply border-green-600
+}
+
+.terminate {
+  @apply hover:border-red-600 transition-all hover:shadow-none border-2 text-red-600 font-medium text-lg text-center p-2 rounded-full bg-white cursor-pointer shadow-sm flex-1
+}
+
+.selected-terminate {
+  box-shadow: 0px 1px 2px 0px rgba(220, 38, 38, 0.12),
+  1px 2px 4px 0px rgba(220, 38, 38, 0.12),
+  2px 4px 8px 0px rgba(220, 38, 38, 0.12),
+  2px 4px 16px 0px rgba(220, 38, 38, 0.12);
+  @apply border-red-600
+}
+
+.action-paused {
+  @apply max-w-[800px] flex gap-3 bg-white shadow rounded p-3 my-3 min-h-[150px] mx-auto flex-col items-center justify-center
+}

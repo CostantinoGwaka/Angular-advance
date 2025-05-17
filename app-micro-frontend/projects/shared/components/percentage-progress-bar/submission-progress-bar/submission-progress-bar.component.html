@@ -1,0 +1,373 @@
+<div class="absolute bottom-0 w-[80%]">
+  @if (showDeadlineClock) {
+  <div @fadeIn class="flex flex-row justify-end">
+    <div
+      class="{{ deadlineCountClass }} {{
+        deadlineCountTextClass
+      }} text-xs p-1 rounded-t mr-2"
+    >
+      {{ deadlineCountDown }}
+    </div>
+  </div>
+  }
+
+  <div
+    class="bg-[#f4f9fd] border border-[#7bc0b1] rounded-t-lg shadow-lg"
+    id="submission-progress-bar"
+    style="left: 10%;"
+  >
+    <ng-container>
+      <!-- top section-->
+      @if (!selectedEntityDetails?.hasAddendum) {
+      <div class="flex flex-row justify-between px-2 py-1 items-center">
+        <span
+          class="text-xs {{
+            !hasPowerOfAttorney ? 'text-danger font-bold' : 'text-black'
+          }}"
+        >
+          {{ title }}
+        </span>
+        @if (description) {
+        <span
+          class="text-xs {{
+            submission?.submissionWithdrawState == 'WITHDRAWN'
+              ? 'text-danger font-bold'
+              : 'text-gray-500'
+          }}"
+        >
+          {{ description }}
+        </span>
+        }
+        <div class="flex flex-row items-center space-x-3">
+          @if (checking) {
+          <mat-spinner [diameter]="16"> </mat-spinner>
+          } @if (!checking && incompleteCriteriaList.length) {
+          <button
+            (click)="showIncompleteCriteria()"
+            @fadeIn
+            class="p-0.5 px-2 rounded border text-xs !bg-secondary"
+            matRipple
+          >
+            View {{ incompleteCriteriaList.length }} Incomplete Criteria
+          </button>
+          } @if (!checking && submission?.signedTenderFormUuid) {
+          <button
+            (click)="showTenderForm()"
+            @fadeIn
+            class="p-0.5 px-2 rounded !border !border-primary text-xs !bg-white"
+            matRipple
+          >
+            View Tender Submission Form
+          </button>
+          }
+        </div>
+      </div>
+      }
+      <!--  end of top section-->
+      @if (selectedEntityDetails?.hasAddendum) {
+      <div class="flex flex-row justify-between px-2 py-1 items-center">
+        <span class="text-xs text-danger font-bold}}">
+          The tender is currently in a modification state (addendum), and submissions will resume
+          once it is finalized.
+        </span>
+      </div>
+      }
+
+      <div class="bg-[#dee2e6] h-[1px]"></div>
+
+      <div class="flex flex-row justify-between items-center px-2">
+        @if (!isLoading) {
+        <div @fadeIn class="w-[50px] space-x-3 flex items-center">
+          @if (completionProgress < 100) {
+          <div class="-mx-2 mt-1">
+            @if (showProgress) {
+            <circular-progress-bar
+              [backgroundColor]="'#D7D7D7'"
+              [color]="isWithdrawn ? colors.warn.main : colors.accent.main"
+              [showValue]="true"
+              [style]="'width:60px'"
+              [text]="''"
+              [valueStyle]="'font-size:16px'"
+              [value]="completionProgress"
+              class="-mt-2"
+              progressRef
+            ></circular-progress-bar>
+            }
+          </div>
+          } @if (completionProgress >= 100) {
+          <div class="-mx-2 mt-1 ml-1">
+            <div
+              class="w-[60px] aspect-square {{
+                isWithdrawn ? 'border-red-800' : 'border-accent'
+              }} border-dotted !border-2 grid place-content-center rounded-full"
+            >
+              <div
+                class="w-[50px] text-xs aspect-square {{
+                  isWithdrawn ? '!bg-warning' : 'bg-accent'
+                }} grid place-content-center font-bold text-2xl text-white rounded-full"
+              >
+                {{ completionProgress }}%
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+        }
+
+        <div class="flex-1 mx-4">
+          <div class="w-full py-2">
+            <div class="flex justify-center">
+              <!-- loading spinner -->
+              @if (isLoading) {
+              <div class="w-100">
+                <app-loader @fadeIn [message]="'Getting details, please wait'"></app-loader>
+              </div>
+              }
+              <!-- end of loading spinner -->
+
+              <!-- Linear criteria progress indicator-->
+              @if (!confirmSubmission) {
+              <!-- criteria group stagging -->
+              @for (stage of summaryList; track stage; let i = $index) { @if (stage.totalCriteria >
+              0) {
+              <div class="w-1/3">
+                <div class="relative mb-2">
+                  @if (i != 0) {
+                  <div
+                    class="absolute flex align-center items-center align-middle content-center"
+                    style="
+                      width: calc(100% - 2.406rem);
+                      top: 50%;
+                      transform: translate(-50%, -50%);
+                    "
+                  >
+                    <div
+                      class="w-full bg-[#716f6f] items-center align-middle align-center flex-1 h-[2px]"
+                    >
+                      <div
+                        class="w-0  {{
+                              isWithdrawn
+                                ? 'bg-[#f40305]'
+                                : stage.percentage != 100
+                                ? 'bg-[#716f6f]'
+                                : 'bg-accent'
+                            }} rounded"
+                        style="{{
+                              (stage.totalSubmittedCriteria /
+                                stage.totalCriteria) *
+                                100 !=
+                              100
+                                ? 'width: ' +
+                                  (stage.totalSubmittedCriteria /
+                                    stage.totalCriteria) *
+                                    100 +
+                                  '%'
+                                : 'width: 100%'
+                            }}; height: 2px"
+                      ></div>
+                    </div>
+                  </div>
+                  }
+                  <div class="grid place-content-center items-center mt-1 z-20">
+                    <app-tiny-circular-progress
+                      [percentage]="
+                            (stage.totalSubmittedCriteria /
+                              stage.totalCriteria) *
+                            100
+                          "
+                    >
+                    </app-tiny-circular-progress>
+                  </div>
+                </div>
+                <div
+                  class="text-xs text-center {{
+                        isWithdrawn
+                          ? 'text-[#f40305]'
+                          : stage.percentage != 100
+                          ? 'text-[#716f6f]'
+                          : 'text-accent'
+                      }}"
+                >
+                  {{ stage.criteriaGroupName }} ({{ stage.totalSubmittedCriteria }}/{{
+                  stage.totalCriteria }})
+                </div>
+              </div>
+              } }
+              <!-- end of criteria group stagging -->
+              }
+              <!-- End of linear criteria progress indicator-->
+
+              <!-- saving loading spinner -->
+              @if (isSaving) {
+              <div class="w-100">
+                <app-loader @fadeIn [message]="'Getting details, please wait'"></app-loader>
+              </div>
+              }
+              <!-- end of saving loading spinner -->
+
+              <!-- Confirm submission area-->
+              @if (confirmSubmission && !loadingForm) { @if (!isLoading) {
+              <app-confirm-area
+                (cancel)="confirmSubmission = false"
+                (confirm)="submitBidWithDialog()"
+                @fadeSmooth
+                [title]="
+                    'You\'re about to submit this tender. Do you want to continue?'
+                  "
+                [useConfirmCancel]="true"
+                [useYesNo]="true"
+              >
+              </app-confirm-area>
+              } }
+              <!-- End of confirm submission area-->
+
+              @if(loadingForm){
+              <div class="w-100">
+                <app-loader
+                  @fadeIn
+                  [message]="'Please wait, while checking tender submission form'"
+                ></app-loader>
+              </div>
+              }
+            </div>
+          </div>
+        </div>
+
+        @if (selectedEntityDetails?.hasAddendum) {
+        <div class="rounded-full text-[10px] items-center whitespace-nowrap px-2 py !bg-red-200">
+          Tender is on modification state (addendum)
+        </div>
+        } @if ( !confirmSubmission && !deadlineDateHasPassed && selectedEntityDetails?.entityStatus
+        !== 'OPENED' && !selectedEntityDetails?.hasAddendum ) {
+        <div class="flex items-center">
+          <!--            <button-->
+          <!--              (click)="displayLoader()"-->
+          <!--              class="!bg-primary text-white"-->
+          <!--              mat-button>-->
+          <!--              Display loader-->
+          <!--            </button>-->
+          <ng-container *appHasPermission="['ROLE_TNDRR_BID_SUBMIMIT_TNDR_BID']">
+            @if ( !isLoading && !submissionStatus && hasPowerOfAttorney && !isWithdrawn ) {
+            <button
+              (click)="confirmSubmission = true"
+              [disabled]="completionProgress !== 100"
+              class="{{
+                  completionProgress == 100
+                    ? '!bg-primary text-white'
+                    : 'text-grey-500 !bg-gray-300'
+                }} py-1 px-3"
+              mat-button
+            >
+              Submit Bid
+            </button>
+            }
+          </ng-container>
+          @if (!isLoading) { @if ( submissionStatus && submission.submissionWithdrawState ==
+          'ACTIVE' && submission.modificationStatus !== 'PENDING_APPROVAL' && hasPowerOfAttorney ) {
+          <div class="flex space-x-2">
+            <ng-container *appHasPermission="['ROLE_TNDRR_BID_MODIFY_TNDR_BID']">
+              <button (click)="modifyBid()" class="!bg-primary text-white" mat-button>
+                Modify Bid
+              </button>
+            </ng-container>
+            <ng-container *appHasPermission="['ROLE_TNDRR_BID_WITHDRAW_TNDR_BID']">
+              <button
+                (click)="openWithdrawDialog()"
+                [disabled]="completionProgress !== 100"
+                class="bg-danger text-sm text-white"
+                mat-button
+              >
+                Withdraw Bid
+              </button>
+            </ng-container>
+          </div>
+          } @if (showMoreOptions) {
+          <ng-container @fadeIn [ngTemplateOutlet]="actionOptions"> </ng-container>
+          } @if (infoText) {
+          <div
+            @fadeIn
+            (click)="infoText.showButton ? (showMoreOptions = true) : ''"
+            class="flex flex-row justify-start
+                   cursor-pointer items-center text-white rounded border {{
+                  infoText.color
+                }} p-2"
+          >
+            <span>{{ infoText.title }}</span>
+            @if (infoText.showButton) {
+            <mat-icon>more_vert</mat-icon>
+            }
+          </div>
+          } }
+        </div>
+        }
+        <div class="flex flex-col gap-1">
+          @if (deadlineDateHasPassed) {
+          <span class="text-xs text-[#e60000]">
+            Submission Closed
+          </span>
+          } @if (selectedEntityDetails?.entityStatus === 'OPENED') {
+          <span class="text-xs text-[#e60000]">
+            Tender has been opened.
+          </span>
+          }
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+<ng-template #actionOptions>
+  <div
+    class="absolute h-[350px] flex flex-col justify-start items-center rounded border p-2 z-10 shadow-lg bg-[#f4f9fd]"
+  >
+    <div class="flex flex-col">
+      <div class="flex flex-row items-center justify-between">
+        <span class="text-gray-500 text-sm">Available options</span>
+        <div
+          (click)="showMoreOptions = false"
+          class="flex text-center items-center cursor-pointer aspect-square text-sm w-6 rounded-full !bg-[#FCD7D7]"
+        >
+          <mat-icon inline class="text-[#FF0000]">cancel</mat-icon>
+        </div>
+      </div>
+      <hr />
+      @if (!showConfirm) {
+      <p class="text-gray-500 text-sm">
+        These options allows to resend or cancel a request.
+      </p>
+      }
+    </div>
+
+    <div class="flex flex-col gap-2">
+      @if (resending) {
+      <div @fadeIn class="flex space-x-2 items-center">
+        <mat-spinner [diameter]="20" [strokeWidth]="3"> </mat-spinner>
+        <div>Resend email, please wait...</div>
+      </div>
+      } @if (showConfirm && !resending) {
+      <app-confirm-area
+        @fadeIn
+        [title]="'Are you sure?'"
+        [useYesNo]="true"
+        [useConfirmCancel]="true"
+        (cancel)="showConfirm = false"
+        (confirm)="resendSubmissionModificationEmail()"
+      >
+      </app-confirm-area>
+      } @if (!showConfirm && !resending) {
+      <div @fadeIn class="flex flex-col gap-2">
+        <button class="!bg-primary text-sm text-white" (click)="showConfirm = true" mat-button>
+          <mat-icon inline>refresh</mat-icon> Re-send Email
+        </button>
+        <button
+          class="bg-danger text-sm text-white mb-2"
+          (click)="requestCancellationRequestDialog()"
+          mat-button
+        >
+          <mat-icon inline>delete</mat-icon> Cancel
+        </button>
+      </div>
+      }
+    </div>
+  </div>
+</ng-template>

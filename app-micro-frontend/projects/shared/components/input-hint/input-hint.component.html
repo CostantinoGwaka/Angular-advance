@@ -1,0 +1,83 @@
+<mat-sidenav-container
+  (backdropClick)="closeBackDrop()"
+  autosize
+  [hasBackdrop]="true"
+  >
+  <mat-sidenav
+    #sideInputField
+    position="end"
+    [disableClose]="false"
+    (keydown.escape)="closeBackDrop()"
+    fixedInViewport="true"
+    mode="over"
+    role="dialog"
+    class="input-hint-side-nav"
+    >
+    <mat-toolbar>
+      <button mat-icon-button (click)="sideNavToggle()">
+        <mat-icon>close</mat-icon>
+      </button>
+      <div
+        class="help-text"
+        style="margin-top: 10px; margin-bottom: 20px; padding-left: 15px"
+        >
+        <div class="flex items-center justify-between">
+          <p
+            tabindex="0"
+            class="focus:outline-none text-2xl font-semibold leading-6 text-gray-800 pt-4"
+            >
+            Input Hint
+          </p>
+        </div>
+      </div>
+    </mat-toolbar>
+    <div class="">
+      @if (isLoading) {
+        <app-loader [message]="'Please wait...'"></app-loader>
+      }
+      <div class="row pl-5">
+        @if (!isLoading && !inputHint?.uuid) {
+          <div
+            class="max-h-[700px] overflow-y-auto"
+            >
+            <p class="text-gray-800 text-sm">This field has no description</p>
+          </div>
+        }
+
+        @if (!isLoading && inputHint?.uuid) {
+          <div
+            class="max-h-[700px] overflow-y-auto"
+            >
+            @if (inputHint?.fieldName) {
+              <h2
+                tabindex="0"
+                class="focus:outline-none text-sm leading-normal pt-8 border-b pb-2 border-gray-300 text-gray-600"
+                >
+                {{ inputHint?.label }}
+              </h2>
+            }
+            @if (inputHint?.description) {
+              <h2
+                tabindex="0"
+                class="focus:outline-none text-sm leading-normal pt-8 border-b pb-2 border-gray-300 text-gray-600"
+                >
+                Description
+              </h2>
+              <p class="text-gray-800 text-sm">{{ inputHint?.description }}</p>
+            }
+            @if (inputHint?.example) {
+              <h2
+                tabindex="0"
+                class="focus:outline-none text-sm leading-normal pt-8 border-b pb-2 border-gray-300 text-gray-600"
+                >
+                Example
+              </h2>
+              <p class="text-gray-800 text-sm">{{ inputHint?.example }}</p>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </mat-sidenav>
+  <mat-sidenav-content> </mat-sidenav-content>
+</mat-sidenav-container>

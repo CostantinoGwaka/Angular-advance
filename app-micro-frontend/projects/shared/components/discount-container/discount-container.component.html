@@ -1,0 +1,77 @@
+<div
+  class="rounded-[10px] bg-[#F2F2F2] p-[16px]
+   flex flex-col justify-start">
+  <div class="mb-[16px]">Do you offer discount to the bid amount?</div>
+  <div class="flex items-center justify-between mb-[16px]">
+    <app-custom-check-box-input
+      [checkOptions]="checkOptions"
+      [exclusiveHabit]="true"
+      [isEvaluating]="isEvaluating"
+      (onItemCheckedEvent)="onCheckChanges($event)">
+    </app-custom-check-box-input>
+  </div>
+  @if (isOfferingDiscount) {
+    <div @fadeIn class="mt-[12px]">
+      <p>
+        Discount Percentage:
+        @if (isEvaluating) {
+          <span @fadeIn class="text-lg font-medium"
+            >{{ discountData!.discountPercentage }}%</span
+            >
+          }
+        </p>
+        @if (!isEvaluating) {
+          <input
+            type="number"
+            class="p-2 border rounded focus:outline-none focus:border-blue-500"
+            style="width: 268px /* hardcoded to prevent unnecessary flex */"
+            [(ngModel)]="discountData!.discountPercentage"
+            [readOnly]="isEvaluating"
+            placeholder="Enter discount percentage"
+            (change)="valueChanged($event)"
+            (keyup)="valueChanged($event)"
+            [min]="1"
+            [max]="100"
+            />
+        }
+        @if (message) {
+          <p class="text-red-400">{{ message }}</p>
+        }
+      </div>
+    }
+    @if (isDiscountDifferent) {
+      <p class="text-red-400">
+        You have updated discount option, please save it to take effect...
+      </p>
+    }
+
+    @if (!isEvaluating || !isDiscountDifferent) {
+      <div class="flex items-end">
+        @if (
+          !loading &&
+          !isEvaluating &&
+          (
+          discountData.hasDiscount == false ||
+          (discountData.hasDiscount == true &&
+          discountData.discountPercentage != null)
+          )
+          ) {
+          <div
+            @fadeIn
+            (click)="saveDiscount()"
+        class="mt-1 bg-[#4599E6] text-[#FDFCFC] rounded-[5px] flex item-center
+      justify-center py-[10px] px-[60px] cursor-pointer
+       hover:bg-[#1D85E5] active:bg-[#FDFCFC]">
+            Save Discount Status
+          </div>
+        }
+        @if (loading) {
+          <app-loader
+            @fadeIn
+            [message]="'saving please wait...'"
+            >
+          </app-loader>
+        }
+      </div>
+    }
+  </div>

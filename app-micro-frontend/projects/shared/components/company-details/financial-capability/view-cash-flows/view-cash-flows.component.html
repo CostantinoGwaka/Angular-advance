@@ -1,0 +1,59 @@
+<div class="container-fluid">
+  @if (selectedCashFlow) {
+    <div class="row">
+      <div class="col-sm-4">
+        <app-view-details-item key="Tenderer" [value]="selectedCashFlow.tenderer?.name"></app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item key="Year" [value]="selectedCashFlow.year"></app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item key="Currency" [value]="selectedCashFlow.currency"></app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item valueType="number" key="Cash Flow" [value]="selectedCashFlow.cashFlow"></app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item valueType="number" key="Profit Before Tax" [value]="selectedCashFlow.profitBeforeTax"></app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item valueType="number" key="Total Revenue" [value]="selectedCashFlow.totalRevenue"></app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item valueType="number" key="Current Assets" [value]="selectedCashFlow.currentAssets"></app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item valueType="number" key="Total Assets" [value]="selectedCashFlow.totalAssets"></app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item valueType="number" key="Working Capital" [value]="selectedCashFlow.workingCapital"></app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item valueType="number" key="Current Liabilities" [value]="selectedCashFlow.currentLiabilities"></app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item valueType="number" key="Total Liabilities" [value]="selectedCashFlow.totalLiabilities"></app-view-details-item>
+      </div>
+      <div class="col-sm-4">
+        <app-view-details-item valueType="number" key="Total Equity" [value]="selectedCashFlow.totalEquity"></app-view-details-item>
+      </div>
+      @if (selectedCashFlow.attachmentUuid) {
+        <div class="col-sm-12 mt-2">
+          <div class="flex space-x-1 attache" (click)="view(selectedCashFlow)">
+            <div class="grid place-items-center w-20">
+              <img src="assets/images/pdf-icon.png" style="height: 20px">
+            </div>
+            <div>
+              {{selectedCashFlow.tenderer.name}} Financial Statement for {{selectedCashFlow.year}}
+            </div>
+            @if (fetchingAttachment) {
+              <div style="height: 50px">
+                <mat-progress-spinner [diameter]="30" mode="indeterminate"></mat-progress-spinner>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

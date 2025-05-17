@@ -1,0 +1,124 @@
+<h2 mat-dialog-title>{{ data.title ? data.title : "Select User" }}</h2>
+<mat-dialog-content class="mat-typography">
+  <div class="container-fluid">
+    <div class="row">
+      <div @fadeIn class="col-sm-12">
+        <ng-container>
+          <div class="space-y-2">
+            @if (data.fromMultipleInstitutions) {
+              <div>
+                <mat-checkbox
+                  class="example-margin"
+                  [(ngModel)]="selectFromOtherInstitutions"
+                  (change)="onSelectFromOtherInstitutions($event)"
+                  >Select From Other Institutions</mat-checkbox
+                  >
+                </div>
+              }
+              <div>
+                @if (
+                  data.institutionType == 'PE' && selectFromOtherInstitutions
+                  ) {
+                  <app-paginated-select
+                    [field]="institutionField"
+                    (fieldValue)="onPESelected($event)"
+                    [(ngModel)]="institutionUuid"
+                  ></app-paginated-select>
+                }
+                @if (loadingUsers) {
+                  <app-loader
+                    [message]="'Loading users please wait...'"
+                  ></app-loader>
+                }
+                @if (institutionUuid && !loadingUsers && users.length == 0) {
+                  <div
+                    >
+                    <div class="flex flex-col items-center w-full">
+                      <div
+                        class="bg-red-100 border-t border-l border-r border-b rounded text-red-500 px-3 py-3 mt-3"
+                        >
+                        <div class="flex flex-row justify-between mt-1">
+                          <p class="text-base m-0 text-center">
+                            This Procuring Entity Does Not Have Users
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                }
+              </div>
+              @if (users.length > 0 && data.institutionType == 'PE') {
+                <mat-form-field
+                  appearance="outline"
+                  >
+                  <mat-label>Select User</mat-label>
+                  <mat-select
+                    [(ngModel)]="userUuid"
+                    (selectionChange)="onSelectedUser($event)"
+                    >
+                    <div
+                      class="mat-select-search-inner mat-typography mat-datepicker-content mat-tab-header"
+                      >
+                      <input
+                        autocomplete="off"
+                        class="mat-select-search-input mat-input-element"
+                        [(ngModel)]="searchString"
+                        type="text"
+                        placeholder="Search"
+                        />
+                    </div>
+                    <mat-option class="mt-5"> --Select-- </mat-option>
+                    @for (
+                      user of users
+                      | search : 'firstName,lastName' : searchString
+                      ; track
+                      user) {
+                      <mat-option
+                        value="{{ user.uuid }}"
+                        >{{ user?.firstName + " " + user?.lastName }}(
+                        {{ user?.jobTitle ? user?.jobTitle : "Designation not set" }})
+                        -
+                        {{
+                        user?.department?.name
+                        ? user?.department?.name
+                        : "Department not set"
+                        }}</mat-option
+                        >
+                      }
+                    </mat-select>
+                  </mat-form-field>
+                }
+                @if (rolesString) {
+                  <div>Role(s): {{ rolesString }}</div>
+                }
+                <div>
+                  @if (data.institutionType == 'TENDERER') {
+                    <app-paginated-select
+                      [field]="tendererUsersField"
+                      (fieldValue)="onTendererUserSelected($event)"
+                      [(ngModel)]="tendererUserUuid"
+                    ></app-paginated-select>
+                  }
+                  @if (loadingUsers) {
+                    <app-loader
+                      [message]="'Loading users please wait...'"
+                    ></app-loader>
+                  }
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button mat-dialog-close>Cancel</button>
+      <button
+        [disabled]="!user?.uuid"
+        mat-button
+        [mat-dialog-close]="true"
+        (click)="selectUser()"
+        >
+        Select User
+      </button>
+    </mat-dialog-actions>

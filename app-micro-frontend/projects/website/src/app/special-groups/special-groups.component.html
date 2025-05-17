@@ -1,0 +1,93 @@
+<web-layout>
+  <parallax-container [title]="'Special Groups'" [description]="'Published Special Groups'">
+    <div class="flex">
+      <div class="flex-1">
+        <div ngProjectAs="table">
+          <div class="flex bg-gray-200 rounded-md my-3 p-2">
+            <button
+              (click)="setSelectedIndex(0)"
+              class="flex-1 hover:mx-1 px-4 py-2 text-center rounded-md hover:bg-slate-100 hover:font-semibold"
+              [ngClass]="{ 'bg-slate-300 font-bold': selectedIndex == 0 }"
+            >
+              All Special Group(s)
+            </button>
+            <button
+              (click)="setSelectedIndex(1)"
+              class="flex-1 hover:mx-1 px-4 py-2 text-center rounded-md hover:bg-slate-100 hover:font-semibold"
+              [ngClass]="{ 'bg-slate-300 font-bold': selectedIndex == 1 }"
+            >
+              Complete Registration
+            </button>
+            <button
+              (click)="setSelectedIndex(2)"
+              class="flex-1 hover:mx-1 px-4 py-2 text-center rounded-md hover:bg-slate-100 hover:font-semibold"
+              [ngClass]="{ 'bg-slate-300 font-bold': selectedIndex == 2 }"
+            >
+              Not Registered
+            </button>
+          </div>
+          <div class="mt-2">
+            <ng-container>
+              @if (selectedIndex == 0) {
+              <div @fadeIn>
+                @if (tableConfigurations.tableColumns) {
+                <app-paginated-data-table
+                  [query]="query"
+                  [apolloNamespace]="apolloNamespace"
+                  [resetTable]="viewDetails && updated"
+                  [tableConfigurations]="tableConfigurations"
+                  [mapFunction]="mapFunction"
+                  [actionButtons]="buttons"
+                  [noSearchFields]="['flag', 'businessLines']"
+                >
+                </app-paginated-data-table>
+                }
+              </div>
+              }
+            </ng-container>
+
+            <ng-container>
+              @if (selectedIndex == 1) {
+              <div @fadeIn>
+                @if (tableConfigurations.tableColumns) {
+                <app-paginated-data-table
+                  [query]="query"
+                  [apolloNamespace]="apolloNamespace"
+                  [resetTable]="viewDetails && updated"
+                  [tableConfigurations]="tableConfigurations"
+                  [mapFunction]="mapFunction"
+                  [actionButtons]="buttons"
+                  [filters]="filterToUse1"
+                  [noSearchFields]="['flag', 'businessLines']"
+                >
+                </app-paginated-data-table>
+                }
+              </div>
+              }
+            </ng-container>
+
+            <ng-container>
+              @if (selectedIndex == 2) {
+              <div @fadeIn>
+                @if (tableConfigurations.tableColumns) {
+                <app-paginated-data-table
+                  [query]="query"
+                  [apolloNamespace]="apolloNamespace"
+                  [resetTable]="viewDetails && updated"
+                  [tableConfigurations]="tableConfigurations"
+                  [mapFunction]="mapFunction"
+                  [actionButtons]="buttons"
+                  [filters]="filterToUse2"
+                  [noSearchFields]="['flag', 'businessLines']"
+                >
+                </app-paginated-data-table>
+                }
+              </div>
+              }
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </parallax-container>
+</web-layout>

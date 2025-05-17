@@ -1,0 +1,341 @@
+@if (fetchingItem) {
+  <app-loader message="{{ 'LOADING' | translate }}"></app-loader>
+}
+@if (!fetchingItem) {
+  <div class="" >
+    <p class="p-3 text-[#929292] bg-[#E5E5E5] md">{{"TENDERER_CV_PERSONAL_DETAILS" | translate}}<span class="text-black font-bold">(*{{"TENDERER_CV_DETAILS_REQUIRED"|translate}})</span></p>
+    <div class="row">
+      <div class="col-md-6">
+        <mat-form-field appearance="outline" class="material-form">
+          <mat-label>{{ "TENDERER_FIRST_NAME" | translate }}</mat-label>
+          <input [(ngModel)]="fname" matInput placeholder="{{ 'TENDERER_FIRST_NAME' | translate }}" />
+        </mat-form-field>
+      </div>
+      <div class="col-md-6">
+        <mat-form-field appearance="outline" class="material-form">
+          <mat-label>{{ "TENDERER_MIDDLE_NAME" | translate }}</mat-label>
+          <input [(ngModel)]="mname" matInput placeholder="{{ 'TENDERER_MIDDLE_NAME' | translate }}" />
+        </mat-form-field>
+      </div>
+      <div class="col-md-6">
+        <mat-form-field appearance="outline" class="material-form">
+          <mat-label>{{ "TENDERER_LAST_NAME" | translate }}</mat-label>
+          <input [(ngModel)]="lname" matInput placeholder="{{ 'TENDERER_LAST_NAME' | translate }}" />
+        </mat-form-field>
+      </div>
+      <div class="col-md-6">
+        <mat-form-field appearance="outline" class="material-form">
+          <mat-label>{{ "TENDERER_PERSONAL_DETAILS_BIRTH_PLACE" | translate }}</mat-label>
+          <input [(ngModel)]="placebirth" matInput placeholder="{{ 'TENDERER_PERSONAL_DETAILS_BIRTH_PLACE' | translate }}" />
+        </mat-form-field>
+      </div>
+      <div class="col-md-6">
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'TENDERER_PERSONAL_DETAILS_GENDER' | translate}}</mat-label>
+          <mat-select [(ngModel)]="genderType" placeholder="{{ 'TENDERER_PERSONAL_DETAILS_GENDER' | translate}}"
+            (selectionChange)="selectGender($event.value)">
+            @for (item  of genderEnum; track item ) {
+              <mat-option [value]="item.value">
+              {{item.name | translate }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-md-6">
+        <mat-form-field appearance="outline">
+          <mat-label>{{ "TENDERER_PERSONAL_DETAILS_BIRTH_DATE" | translate }}</mat-label>
+          <input matInput [matDatepicker]="registrationDate" [min]="minimumDate" [(ngModel)]="dateOfBirth" (dateInput)="selectedBirthDate($event)">
+          <mat-hint>MM/DD/YYYY</mat-hint>
+          <mat-datepicker-toggle matSuffix [for]="registrationDate"></mat-datepicker-toggle>
+          <mat-datepicker #registrationDate></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="pt-2 pb-4"></div>
+    <p class="p-3 text-[#929292] bg-[#E5E5E5] rounded-md">{{ "TENDERER_CV_CONTACT_DETAILS" | translate }} <span class="text-black font-bold">(*{{"TENDERER_CV_DETAILS_REQUIRED"|translate}})</span></p>
+    <div class="row">
+      <div class="col-md-6">
+        <mat-form-field appearance="outline" class="material-form">
+          <mat-label>{{ 'PHONE_NUMBER' | translate }}</mat-label>
+          <input [(ngModel)]="phone" matInput placeholder="{{ 'PHONE_NUMBER' | translate }}" />
+        </mat-form-field>
+      </div>
+      <div class="col-md-6">
+        <mat-form-field appearance="outline" class="material-form">
+          <mat-label>{{ 'PHYSICAL_ADDRESS' | translate}}</mat-label>
+          <input
+            [(ngModel)]="presentAddress"
+            matInput
+            placeholder="{{ 'PHYSICAL_ADDRESS' | translate}}"
+            />
+        </mat-form-field>
+      </div>
+      <div class="col-md-6">
+        <mat-form-field appearance="outline" class="material-form">
+          <mat-label>{{ 'EMAIL' | translate}}</mat-label>
+          <input
+            readonly="readonly"
+            [(ngModel)]="email"
+            matInput
+            placeholder="{{ 'EMAIL' | translate}}"
+            />
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="col-md-12 text-right">
+      <app-save-area
+        saveText="{{ 'SYSTEM_SAVE' | translate }}"
+        [showCancel]="false"
+        [confirmFirst]="true"
+        (save)="savePersonalDetails()"
+        [saveDisabled]="!fname || !mname || !lname || !genderType || !presentAddress || !phone || !placebirth || !dateOfBirth"
+        [savingData]="savePersonal"
+        confirmText="{{ 'TENDERER_CV_PERSONAL_AND_CONTACT_DETAILS_SAVE_MESSAGE' | translate }}"
+        loadingMessage="{{ 'SYSTEM_SAVE' | translate }}"
+      ></app-save-area>
+    </div>
+    <div class="pt-2 pb-4"></div>
+    <div class="block bg-white py-3 mb-2">
+      <div class="flex flex-wrap items-center justify-content-between bg-[#E5E5E5] md:rounded-md">
+        <div class="flex  flex-wrap items-start">
+          <p class="p-3 text-[#929292] rounded-md">{{ "TENDERER_CV_LANGUAGE_PROFICIENCY" | translate }} <span class="text-black font-bold">(*{{"TENDERER_CV_DETAILS_REQUIRED"|translate}})</span></p>
+        </div>
+        <div class="place-items-end pr-4">
+          <button
+            mat-flat-button
+            color="primary"
+            (click)="openLanguageFormSheetSheet()"
+            style="padding-right: 25px; padding-bottom: 5px; padding-top: 5px"
+            class="!m-0 py-1 items-center flex flex-wrap gen__button btn__primary">
+            <mat-icon>add</mat-icon>{{ 'SYSTEM_ADD'  | translate }}
+          </button>
+        </div>
+      </div>
+      <div>
+        <app-paginated-data-table
+          [query]="queryLanguage"
+          [apolloNamespace]="uaaApolloNamespace"
+          [resetTable]="refreshLanguage"
+          [tableConfigurations]="languageConfigurations"
+          [loading]="fetchingLanguage"
+          (totalRecords)="onChangeLanguageTotalRecord($event)"
+          (rowUpdate)="openLanguageFormSheetSheet($event)"
+          (rowDelete)="deleteLanguage($event)"
+          [mapFunction]="UserLanguageMapFunction"
+          [title]="'Language Proficiency'">
+        </app-paginated-data-table>
+      </div>
+    </div>
+    <div class="pt-2 pb-4" @fadeIn id="personalsaved"></div>
+    <div class="block py-3">
+      <div class="flex flex-wrap items-center justify-content-between bg-[#E5E5E5] mb-2 md:rounded-md">
+        <div class="flex  flex-wrap items-start">
+          <p class="p-3 text-[#929292] rounded-md"> {{ "TENDERER_CV_TRAINING_AND_WORKSHOP" | translate }} <span class="text-black font-bold">({{"TENDERER_CV_DETAILS_OPTIONAL" | translate}})</span></p>
+        </div>
+        <div class="place-items-end pr-4">
+          <button
+            mat-flat-button
+            color="primary"
+            (click)="openTrainingFormSheetSheet()"
+            style="padding-right: 25px; padding-bottom: 5px; padding-top: 5px"
+            class="!m-0 py-1 items-center flex flex-wrap gen__button btn__primary">
+            <mat-icon>add</mat-icon>{{ 'SYSTEM_ADD'  | translate }}
+          </button>
+        </div>
+      </div>
+      <div>
+        <app-paginated-data-table
+          [query]="queryTraining"
+          [apolloNamespace]="uaaApolloNamespace"
+          [resetTable]="refreshTraining"
+          [tableConfigurations]="trainingQTableConfigurations"
+          [loading]="fetchingTraining"
+          (rowUpdate)="openTrainingFormSheetSheet($event)"
+          (rowDelete)="deleteTraining($event)"
+          [mapFunction]="UserTrainingMapFunction"
+          [title]="'Training and Workshop'">
+        </app-paginated-data-table>
+      </div>
+    </div>
+    <div class="pt-2 pb-4"></div>
+    <div class="block bg-white py-3 mb-2">
+      <div class="flex flex-wrap items-center justify-content-between bg-[#E5E5E5]  md:rounded-md">
+        <div class="flex flex-wrap items-start">
+          <p class="p-4 mb-0 text-[#929292] rounded-md">{{ "TENDERER_CV_ACADEMIC_QUALIFICATIONS" | translate }} <span class="text-black font-bold">(*{{"TENDERER_CV_DETAILS_REQUIRED"|translate}})</span></p>
+        </div>
+        <div class="place-items-end pr-4">
+          <button
+            mat-flat-button
+            color="primary"
+            (click)="openEdFormSheetSheet()"
+            style="padding-right: 25px; padding-bottom: 5px; padding-top: 5px"
+            class="!m-0 py-1 items-center flex flex-wrap gen__button btn__primary">
+            <mat-icon>add</mat-icon>{{ 'SYSTEM_ADD'  | translate }}
+          </button>
+        </div>
+      </div>
+      <div>
+        <app-paginated-data-table
+          [query]="queryAcademic"
+          [apolloNamespace]="uaaApolloNamespace"
+          [resetTable]="refreshAcademic"
+          [tableConfigurations]="aQTableConfigurations"
+          [loading]="fetchingAcademic"
+          (rowUpdate)="openEdFormSheetSheet($event)"
+          (rowDelete)="deleteAcademicQualification($event)"
+          (rowPrint)="buttonSelected($event)"
+          (totalRecords)="onChangeAcademicTotalRecord($event)"
+          [mapFunction]="UserAcademicQualificationMapFunction"
+          [title]="'Academic Qualification'">
+        </app-paginated-data-table>
+      </div>
+    </div>
+    <div class="pt-2 pb-4"></div>
+    <div class="block bg-white py-3 mb-2">
+      <div class="flex flex-wrap items-center justify-content-between bg-[#E5E5E5] md:rounded-md">
+        <div class="flex flex-wrap items-start">
+          <p class="p-3 text-[#929292] bg-[#E5E5E5] rounded-md">{{ "TENDERER_CV_OTHER_COMPETENCY" | translate }} <span class="text-black font-bold">({{ "TENDERER_CV_DETAILS_OPTIONAL" | translate }})</span></p>
+        </div>
+        <div class="place-items-end pr-4">
+          <button
+            mat-flat-button
+            color="primary"
+            (click)="openCompetencyFormSheetSheet()"
+            style="padding-right: 25px; padding-bottom: 5px; padding-top: 5px"
+            class="!m-0 py-1 items-center flex flex-wrap gen__button btn__primary">
+            <mat-icon>add</mat-icon>{{ 'SYSTEM_ADD'  | translate }}
+          </button>
+        </div>
+      </div>
+      <div>
+        <app-paginated-data-table
+          [query]="queryCompetency"
+          [apolloNamespace]="uaaApolloNamespace"
+          [resetTable]="refreshCompetency"
+          [tableConfigurations]="competencyQTableConfigurations"
+          [loading]="fetchingCompetency"
+          (rowUpdate)="openCompetencyFormSheetSheet($event)"
+          (rowDelete)="deleteCompetency($event)"
+          [mapFunction]="UserCompetencyMapFunction"
+          [title]="'Other Competency'">
+        </app-paginated-data-table>
+      </div>
+    </div>
+    <div class="pt-2 pb-4"></div>
+    <div class="block py-3 mb-2">
+      <div class="flex flex-wrap items-center justify-content-between bg-[#E5E5E5] md:rounded-md">
+        <div class="flex flex-wrap items-start">
+          <p class="p-4 mb-0 text-[#929292] bg-[#E5E5E5] rounded-md">{{ "TENDERER_CV_WORK_EXPERIENCE" | translate}} <span class="text-black font-bold">(*{{"TENDERER_CV_DETAILS_REQUIRED"|translate}})</span></p>
+        </div>
+        @if (enableActions) {
+          <div class="place-items-end pr-4">
+            <button
+              mat-flat-button
+              color="primary"
+              (click)="openXpFormSheetSheet()"
+              style="padding-right: 25px; padding-bottom: 5px; padding-top: 5px"
+              class="!m-0 py-1 items-center flex flex-wrap gen__button btn__primary">
+              <mat-icon>add</mat-icon>{{ 'SYSTEM_ADD'  | translate }}
+            </button>
+          </div>
+        }
+      </div>
+      <div>
+        <app-paginated-data-table
+          [query]="queryWorkExperience"
+          [apolloNamespace]="uaaApolloNamespace"
+          [resetTable]="refreshWork"
+          [tableConfigurations]="workExperienceTableConfigurations"
+          [loading]="fetchingWork"
+          (rowUpdate)="openXpFormSheetSheet($event)"
+          (rowDelete)="deleteWorkExperience($event)"
+          (totalRecords)="onChangeWorkExperienceTotalRecord($event)"
+          [mapFunction]="WorkExperienceMapFunction"
+          [title]="'Work Experience'">
+        </app-paginated-data-table>
+      </div>
+    </div>
+    <div class="pt-2 pb-4"></div>
+    <div class="block py-3 mb-2">
+      <div class="flex flex-wrap items-center justify-content-between bg-[#E5E5E5] md:rounded-md">
+        <div class="flex flex-wrap items-start">
+          <p class="p-4 mb-0 text-[#929292] rounded-md"> {{ "TENDERER_CV_PROFESSIONAL_QUALIFICATION" | translate }} <span class="text-black font-bold">( {{ "TENDERER_CV_DETAILS_OPTIONAL" | translate }})</span></p>
+        </div>
+        <div class="place-items-end pr-4">
+          <button
+            mat-flat-button
+            color="primary"
+            (click)="openProfessionalFormSheetSheet()"
+            style="padding-right: 25px; padding-bottom: 5px; padding-top: 5px"
+            class="!m-0 py-1 items-center flex flex-wrap gen__button btn__primary">
+            <mat-icon>add</mat-icon>{{ 'SYSTEM_ADD'  | translate }}
+          </button>
+        </div>
+      </div>
+      <div>
+        <app-paginated-data-table
+          [query]="queryProfessional"
+          [apolloNamespace]="uaaApolloNamespace"
+          [resetTable]="refreshProfessional"
+          [tableConfigurations]="professionalQTableConfigurations"
+          [loading]="fetchingProfessional"
+          (rowUpdate)="openProfessionalFormSheetSheet($event)"
+          (rowDelete)="deleteProfessionalCertificate($event)"
+          [title]="'Professional Certification'">
+        </app-paginated-data-table>
+      </div>
+    </div>
+    <div class="pt-2 pb-4"></div>
+    <div class="block py-3 mb-2">
+      <div class="flex flex-wrap items-center justify-content-between bg-[#E5E5E5] md:rounded-md">
+        <div class="flex flex-wrap start">
+          <p class="p-3 text-[#929292] bg-[#E5E5E5] rounded-md">{{ "TENDERER_CV_REFEREES" | translate}} <span class="text-black font-bold">(*{{"TENDERER_CV_DETAILS_REQUIRED"|translate}})</span></p>
+        </div>
+        <div class="place-items-end pr-4">
+          <button
+            mat-flat-button
+            color="primary"
+            (click)="openRefereeFormSheetSheet()"
+            style="padding-right: 25px; padding-bottom: 5px; padding-top: 5px"
+            class="!m-0 py-1 items-center flex flex-wrap gen__button btn__primary">
+            <mat-icon>add</mat-icon>{{ 'SYSTEM_ADD'  | translate }}
+          </button>
+        </div>
+      </div>
+      <div>
+        @if (showSaveDuringRegistration && refereeTotalRecords < 3) {
+          <div class="row mb-0">
+            <p class="pt-3 mb-0 text-danger bg-white rounded-md">{{ "TENDERER_CV_REFEREE" | translate }}</p>
+          </div>
+        }
+        <app-paginated-data-table
+          [query]="queryReferee"
+          [apolloNamespace]="uaaApolloNamespace"
+          [resetTable]="refreshReferee"
+          [tableConfigurations]="refereeQTableConfigurations"
+          [loading]="fetchingReferee"
+          (rowUpdate)="openRefereeFormSheetSheet($event)"
+          (rowDelete)="deleteReferee($event)"
+          (totalRecords)="onChangeRefereeTotalRecord($event)"
+          [title]="'Referees'">
+        </app-paginated-data-table>
+      </div>
+    </div>
+    <div class="pt-2 pb-4"></div>
+    @if (showSaveDuringRegistration) {
+      <div class="col-md-12 text-right">
+        <app-save-area
+          saveText="{{ 'SAVE_CONTINUE' | translate }}"
+          [saveIcon]="'arrow_forward'"
+          [showCancel]="false"
+      [saveDisabled]="!fname || !mname || !lname || !genderType || !presentAddress || !phone || !placebirth || !dateOfBirth ||
+          academicTotalRecords == 0 || refereeTotalRecords < 3 || languageTotalRecords == 0 || workExperienceTotalRecords == 0"
+      [confirmFirst]="true"
+          (save)="saveAndContinueForRegistration.emit(true)"
+          confirmText="{{ 'SAVE_CONTINUE_MESSAGE' | translate }}"
+          loadingMessage="{{ 'LOADING' | translate }}"
+        ></app-save-area>
+      </div>
+    }
+  </div>
+}

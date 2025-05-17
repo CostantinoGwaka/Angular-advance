@@ -1,0 +1,26 @@
+<div class="p-3 !border border-gray bg-gray-50 rounded">
+  <div>{{ label }}</div>
+  <key-value-input
+    [options]="options"
+    (onSelect)="onSelect($event)"
+    (onAddNewItem)="onAddNewItem($event)"
+    [field]="field"
+    [loading]="loading"
+    (onClose)="onCloseAddNew($event)"
+    [editMode]="true"
+    [isNewEntryEditor]="true"
+  ></key-value-input>
+
+  <div class="flex justify-between">
+    <div>
+      <button mat-icon-button matSuffix (click)="hintClicked()">
+        <mat-icon
+          class="text-gray-400 hover:!text-primary"
+          matSuffix
+          matTooltip="View Hint">
+          help_outline
+        </mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,35 @@
+<app-modal-header
+  class="py-3"
+  (closeModal)="closeModal(false)"
+[title]="title | uppercase"></app-modal-header>
+
+<div class="form-holder">
+  @if (message) {
+    <p class="{{textColor}}">{{message}}</p>
+  }
+  @if (showTextInputField) {
+    <div class="row">
+      <p class="text-muted">Write <span class="p-2 font-mono font-semibold! rounded text-black bg-red-200 no-select">{{confirmInputValue}}</span> to Confirm.</p>
+      <mat-form-field appearance="outline" class="w-full">
+        <input
+          matInput
+          [(ngModel)]="confirmationText"
+          type="text"
+          autocomplete="off"
+          />
+      </mat-form-field>
+    </div>
+  }
+  <app-save-area
+    [confirmFirst]="false"
+    loadingMessage="Please wait..."
+    [savingData]="loading"
+    (save)="closeModal(true)"
+    [saveDisabled]="showTextInputField ? (confirmationText !== confirmInputValue) : false"
+    [saveText]="confirmText"
+    [saveColor]="saveColor"
+    [confirmText]="message"
+    [cancelText]="cancelText"
+    (cancel)="closeModal(false)"
+  ></app-save-area>
+</div>

@@ -1,0 +1,20 @@
+::ng-deep {
+  .home-search-area{
+    .mat-mdc-form-field-wrapper {
+        padding-bottom: 0px !important
+      }
+  }
+  .mat-mdc-form-field-appearance-outline .mat-mdc-form-field-outline {
+    background-color: white;
+    border-radius: 5px;
+  }
+
+  .total-tenders-loader {
+      .mat-mdc-progress-spinner circle,
+        .mat-mdc-progress-spinner circle {
+        stroke: white;
+      }
+  }
+}
+
+

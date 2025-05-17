@@ -1,0 +1,130 @@
+<div id="shared-layout-content-wrapper">
+
+	<app-notification-banner
+		[mainPermission]="['ROLE_TENDER_VALIDITY_CHECKER']"
+		[buttonPermission]="['ROLE_TENDER_VALIDITY_CHECKER_REQUEST']"
+		></app-notification-banner>
+
+  @if (!hideBreadcrumb) {
+    <app-top-banner
+      (addClicked)="add()"
+      (onButtonMenuAction)="onButtonMenuAction($event)"
+      [addPermission]="addPermission"
+      [addHasFeatureAndPermission]="addHasFeatureAndPermission"
+      [addFeatureAndPermission]="addFeatureAndPermission"
+      [dropMenuOnCreate]="dropMenuOnCreate"
+      [hideAdd]="hideAdd"
+      [hideButtonIcon]="hideButtonIcon"
+      [image]="image"
+      [menuItems]="menus"
+      [ngClass]="routeAnimationsElements"
+      [showHelp]="showHelp"
+      [btnAddText]="btnAddText"
+      [btnAddIcon]="btnAddIcon"
+      [title]="Analysis"
+      [subTitle]="subTitle"
+      [titleStyle]="titleStyle"
+      [subTitleStyle]="subTitleStyle"
+      [useDropdownOnCreate]="useDropdownOnCreate"
+      [viewDetails]="viewDetails"
+      >
+    </app-top-banner>
+  }
+  <div class="pl-3 pb-24">
+    <div class="row no-print">
+      <div class="col-md-12">
+        <ng-content select="summary"></ng-content>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div
+          [@tableSize]="
+            viewDetails ? (smallForm ? 'eighty' : animationSize) : 'hundred'
+          "
+          [ngClass]="routeAnimationsElements"
+          class="no-print"
+          >
+          <ng-content select="table"></ng-content>
+        </div>
+
+        <div
+          [@formSize]="
+            viewDetails ? (smallForm ? 'twenty' : animationSize) : 'zero'
+          "
+          [ngClass]="routeAnimationsElements"
+          >
+          <div class="flex justify-between items-start w-100">
+            <div class="flex items-center w-[90%]">
+              @if (formTitle) {
+                <span class="text-lg">
+                  {{ formTitle | translate }}
+                </span>
+              }
+            </div>
+            <button
+              (click)="closeForm()"
+              class="fa-pull-right cursor close-button"
+              mat-button
+              title="Close Form"
+              >
+              <mat-icon>close</mat-icon>
+              {{ "SYSTEM_CLOSE" | translate }}
+            </button>
+          </div>
+
+          <mat-divider class="no-print !mt-[9px]"></mat-divider>
+          @if (loading) {
+            <p>{{ "LOADING" | translate }}.</p>
+          }
+          @if (loading) {
+            <mat-progress-bar mode="indeterminate"> </mat-progress-bar>
+          }
+          <mat-card appearance="outlined" id="main-card-wrapper">
+            <ng-content select="form"></ng-content>
+          </mat-card>
+        </div>
+        <!-- /.col-md-12 -->
+      </div>
+    </div>
+
+    <div class="z-10">
+      @if (showSubmissionProgressBar$ | async) {
+        <app-submission-progress-bar
+          @fadeIn>
+        </app-submission-progress-bar>
+      }
+
+      @if (showEvaluationProgressBar$ | async) {
+        <app-evaluation-progress-bar
+          @fadeIn
+          (onClose)="closeForm()"
+          (evaluationCompleted)="evaluationCompleted.emit(true)">
+        </app-evaluation-progress-bar>
+      }
+    </div>
+  </div>
+</div>
+
+<!-- <ng-container *appHasPermission="addPermission">-->
+<!--  <div class="col-md-12"-->
+<!--    *ngIf="!viewDetails">-->
+<!--    <button @fadeIn-->
+<!--            [ngClass]="routeAnimationsElements"-->
+<!--            *ngIf="!hideAdd && !viewDetails"-->
+<!--            mat-raised-button-->
+<!--            (click)="add()"-->
+<!--            style="padding-right: 25px; padding-bottom: 5px; padding-top: 5px;"-->
+<!--            class="add-item !text-white dark:!text-word-primary !bg-gradient-to-r !from-primary-900 !to-primary-500 !rounded-3xl !shadow-5xl">-->
+<!--      <mat-icon>add</mat-icon> Create-->
+<!--    </button>-->
+<!--&lt;!&ndash;    <a style="z-index: 100;"&ndash;&gt;-->
+<!--&lt;!&ndash;      *ngIf="!hideAdd"&ndash;&gt;-->
+<!--&lt;!&ndash;      title="Add"&ndash;&gt;-->
+<!--&lt;!&ndash;      (click)="add()"&ndash;&gt;-->
+<!--&lt;!&ndash;      mat-fab&ndash;&gt;-->
+<!--&lt;!&ndash;      class="add-item !bg-first">&ndash;&gt;-->
+<!--&lt;!&ndash;      <mat-icon>add</mat-icon>&ndash;&gt;-->
+<!--&lt;!&ndash;    </a>&ndash;&gt;-->
+<!--  </div>-->
+<!--</ng-container>-->

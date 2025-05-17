@@ -1,0 +1,91 @@
+<div
+  class="w-full flex rounded-lg border overflow-hidden relative"
+  [style.height.px]="wrapperHeight"
+  >
+  <div class="w-full flex flex-col space-y-4 mt-4 z-10 mr-[20px]">
+    @for (data of dataSet; track data) {
+      <div
+        class="flex items-center"
+        [style.height.px]="20"
+        >
+        <div
+          class="w-[200px] h-full text-sm mt-1 text-gray-600 text-right pr-5 hover:!text-primary hover:underline cursor-pointer"
+          (click)="onStatValueClick(data.code)"
+          >
+          {{ data.label }}
+        </div>
+        <div
+          class="flex-1 hover:bg-slate-600/10 cursor-pointer rounded-r-lg"
+          (click)="expand(data)"
+          >
+          <div [style.width.%]="(data.value / dataSet[0].value) * 100">
+            <single-horizontal-stacked-bar-chart
+              [items]="data.data"
+              [wrapperClass]="'rounded-r-lg overflow-hidden text-sm'"
+              [isClickable]="false"
+            ></single-horizontal-stacked-bar-chart>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+
+  @if (expandedItemData?.length > 0) {
+    <div
+      class="absolute z-20 inset-0 p-3 bg-white"
+      >
+      <div class="flex items-center mb-4">
+        <button
+          (click)="hideExpandedItem()"
+          class="mr-2 hover:bg-gray-200 rounded-full grid place-content-center"
+          >
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <div class="text-center text-lg font-bold text-gray-600">
+          {{ expandedItemTitle }}
+        </div>
+      </div>
+      <div>
+        <app-horizontal-stacked-bar-chart-with-legend
+          [data]="expandedItemData"
+        ></app-horizontal-stacked-bar-chart-with-legend>
+      </div>
+    </div>
+  }
+  <div class="w-full absolute flex h-full">
+    <div class="w-[200px] h-full border-left">
+      <div class="flex h-full flex-col w-full">
+        <div class="flex-1 border-r border-b"></div>
+        <div class="text-right text-[#6C6C6C]">0</div>
+      </div>
+    </div>
+    <div class="relative flex-1 h-full">
+      <div class="absolute inset-0 flex h-full">
+        @for (verticalBar of verticalBars; track verticalBar; let i = $index) {
+          <div
+            class="h-full flex-1"
+            >
+            <div class="flex h-full flex-col w-full">
+              <div
+                class="flex-1"
+              [ngClass]="
+                (i % 2 === 0 ? 'bg-[#F9F9F9] ' : 'bg-[#ffff]') +
+                '  flex-1 border-r  border-b'
+              "
+              ></div>
+              <div class="text-right text-[#6C6C6C]">
+                {{ separateByThousands(verticalBar.position) }}
+              </div>
+            </div>
+          </div>
+        }
+        <div class="h-full w-[20px]">
+          <div class="flex h-full flex-col w-full">
+            <div class="flex-1" [ngClass]="'bg-[#ffff] flex-1 border-b'"></div>
+            <div>&nbsp;</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

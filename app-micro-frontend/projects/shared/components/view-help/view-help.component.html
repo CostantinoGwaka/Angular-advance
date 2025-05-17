@@ -1,0 +1,29 @@
+<div class="row">
+  <div>
+    <mat-toolbar class="help-menu">
+      <mat-toolbar-row>
+        <div class="ks-title">
+          <div class="holder">
+            <mat-icon>help_outline</mat-icon>
+            <h3 style="cursor: pointer; font-size: 15px;">
+              &nbsp; Help Text
+            </h3>
+          </div>
+          <div>
+            <button
+              mat-button
+              title="Close Help"
+              (click)="onClose()"
+              class="fa-pull-right mr-1 cursor close-button"
+            >
+              <mat-icon>close</mat-icon> Close
+            </button>
+          </div>
+        </div>
+      </mat-toolbar-row>
+    </mat-toolbar>
+    <div  class="image-display">
+      <p>More help details here</p>
+    </div>
+  </div>
+</div>

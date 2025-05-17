@@ -1,0 +1,9 @@
+<word-processor
+  [selectedToolBarButtons]="selectedToolBarButtons"
+  [additionalOptions]="additionalOptions"
+  [customClassBottomContainer]="customClassBottomContainer"
+  [customClassTopContainer]="customClassTopContainer"
+  [content]="(editorContent)? editorContent: ''"
+  (onKeyPressEvent)="onKeyPressEvent($event)"
+  (onContentChange)="onEditorChanged($event)"
+></word-processor>

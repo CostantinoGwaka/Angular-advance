@@ -1,0 +1,140 @@
+<div class="bg-white p-2 flex relative">
+  <div class="flex items-center justify-between w-full">
+    @if (viewMode != 'manage') {
+    <div class="flex flex-1 items-center w-full space-x-3">
+      <div>
+        <circular-progress-bar
+          #progressBar
+          [value]="percentProgress"
+          [color]="colors.accent.main"
+          [backgroundColor]="'#D7D7D7'"
+          [showValue]="true"
+          [valueStyle]="'font-size:10px'"
+          [text]="''"
+          class="-mt-2"
+          [style]="'width:50px'"
+        ></circular-progress-bar>
+      </div>
+      <div class="space-y-1">
+        <div class="flex space-x-2">
+          @if (boqsFillingCompletionStatus?.isCompleted) {
+          <div class="py-0.5 px-2 flex items-center rounded-full bg-accent text-white text-xs">
+            Completed
+          </div>
+          } @if (!boqsFillingCompletionStatus?.isCompleted) {
+          <button
+            class="pl-2 bg-red-500 rounded-full text-white flex items-center text-xs"
+            matRipple
+            (click)="setIncompleteItems()"
+          >
+            <span>View incomplete items</span>
+            <mat-icon class="-mt-[5px] pt-[2px]">arrow_drop_down</mat-icon>
+          </button>
+          }
+        </div>
+        <div class="flex text-xs text-gray-700 space-y-1">
+          <div class="flex items-center space-x-2">
+            <span>
+              Completed {{ completedItems }} of {{ totalItems }} selected BOQ items
+            </span>
+            @if (boqsFillingCompletionStatus?.inCompleteMainItems > 0) {
+            <span class="flex items-center">
+              <span class="flex items-center">
+                <mat-icon inline class="text-yellow-400">warning</mat-icon>
+                {{ boqsFillingCompletionStatus?.inCompleteMainItems }} main item{{
+                boqsFillingCompletionStatus?.inCompleteMainItems > 1 ? "s" : "" }} {{
+                boqsFillingCompletionStatus?.inCompleteMainItems > 1 ? " have " : " has " }} no BOQs
+                items
+              </span>
+            </span>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+    <div class="flex space-x-2">
+      <div class="h-[45px] relative w-[400px]">
+        <div class="absolute top-0 bottom-0 pl-2 grid place-content-center">
+          <mat-icon>search</mat-icon>
+        </div>
+        <input
+          (keyup)="search()"
+          [(ngModel)]="searchKeyword"
+          class="h-full pr-3 pl-10 w-full !border border-[#EEEEEE] bg-[#F5F5F5] rounded !outline-primary"
+          placeholder="Search BOQ item"
+        />
+      </div>
+      @if(showUnitRateColumn){
+      <button mat-stroked-button color="primary" (click)="_exportData()">
+        <mat-icon>cloud_download</mat-icon>
+        <span>&nbsp; Download</span>
+      </button>
+      }
+    </div>
+  </div>
+
+  @if (showIncompleteItems || showSearchResults) {
+  <div
+    #filterResults
+    class="absolute left-0 right-0 top-[60px] divide-y border-t z-50 bg-white rounded-b-md shadow-md"
+  >
+    <div class="bg-gray-100 p-2 items-center flex w-full">
+      @if (showIncompleteItems) {
+      <div class="flex-1">
+        {{ filteredItems.length }} incomplete item{{ filteredItems.length > 1 ? "s" : "" }} found
+      </div>
+      } @if (showSearchResults) {
+      <div class="flex-1">
+        Searching for "{{ searchKeyword }}" | {{ filteredItems.length }} item{{ filteredItems.length
+        > 1 ? "s" : "" }} found
+      </div>
+      }
+      <button
+        (click)="hideResults()"
+        class="py-1 px-2 text-xs !border ˜border-primary rounded !text-primary"
+      >
+        Cancel
+      </button>
+    </div>
+    <cdk-virtual-scroll-viewport
+      #itemsListViewPort
+      [itemSize]="40"
+      [style.width.%]="100"
+      [style.height.px]="300"
+      class=""
+    >
+      <div
+        id="incomplete-{{ item?.uuid }}"
+        *cdkVirtualFor="let item of filteredItems"
+        class="p-2 space-y-1 cursor-pointer rounded hover:bg-gray-100"
+        (click)="goToItem(item)"
+      >
+        <div>
+          <span>
+            {{ item.itemDescription }}
+          </span>
+          @if (item.incompleteReasons) {
+          <span class="">
+            :
+            <span class="text-red-500"
+              >[@for ( incompleteReason of item.incompleteReasons; track incompleteReason; let i =
+              $index) {
+              <span
+                >{{ incompleteReason }}{{ i < item.incompleteReasons.length - 1 ? ", " : "" }}</span
+              >
+              }]</span
+            >
+          </span>
+          }
+        </div>
+        @if (item.parentBreadCrumb) {
+        <div class="text-gray-500">
+          In {{ item.parentBreadCrumb }}
+        </div>
+        }
+      </div>
+    </cdk-virtual-scroll-viewport>
+  </div>
+  }
+</div>

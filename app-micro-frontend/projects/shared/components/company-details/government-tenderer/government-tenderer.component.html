@@ -1,0 +1,160 @@
+<div class="max-w-full p-6 bg-white rounded-lg shadow" @fadeIn>
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-2xl font-bold text-gray-800">Government Compliance</h2>
+    @if (user?.rolesListStrings?.includes('TENDERER_ADMIN')) {
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="addGovernmentCompliance()"
+      class="!bg-blue-600 !text-white hover:!bg-blue-700"
+    >
+      <mat-icon class="mr-2">add</mat-icon>
+      Add Compliance
+    </button>
+    }
+  </div>
+
+  <div class="overflow-x-auto">
+    <table class="w-full border-collapse">
+      <thead>
+        <tr class="bg-gray-50">
+          <th class="border border-gray-200 p-3 text-left text-sm font-semibold text-gray-600">
+            #
+          </th>
+          <th class="border border-gray-200 p-3 text-left text-sm font-semibold text-gray-600">
+            Government
+          </th>
+          <th class="border border-gray-200 p-3 text-left text-sm font-semibold text-gray-600">
+            Gov number
+          </th>
+          <th class="border border-gray-200 p-3 text-left text-sm font-semibold text-gray-600">
+            Temp number
+          </th>
+          <th class="border border-gray-200 p-3 text-left text-sm font-semibold text-gray-600">
+            Registration Status
+          </th>
+          <th class="border border-gray-200 p-3 text-left text-sm font-semibold text-gray-600">
+            Compliance Status
+          </th>
+          <th class="border border-gray-200 p-3 text-left text-sm font-semibold text-gray-600">
+            Date
+          </th>
+          <th class="border border-gray-200 p-3 text-left text-sm font-semibold text-gray-600">
+            Actions
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (dataSaved?.length > 0) { @for (data of dataSaved; track data; let i = $index) {
+        <tr class="hover:bg-gray-50 transition-colors">
+          <td class="border border-gray-200 p-3 text-sm">{{ i + 1 }}</td>
+          <td class="border border-gray-200 p-3 text-sm">
+            {{ data.governmentCompliance.procuringEntity.name }}
+          </td>
+          <td class="border border-gray-200 p-3 text-sm">
+            {{ data.registrationNumber }}
+          </td>
+          <td class="border border-gray-200 p-3 text-sm">
+            {{ data?.temporaryRegistrationNumber ?? 'Not Found' }}
+          </td>
+          <td class="border border-gray-200 p-3 text-sm">
+            <span
+              [class]="
+								'px-2 py-1 rounded-full text-xs ' +
+								(data.registrationStatus === 'REGISTERED'
+									? 'bg-green-100 text-green-800'
+									: 'bg-yellow-100 text-yellow-800')
+							"
+            >
+              {{ data.registrationStatus }}
+            </span>
+          </td>
+          <td class="border border-gray-200 p-3 text-sm">
+            <span
+              [class]="
+								'px-2 py-1 rounded-full text-xs ' +
+								(data.complianceStatus === 'COMPLIANT'
+									? 'bg-green-100 text-green-800'
+									: 'bg-red-100 text-red-800')
+							"
+            >
+              {{ data.complianceStatus }}
+            </span>
+          </td>
+          <td class="border border-gray-200 p-3 text-sm">
+            {{ formatDate(data.createdAt) }}
+          </td>
+          <td class="border border-gray-200 p-3 text-sm">
+            <div class="flex gap-2">
+              <!-- @if (data.registrationNumber && !fetchingAttachment[data?.uuid] &&
+              deletingGovCompliance) {  -->
+
+              <!-- check one  -->
+
+              @if ((data.registrationNumber != 'NEW' && data.registrationStatus == 'REGISTERED') ||
+              data.complianceStatus == 'NOT_COMPLY') {
+              <button
+                mat-raised-button
+                color="primary"
+                (click)="reloadData(data, data.registrationNumber, data?.uuid)"
+                class="!min-w-0 !bg-blue-500 !text-white hover:!bg-blue-600"
+              >
+                <mat-icon class="mr-1 !w-4 !h-4 !text-base">refresh</mat-icon>
+                <span class="text-xs">Check Compliance</span>
+              </button>
+              }
+
+              <!-- check two -->
+
+              @if(data.registrationNumber == 'NEW' || data.registrationStatus == 'NOT_REGISTERED') {
+              <button
+                mat-raised-button
+                color="primary"
+                (click)="
+									reloadDataRegistration(
+										data,
+										data.temporaryRegistrationNumber ?? data.registrationNumber,
+										data?.uuid
+									)
+								"
+                class="!min-w-0 !bg-blue-500 !text-white hover:!bg-blue-600"
+              >
+                <mat-icon class="mr-1 !w-4 !h-4 !text-base">refresh</mat-icon>
+                <span class="text-xs">Check Registration</span>
+              </button>
+              }
+
+              <!-- check two -->
+
+              <button
+                mat-raised-button
+                color="warn"
+                (click)="deleteCompliance(data.governmentCompliance.uuid)"
+                class="!min-w-0 !bg-red-500 !text-white hover:!bg-red-600"
+              >
+                <mat-icon class="mr-1 !w-4 !h-4 !text-base">delete</mat-icon>
+                <span class="text-xs">Delete</span>
+              </button>
+
+              @if (fetchingAttachment[data?.uuid] || deletingGovCompliance) {
+              <div class="flex items-center justify-center w-8 h-8">
+                <mat-progress-spinner [diameter]="20" mode="indeterminate" class="!text-blue-500">
+                </mat-progress-spinner>
+              </div>
+              }
+
+              <!-- check two -->
+            </div>
+          </td>
+        </tr>
+        } } @else {
+        <tr>
+          <td colspan="8" class="border border-gray-200 p-6 text-center text-gray-500">
+            No data found
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

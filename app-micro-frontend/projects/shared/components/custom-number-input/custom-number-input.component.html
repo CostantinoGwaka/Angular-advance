@@ -1,0 +1,17 @@
+@if (!changeAttempted) {
+  <div class="py-2 px-3 text-end h-[100px] w-full flex items-center justify-end"
+    [ngClass]="{'bg-blue-50':!isReadOnly,'cursor-cell':!isReadOnly,'hover:bg-slate-100':!isReadOnly,'active:bg-slate-200':!isReadOnly}"
+  (click)="attemptChange()">{{value|number}}</div>
+}
+@if (changeAttempted) {
+  <div class="">
+    <input type="text"
+      id="inputField"
+      [ngClass]="{'bg-blue-50':!isReadOnly,'hover:bg-slate-100':!isReadOnly,'active:bg-slate-200':!isReadOnly}"
+      class="py-2 px-3 outline-none text-end h-[100px] w-full flex items-center justify-end" inputmode="numeric"
+      appClickOutside
+      (clickOutside)="clickedOutside()"
+      [ngModel]="value|numberPipe:true"
+      (ngModelChange)="registerChange($event)" name="inputField">
+  </div>
+}

@@ -1,0 +1,126 @@
+
+<mat-stepper orientation="horizontal" [animationDuration]="'500'">
+  <mat-step label="Team Members">
+    <ng-container>
+      @if (team?.approvalStatus != 'APPROVED' && (isHPMU() || isAO()) && readOnly == false && loadingMembers == false) {
+        <div class="col-span-6 text-right">
+          <button mat-button (click)="updateItem(team)" class="!bg-primary text-white py-1 px-3">
+            <mat-icon inline class="text-xl">add</mat-icon>&nbsp;Add/Update Members
+          </button>
+        </div>
+      }
+      <div class="mt-2 mb-2">
+        @if (loadingMembers) {
+          <app-loader [message]="'Loading members please wait...'"></app-loader>
+        }
+        <app-team-member-viewer
+          [isForTask]="true"
+          [hideActionButton]="readOnly"
+          [members]="team?.members"
+          (onPrepareLetterEvent)="viewMemberLetter($event)"
+          (onReplaceMemberEvent)="replaceMemberAction($event)"
+          (onViewLetterEvent)="viewMemberLetter($event)">
+        </app-team-member-viewer>
+      </div>
+    </ng-container>
+  </mat-step>
+  <mat-step label="Team Details">
+    <div class="row">
+      <div class="py-3 px-2 grid grid-cols-12 gap-2">
+        <div class="col-span-3 text-left font-medium text-gray-400">
+          <app-view-details-item [value]="entity?.entityNumber"></app-view-details-item>
+        </div>
+        <div class="col-span-9 text-left font-medium text-gray-400"><app-view-details-item [value]="entity?.name"></app-view-details-item>
+      </div>
+    </div>
+    <div class="grid grid-cols-12 gap-3">
+      <div class="col-span-3">
+        <app-view-details-item key="Procurement Category"
+        [value]="entity?.procurementCategoryName"></app-view-details-item>
+      </div>
+      <div class="col-span-3">
+        <app-view-details-item key="Procurement Method"
+        [value]="entity?.procurementMethodName"></app-view-details-item>
+      </div>
+      <div class="col-span-3"><app-view-details-item key="Procurement Method Category"
+      [value]="entity?.procurementMethodCategory"></app-view-details-item></div>
+      <div class="col-span-3">
+        <app-view-details-item key="Selection Method"
+        [value]="entity?.selectionMethodName"></app-view-details-item>
+      </div>
+    </div>
+    <div class="grid grid-cols-12 gap-3">
+      <div class="col-span-3">
+        <app-view-details-item key="Procurement Sub Category"
+        [value]="entity?.entitySubCategoryName"></app-view-details-item>
+      </div>
+      <div class="col-span-3">
+        <app-view-details-item key="Budget Purpose" [value]="entity?.budgetPurpose"></app-view-details-item>
+      </div>
+      <div class="col-span-3">
+        <app-view-details-item key="Source Of Fund"
+        [value]="entity?.sourceOfFundName"></app-view-details-item>
+      </div>
+      <div class="col-span-3">
+        <app-view-details-item key="Contract Type"
+        [value]="entity?.contractType"></app-view-details-item>
+      </div>
+    </div>
+    <div class="grid grid-cols-12 gap-3">
+      @if (entityType == 'PLANNED_TENDER') {
+        <div class="col-span-4">
+          <app-view-details-item key="Pre Qualification Invitation Date"
+          [value]="entity?.preQualificationInvitationDate|date"></app-view-details-item>
+        </div>
+      }
+      @if (entityType == 'PLANNED_TENDER') {
+        <div class="col-span-4">
+          <app-view-details-item key="Pre Qualification Tender Sub Category"
+          [value]="entity?.prequalificationTenderSubCategoryName"></app-view-details-item>
+        </div>
+      }
+      @if (entityType != 'PLANNED_TENDER') {
+        <div class="col-span-4">
+          <app-view-details-item key="Inviatation Date"
+          [value]="entity?.invitationDate"></app-view-details-item>
+        </div>
+      }
+    </div>
+  </div>
+
+</mat-step>
+<mat-step label="{{entityName}} Planned Dates">
+  <ng-template matStepperIcon="event_note">
+    <mat-icon>event_note</mat-icon>
+  </ng-template>
+  <div class="grid grid-cols-12">
+    <div class="col-span-12">
+      <div class="w-[100%]">
+        <div class=" cursor-pointer relative flex items-center px-4 py-4 !bg-gray-100 rounded mb-4 flex-col md:flex-row space-y-2 md:space-y-0">
+          <div class="flex flex-row">
+            <mat-icon class="mr-1">event_note</mat-icon>
+            <span class="text-base font-bold">{{entityName}} Planned Date</span>
+          </div>
+        </div>
+
+        @if (team?.plannedEvaluationStartDate && team?.plannedEvaluationEndDate) {
+          <div class="mb-2">
+            <app-date-viewer
+              [label]="'Planned Start Date'"
+              [nextDateLabel]="'Planned End Date'"
+              [date]="team?.plannedEvaluationStartDate"
+              [nextDate]="team?.plannedEvaluationEndDate">
+            </app-date-viewer>
+          </div>
+          <div class="my-2">
+            <app-date-viewer
+              [label]="'Planned End Date'"
+              [date]="team?.plannedEvaluationEndDate">
+            </app-date-viewer>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</mat-step>
+</mat-stepper>

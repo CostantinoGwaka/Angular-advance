@@ -1,0 +1,662 @@
+<div #mainContent class="grid grid-cols-4">
+  <div class="bg-gray-100 rounded-lg">
+    <div class="p-4 border-b border-b-gray-300 space-x-3 flex items-center">
+      @if (completionProgress < 100 || saveProgressPercent() < 100) {
+        <div
+          class="relative aspect-square w-[120px]"
+          >
+          <div class="absolute inset-0 z-20">
+            @if (showProgress) {
+              <circular-progress-bar
+                #progressRef
+                [value]="completionProgress"
+                [color]="'#4f4f4f'"
+                [backgroundColor]="'#D7D7D7'"
+                [showValue]="false"
+                [valueStyle]="'font-size:20px'"
+                [text]="''"
+                class="-mt-2"
+                [style]="'width:100%'"
+              ></circular-progress-bar>
+            }
+          </div>
+          <div class="absolute inset-0 z-30">
+            @if (showProgress) {
+              <circular-progress-bar
+                #saveProgressRef
+                [value]="saveProgressPercent()"
+                [color]="colors.accent.main"
+                [backgroundColor]="'#D7D7D700'"
+                [showValue]="false"
+                [valueStyle]="'font-size:20px'"
+                [text]="''"
+                class="-mt-2"
+                [style]="'width:100%'"
+              ></circular-progress-bar>
+            }
+          </div>
+          <div class="absolute inset-0 grid place-content-center text-center">
+            <div class="space-y-2 font-bold text-[14px]">
+              <div class="text-[#4f4f4f] leading-3">
+                {{ completionProgress }}%
+              </div>
+            </div>
+            <div class="mt-2 text-[20px] font-bold">
+              <div [style.color]="colors.accent.main" class="leading-3">
+                {{ saveProgressPercent() }}%
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+      @if (completionProgress >= 100 && saveProgressPercent() >= 100) {
+        <div>
+          <div
+            class="w-[110px] aspect-square border-accent border-dotted !border-2 grid place-content-center rounded-full"
+            >
+            <div
+              class="w-[100px] aspect-square bg-accent grid place-content-center font-bold text-2xl text-white rounded-full"
+              >
+              {{ completionProgress }}%
+            </div>
+          </div>
+        </div>
+      }
+      <div>
+        <div>
+          <b>Progress</b>
+        </div>
+        <div class="space-y-1 text-xs mt-2">
+          <div class="flex space-x-1 items-center">
+            <div class="w-2 aspect-square bg-[#4f4f4f]"></div>
+            <div class="flex space-x-1">
+              <span>Filled</span>
+              @if(verticalStepsFormService.unfilledItems().length){
+                <button
+                  class="text-red-500 flex space-x-1 items-center"
+                  (click)="showUnfilledItems()"
+                  >
+                  <mat-icon inline> warning </mat-icon>
+                  <span>
+                    {{ verticalStepsFormService.unfilledItems().length }} Not
+                    filled
+                  </span>
+                </button>
+              }
+            </div>
+          </div>
+          <div class="flex space-x-1 items-center">
+            <div class="w-2 aspect-square bg-accent"></div>
+            <div class="flex space-x-1">
+              <span>Saved</span>
+              @if(verticalStepsFormService.unsavedItems().length){
+                <button
+                  class="text-red-500 flex space-x-1 items-center"
+                  (click)="showUnsavedItems()"
+                  >
+                  <mat-icon inline> warning </mat-icon>
+                  <span>
+                    {{ verticalStepsFormService.unsavedItems().length }} Not saved
+                  </span>
+                </button>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="py-2">
+      @for (step of steps; track step; let i = $index) {
+        <vertical-steps-form-step-item
+          [step]="step"
+          (onClick)="onStepClick(i)"
+          >
+        </vertical-steps-form-step-item>
+      }
+    </div>
+  </div>
+  <div class="col-span-3 pl-8">
+    @if (errorMessage()) {
+      <div
+        class="text-red-600 my-4 p-2 bg-red-100 border !border-red-600 rounded"
+        >
+        {{ errorMessage() }}
+      </div>
+    }
+    @if (form) {
+      <form
+        [formGroup]="form"
+        autocomplete="off"
+        (click)="onFormAreaClick()"
+        >
+        @for (step of steps; track step; let step_index = $index) {
+          <div
+            [class]="'pl-4 ' + (step.isActive ? 'block' : 'hidden')"
+            >
+            @if (step.isActive) {
+              <div
+                class="mb-4 flex !text-xl pb-2 border-b items-center justify-between"
+                >
+                <div class="flex space-x-4 items-center">
+                  @if (!step.isComplete) {
+                    <img
+                      src="/assets/images/check-faint.svg"
+                      class="w-5 aspect-square"
+                      />
+                  }
+                  @if (step.isComplete) {
+                    <img
+                      src="/assets/images/check-green.svg"
+                      class="w-5 aspect-square"
+                      />
+                  }
+                  <div>
+                    {{ step.label }}
+                  </div>
+                </div>
+                <button
+                  class="flex space-x-1 bg-gray-200 p-1 rounded text-sm items-center"
+                  (click)="searchFields()"
+                  >
+                  <mat-icon inline>search</mat-icon>
+                  <span>Search</span>
+                </button>
+              </div>
+              <div class="mb-4 flex !text-xl pb-2 items-start space-x-4">
+                @if (step?.hasInvalidGeneralConstraint) {
+                  <div
+                    class="!border-red-600 border-2 w-full rounded-md bg-red-300"
+                    >
+                    @for (constraint of step?.generalConstraint; track constraint) {
+                      <div>
+                        <div class="pt-2 px-2 pb-0">
+                          <ul class="list-disc mb-2">
+                            @if (constraint.errorMessage !== null) {
+                              <li
+                                class="font-normal text-sm text-gray-700"
+                                >
+                                {{ constraint.errorMessage }}
+                              </li>
+                            }
+                          </ul>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+              <div [class]="'grid-cols-6 grid gap-4'">
+                @for (field of step.fields; track field) {
+                  @if (!field?.isHidden) {
+                    <div
+                [class]="
+                  ' col-span-' +
+                  field.rowSpan +
+                  ' remove-material-form-spacing rounded'
+                "
+                      [id]="'field-' + field.name"
+                [ngStyle]="
+                  verticalStepsFormService.itemToGoTo?.uuid === field.uuid
+                    ? {
+                        'background-color':
+                          getItemStatus(verticalStepsFormService.itemToGoTo)
+                            .color + '40',
+                        padding: '4px',
+                        border:
+                          '1px solid ' +
+                          getItemStatus(verticalStepsFormService.itemToGoTo)
+                            .color
+                      }
+                    : null
+                "
+                    >
+                    @if (field.formFieldType == 'TEXT' && !field?.isHidden) {
+                      <mat-form-field
+                        appearance="outline"
+                        >
+                        <mat-label>{{ field.label }}</mat-label>
+                        <input
+                          [formControlName]="field.name"
+                          matInput
+                          [placeholder]="field.label"
+                          />
+                        <button
+                          mat-icon-button
+                          matSuffix
+                          (click)="showInputHint(field)"
+                          >
+                          <mat-icon
+                            class="text-gray-400 hover:!text-primary"
+                            matSuffix
+                            matTooltip="View Hint"
+                            >
+                            help_outline
+                          </mat-icon>
+                        </button>
+                      </mat-form-field>
+                    }
+                    @if (field.formFieldType == 'NUMBER' && !field?.isHidden) {
+                      <mat-form-field
+                        appearance="outline"
+                        class="group material-form col-span-2 mb-2"
+                        >
+                        <mat-label>{{ field.label }}</mat-label>
+                        <input
+                          [formControlName]="field.name"
+                          type="number"
+                    [min]="
+                      field.constraint?.minimumValue
+                        ? field.constraint?.minimumValue
+                        : null
+                    "
+                    [max]="
+                      field.constraint?.maximumValue
+                        ? field.constraint?.maximumValue
+                        : null
+                    "
+                          (input)="field.onChange ? field.onChange() : null"
+                          matInput
+                          [placeholder]="field.label"
+                          />
+                        <button
+                          mat-icon-button
+                          matSuffix
+                          (click)="showInputHint(field)"
+                          >
+                          <mat-icon
+                            class="text-gray-400 hover:!text-primary"
+                            matSuffix
+                            matTooltip="View Hint"
+                            >
+                            help_outline
+                          </mat-icon>
+                        </button>
+                        @if (
+                          field.constraint &&
+                          field.constraint?.minimumValue != null &&
+                          field.constraint?.maximumValue != null
+                          ) {
+                          <mat-hint
+                            >{{
+                            "Range from " +
+                            field.constraint?.minimumValue +
+                            " to " +
+                            field.constraint?.maximumValue
+                            }}</mat-hint
+                            >
+                          }
+                          @if (
+                            field.constraint &&
+                            field.constraint?.minimumValue != null &&
+                            field.constraint?.maximumValue == null
+                            ) {
+                            <mat-hint
+                              >{{
+                              "Value must start from " + field.constraint?.minimumValue
+                              }}</mat-hint
+                              >
+                            }
+                            @if (
+                              field.constraint &&
+                              field.constraint?.minimumValue == null &&
+                              field.constraint?.maximumValue != null
+                              ) {
+                              <mat-hint
+                                >{{
+                                "Value must not exceed " + field.constraint?.maximumValue
+                                }}</mat-hint
+                                >
+                              }
+                            </mat-form-field>
+                          }
+                          @if (field.formFieldType == 'SELECTOR' && !field?.isHidden) {
+                            <mat-form-field
+                              appearance="outline"
+                              class="material-form"
+                              >
+                              <mat-label>{{ field.label }}</mat-label>
+                              <mat-select
+                                [formControlName]="field.name"
+                    (selectionChange)="
+                      field.onChange ? field.onChange($event.value) : null
+                    "
+                                >
+                                <mat-option [value]=""> Select </mat-option>
+                                @if (field?.selectorConfiguration?.valueField) {
+                                  @for (
+                                    option of field.selectorConfiguration?.selections
+                                    ; track
+                                    option) {
+                                    <mat-option
+                        [value]="
+                          option[field?.selectorConfiguration?.valueField]
+                        "
+                                      >
+                                      {{ option[field.selectorConfiguration?.labelField] }}
+                                    </mat-option>
+                                  }
+                                }
+                              </mat-select>
+                              <button
+                                mat-icon-button
+                                matSuffix
+                                (click)="showInputHint(field)"
+                                >
+                                <mat-icon
+                                  class="text-gray-400 hover:!text-primary"
+                                  matSuffix
+                                  matTooltip="View Hint"
+                                  >
+                                  help_outline
+                                </mat-icon>
+                              </button>
+                            </mat-form-field>
+                          }
+                          @if (field.formFieldType == 'DATE' && !field?.isHidden) {
+                            <mat-form-field
+                              appearance="outline"
+                              class="material-form"
+                              >
+                              <mat-label>{{ field.label }}</mat-label>
+                              <input
+                                [formControlName]="field.name"
+                                matInput
+                                [matDatepicker]="picker"
+                                [min]="minDate"
+                                />
+                              <mat-datepicker-toggle
+                                matSuffix
+                                [for]="picker"
+                                (click)="reactToFormEvents($event)"
+                              ></mat-datepicker-toggle>
+                              <mat-datepicker
+                                (click)="reactToFormEvents($event)"
+                                #picker
+                              ></mat-datepicker>
+                              <button
+                                mat-icon-button
+                                matSuffix
+                                (click)="showInputHint(field)"
+                                >
+                                <mat-icon
+                                  class="text-gray-400 hover:!text-primary"
+                                  matSuffix
+                                  matTooltip="View Hint"
+                                  >
+                                  help_outline
+                                </mat-icon>
+                              </button>
+                            </mat-form-field>
+                          }
+                          @if (field.formFieldType == 'TIME' && !field?.isHidden) {
+                            <mat-form-field appearance="outline" class="material-form">
+                              <mat-label>{{ field.label }}</mat-label>
+                              <input type="time" [formControlName]="field.name" matInput />
+                            </mat-form-field>
+                            } @if (field.formFieldType == 'TIME24' && !field?.isHidden) {
+                            <app-time-picker
+                              [formControlName]="field.name"
+                  [field]="{
+                    label: field.label,
+                    type: FieldType.time24,
+                    key: field.name,
+                    value: null,
+                    required: true,
+                    validations: []
+                  }"
+                              >
+                            </app-time-picker>
+                          }
+                          @if (field.formFieldType == 'TEXT-AREA' && !field?.isHidden) {
+                            <mat-form-field
+                              appearance="outline"
+                              >
+                              <mat-label>{{ field.label }}</mat-label>
+                              <textarea
+                                [formControlName]="field.name"
+                                matInput
+                                [placeholder]="field.label"
+                              ></textarea>
+                              <button
+                                mat-icon-button
+                                matSuffix
+                                (click)="showInputHint(field)"
+                                >
+                                <mat-icon
+                                  class="text-gray-400 hover:!text-primary"
+                                  matSuffix
+                                  matTooltip="View Hint"
+                                  >
+                                  help_outline
+                                </mat-icon>
+                              </button>
+                            </mat-form-field>
+                          }
+                          @if (field.formFieldType == 'RICHTEXT' && !field?.isHidden) {
+                            <div
+                              appearance="outline"
+                              >
+                              <mat-label>{{ field.label }}</mat-label>
+                              <app-word-processor-form
+                                [formControlName]="field.name"
+                              ></app-word-processor-form>
+                            </div>
+                          }
+                          @if (
+                            field.formFieldType == 'ATTACHMENT' && !field?.isHidden
+                            ) {
+                            <div
+                              >
+                              @if (
+                                !showPreview[field?.name] && !documentLoading[field?.name]
+                                ) {
+                                <div
+                                  @fadeIn
+                                  class="flex items-center justify-start gap-2 w-full py-2"
+                                  >
+                                  @if (savingFile) {
+                                    <app-loader
+                                      @fadeIn
+                                      [message]="'Uploading please wait...'"
+                                    ></app-loader>
+                                  }
+                                  <input
+                                    id="fileInput_{{ field?.name }}"
+                                    type="file"
+                                    name="fileInput_{{ field?.name }}"
+                                    accept=".pdf"
+                                    (change)="onFileSelection($event, field)"
+                                    class="hidden"
+                                    />
+                                  @if (!savingFile) {
+                                    <div
+                                      @fadeIn
+                                      (click)="selectFile('fileInput_' + field?.name)"
+                      [ngClass]="{
+                        'bg-blue-200 hover:shadow-md text-blue-900 fill-blue-900':
+                          !field?.value,
+                        'text-black hover:bg-slate-200': !!field?.value
+                      }"
+                                      class="text-[10px] rounded-md px-2 py-1 my-2 w-full flex items-center justify-between cursor-pointer"
+                                      >
+                                      @if (field?.value) {
+                                        <span class="flex items-center gap-1"
+                                          ><mat-icon inline>edit</mat-icon> Update Attachment for
+                                          {{ field.label }}</span
+                                          >
+                                        }
+                                        @if (!field?.value) {
+                                          <span
+                                            class="flex items-center gap-1"
+                                            >
+                                            <svg
+                                              width="20px"
+                                              height="20px"
+                                              viewBox="0 0 24 24"
+                                              xmlns="http://www.w3.org/2000/svg"
+                                              >
+                                              <path
+                                                fill-rule="evenodd"
+                                                clip-rule="evenodd"
+                                                d="M10 1C9.73478 1 9.48043 1.10536 9.29289 1.29289L3.29289 7.29289C3.10536 7.48043 3 7.73478 3 8V20C3 21.6569 4.34315 23 6 23H7C7.55228 23 8 22.5523 8 22C8 21.4477 7.55228 21 7 21H6C5.44772 21 5 20.5523 5 20V9H10C10.5523 9 11 8.55228 11 8V3H18C18.5523 3 19 3.44772 19 4V11C19 11.5523 19.4477 12 20 12C20.5523 12 21 11.5523 21 11V4C21 2.34315 19.6569 1 18 1H10ZM9 7H6.41421L9 4.41421V7ZM10.3078 23.5628C10.4657 23.7575 10.6952 23.9172 10.9846 23.9762C11.2556 24.0316 11.4923 23.981 11.6563 23.9212C11.9581 23.8111 12.1956 23.6035 12.3505 23.4506C12.5941 23.2105 12.8491 22.8848 13.1029 22.5169C14.2122 22.1342 15.7711 21.782 17.287 21.5602C18.1297 21.4368 18.9165 21.3603 19.5789 21.3343C19.8413 21.6432 20.08 21.9094 20.2788 22.1105C20.4032 22.2363 20.5415 22.3671 20.6768 22.4671C20.7378 22.5122 20.8519 22.592 20.999 22.6493C21.0755 22.6791 21.5781 22.871 22.0424 22.4969C22.3156 22.2768 22.5685 22.0304 22.7444 21.7525C22.9212 21.4733 23.0879 21.0471 22.9491 20.5625C22.8131 20.0881 22.4588 19.8221 22.198 19.6848C21.9319 19.5448 21.6329 19.4668 21.3586 19.4187C21.11 19.3751 20.8288 19.3478 20.5233 19.3344C19.9042 18.5615 19.1805 17.6002 18.493 16.6198C17.89 15.76 17.3278 14.904 16.891 14.1587C16.9359 13.9664 16.9734 13.7816 17.0025 13.606C17.0523 13.3052 17.0824 13.004 17.0758 12.7211C17.0695 12.4497 17.0284 12.1229 16.88 11.8177C16.7154 11.4795 16.416 11.1716 15.9682 11.051C15.5664 10.9428 15.1833 11.0239 14.8894 11.1326C14.4359 11.3004 14.1873 11.6726 14.1014 12.0361C14.0288 12.3437 14.0681 12.6407 14.1136 12.8529C14.2076 13.2915 14.4269 13.7956 14.6795 14.2893C14.702 14.3332 14.7251 14.3777 14.7487 14.4225C14.5103 15.2072 14.1578 16.1328 13.7392 17.0899C13.1256 18.4929 12.4055 19.8836 11.7853 20.878C11.3619 21.0554 10.9712 21.2584 10.6746 21.4916C10.4726 21.6505 10.2019 21.909 10.0724 22.2868C9.9132 22.7514 10.0261 23.2154 10.3078 23.5628ZM11.8757 23.0947C11.8755 23.0946 11.8775 23.0923 11.8824 23.0877C11.8783 23.0924 11.8759 23.0947 11.8757 23.0947ZM16.9974 19.5812C16.1835 19.7003 15.3445 19.8566 14.5498 20.0392C14.9041 19.3523 15.2529 18.6201 15.5716 17.8914C15.7526 17.4775 15.9269 17.0581 16.0885 16.6431C16.336 17.0175 16.5942 17.3956 16.8555 17.7681C17.2581 18.3421 17.6734 18.911 18.0759 19.4437C17.7186 19.4822 17.3567 19.5287 16.9974 19.5812ZM16.0609 12.3842C16.0608 12.3829 16.0607 12.3823 16.0606 12.3823C16.0606 12.3822 16.0607 12.3838 16.061 12.3872C16.061 12.386 16.0609 12.385 16.0609 12.3842Z"
+                                                />
+                                            </svg>
+                                            Attachment for {{ field.label }}
+                                          </span>
+                                        }
+                                      </div>
+                                    }
+                                    @if (field?.value) {
+                                      <div
+                                        @fadeIn
+                                        (click)="removeDocument(field)"
+                                        class="bg-red-600 hover:shadow-md text-[9px] rounded-md px-2 py-1 text-white flex items-center justify-between cursor-pointer gap-1"
+                                        >
+                                        <mat-icon inline>delete</mat-icon> Delete
+                                      </div>
+                                    }
+                                    @if (field?.value) {
+                                      <div
+                                        @fadeIn
+                                        (click)="previewDocument(field)"
+                                        class="bg-orange-200 hover:shadow-md text-[9px] rounded-md px-2 py-1 text-orange-900 flex items-center justify-between cursor-pointer gap-1"
+                                        >
+                                        <mat-icon inline>visibility</mat-icon> Preview
+                                      </div>
+                                    }
+                                  </div>
+                                }
+                                @if (documentLoading[field?.name]) {
+                                  <app-loader
+                                    [message]="'Loading attachment, Please wait'"
+                                  ></app-loader>
+                                }
+                              </div>
+                            }
+                            @if (
+                              field.formFieldType == 'EDITABLE-LIST' && !field?.isHidden
+                              ) {
+                              <div
+                                class="mb-4"
+                                >
+                                <editable-list-items-selector
+                                  [options]="field.selectorConfiguration?.selections"
+                    [onAddNewItemFunction]="
+                      field?.editableListProperties?.onAddNewItem
+                    "
+                                  [selectorConfiguration]="field.selectorConfiguration"
+                                  [selectedValues]="this.form.controls[field.name].value"
+                                  [label]="field.label"
+                    (onNewOptionCreated)="
+                      onNewOptionCreated($event, field.name)
+                    "
+                                  (onRemove)="onEditableListItemRemoved($event, field.name)"
+                                  (onHintClicked)="showInputHint(field)"
+                    (onOptionSelect)="
+                      onEditableListItemSelect($event, field.name)
+                    "
+                                ></editable-list-items-selector>
+                                <select hidden [formControlName]="field.name" multiple>
+                                  @for (
+                                    option of field.selectorConfiguration?.selections
+                                    ; track
+                                    option) {
+                                    <option
+                                      [value]="option.value"
+                                      >
+                                      {{ option.label }}
+                                    </option>
+                                  }
+                                </select>
+                              </div>
+                            }
+                            @if (
+                              field.formFieldType == 'KEY-VALUE-LIST' && !field?.isHidden
+                              ) {
+                              <div
+                                class="mb-4"
+                                >
+                                <key-value-list-input
+                                  [options]="field.selectorConfiguration?.options || []"
+                    [onAddNewKeyValueItemFunction]="
+                      field?.keyValueInputProperties?.onAddNewItem
+                    "
+                                  [selectorConfiguration]="field.selectorConfiguration"
+                                  [selectedValues]="this.form.controls[field.name].value"
+                                  [label]="field.label"
+                                  [field]="field"
+                    (onNewKeyValueInputCreated)="
+                      onNewKeyValueInputCreated($event, field.name)
+                    "
+                                  (onRemove)="onKeyValueItemRemoved($event, field.name)"
+                                  (onHintClicked)="showInputHint(field)"
+                                  (onOptionSelect)="onKeyValueItemSelect($event, field.name)"
+                                ></key-value-list-input>
+                              </div>
+                            }
+                            @if(verticalStepsFormService.itemToGoTo?.uuid===field.uuid){
+                              <div [class]="'w-full rounded p-1 text-xs -mt-[8px]'">
+                                {{ getItemStatus(verticalStepsFormService.itemToGoTo).text }}
+                              </div>
+                            }
+                          </div>
+                        }
+                      }
+                    </div>
+                    @if (isSaving) {
+                      <app-loader
+                        [message]="'Please wait...'"
+                      ></app-loader>
+                    }
+                    @if (!isSaving) {
+                      <div class="flex justify-end space-x-4">
+                        @if (step_index > 0) {
+                          <button
+                            mat-stroked-button
+                            (click)="save(step_index, 'prev')"
+                            >
+                            <mat-icon inline>arrow_back</mat-icon> Previous
+                          </button>
+                        }
+                        @if (step_index < steps.length - 1) {
+                          <button
+                            mat-stroked-button
+                            color="primary"
+                            (click)="save(step_index, 'next')"
+                            >
+                            Save and Continue <mat-icon inline>arrow_forward</mat-icon>
+                          </button>
+                        }
+                        @if (step_index == steps.length - 1) {
+                          <button
+                            mat-stroked-button
+                            color="primary"
+                            (click)="save(-1)"
+                            >
+                            Save
+                          </button>
+                        }
+                        <button
+                          [disabled]="saveProgressPercent() < 100"
+                          mat-flat-button
+                          color="success"
+                          (click)="handleSubmit(step)"
+                          >
+                          Complete
+                        </button>
+                      </div>
+                    }
+                    @if (errorMessage()) {
+                      <div
+                        class="text-red-600 my-4 p-2 bg-red-100 border !border-red-600 rounded"
+                        >
+                        {{ errorMessage() }}
+                      </div>
+                    }
+                  }
+                </div>
+              }
+            </form>
+          }
+        </div>
+      </div>

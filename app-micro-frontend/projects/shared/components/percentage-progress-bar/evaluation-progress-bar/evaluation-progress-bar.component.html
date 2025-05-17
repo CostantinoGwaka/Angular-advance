@@ -1,0 +1,176 @@
+<div class="absolute bottom-0 w-[80%]">
+  <div
+    class="bg-[#f4f9fd] border border-[#7bc0b1] rounded-t-lg shadow-lg"
+    style="left: 10%">
+    <ng-container>
+      <div class="flex flex-row justify-between px-2 py-1 items-center">
+        <span class="text-xs text-black">{{ title }}</span>
+        <span class="text-xs text-grey-500">{{ description }}</span>
+        @if (incompleteCriteriaList.length > 0) {
+          <button
+            (click)="showIncompleteCriteria()"
+            @fadeIn
+            class="p-0.5 px-2 rounded border text-xs !bg-secondary"
+            matRipple>
+            View {{ incompleteCriteriaList.length }} Pending Criteria
+          </button>
+        }
+      </div>
+      <div class="bg-[#dee2e6] h-[1px]"></div>
+      <div
+        class="flex flex-row {{
+        confirmCompletion ? 'justify-start' : 'justify-between'
+      }} items-center pl-5 pr-5"
+        >
+        @if (!isLoading) {
+          <div @fadeIn class="space-x-3 flex items-center">
+            @if (completionProgress < 100) {
+              <div>
+                <circular-progress-bar
+                  [backgroundColor]="'#D7D7D7'"
+                  [color]="colors.accent.main"
+                  [showValue]="true"
+                  [style]="'width:50px'"
+                  [text]="''"
+                  [valueStyle]="'font-size:10px'"
+                  [value]="completionProgress"
+                  class="-mt-2"
+                  progressRef
+                  >
+                </circular-progress-bar>
+              </div>
+            }
+            @if (completionProgress >= 100) {
+              <div>
+                <div
+              class="w-[50px] aspect-square border-accent border-dotted
+            !border-2 grid place-content-center rounded-full">
+                  <div
+                class="w-[40px] aspect-square bg-accent grid place-content-center
+               font-bold text-[10px] text-white rounded-full">
+                    {{ completionProgress }}%
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        }
+
+        <div class="w-100 flex mx-4 p-2">
+          <div class="w-full py-2">
+            <div class="flex justify-center">
+              <!-- loading spinner -->
+              @if (isLoading) {
+                <div class="w-100">
+                  <app-loader
+                    @fadeIn
+                    [message]="'Getting details, please wait'"
+                  ></app-loader>
+                </div>
+              }
+              <!-- end of loading spinner -->
+
+              <!-- Linear criteria progress indicator-->
+              @if (!confirmCompletion) {
+                <!-- criteria group staging -->
+                @if (summary) {
+                  <div class="flex flex-row items-center">
+                    <div
+                    class="w-6 h-6 mx-auto {{
+                    completionProgress != 100
+                      ? 'bg-[#716f6f] border-2 border-[#716f6f]'
+                      : 'bg-accent'
+                  }}
+                      rounded-full text-white flex items-center">
+                      <span class="text-center text-white w-full z-10">
+                        <mat-icon
+                      class="pt-[8px] {{
+                        summary.evaluatedScore !== summary.totalScore
+                          ? 'pr-[4px]'
+                          : ''
+                      }} !text-[15px]">
+                          {{
+                          (summary.evaluatedScore / summary.totalScore) * 100 !=
+                          100
+                          ? "more_horiz"
+                          : "check"
+                          }}
+                        </mat-icon>
+                      </span>
+                    </div>
+                    <div
+                    class="ml-2 !text-xs text-center {{
+                    completionProgress != 100 ? 'text-[#716f6f]' : 'text-accent'
+                  }}"
+                      >
+                      {{ evaluationStage?.evaluationStage?.name }} ({{
+                      summary.evaluatedScore
+                      }}
+                      / {{ summary.totalScore }})
+                    </div>
+                  </div>
+                }
+                <!-- end of criteria group staging -->
+              }
+              <!-- End of linear criteria progress indicator-->
+
+              <!-- saving loading spinner -->
+              @if (isSaving) {
+                <div class="w-100">
+                  <app-loader
+                    @fadeIn
+                    [message]="'Getting details, please wait'"
+                  ></app-loader>
+                </div>
+              }
+              <!-- end of saving loading spinner -->
+
+              <!--            &lt;!&ndash; Confirm submission area&ndash;&gt;-->
+              <!--            <div *ngIf="confirmCompletion" class="flex justify-center">-->
+              <!--              <app-confirm-area-->
+              <!--                (cancel)="confirmCompletion = false"-->
+              <!--                (confirm)="completeStage()"-->
+              <!--                *ngIf="!isSaving"-->
+              <!--                @fadeSmooth-->
+              <!--                [title]="-->
+              <!--                  'You\'re about to complete this stage. Do you want to continue?'-->
+              <!--                "-->
+              <!--                [useConfirmCancel]="true"-->
+              <!--                [useYesNo]="true"-->
+              <!--              >-->
+              <!--              </app-confirm-area>-->
+              <!--            </div>-->
+              <!--            &lt;!&ndash; End of confirm submission area&ndash;&gt;-->
+            </div>
+          </div>
+        </div>
+
+        @if (!confirmCompletion) {
+<div
+             class="flex justify-end items-center">
+        @if (!isLoading && !completedStatus && !evaluationStage?.completed) {
+          <button
+            (click)="confirmStageCompletion()"
+            [disabled]="completionProgress !== 100"
+            class="!text-[12px] {{
+              completionProgress == 100
+                ? '!bg-primary text-white'
+                : 'text-grey-500 !bg-gray-300'
+            }} py-1 px-3"
+            mat-button>COMPLETE {{ evaluationStage?.evaluationStage?.name?.toUpperCase() }} STAGE
+          </button>
+        }
+        @if (evaluationStage?.completed) {
+          <button
+            (click)="onClose.emit()"
+            class="!bg-primary !text-[12px] text-white py-1 px-3"
+            mat-button>
+            CLOSE
+          </button>
+        }
+      </div>
+    }
+  </div>
+</ng-container>
+</div>
+</div>

@@ -1,0 +1,461 @@
+<div class="place-content-center">
+  @if (fetchingItem) {
+    <app-loader>Please wait,fetching CV data...</app-loader>
+  }
+  @if (!fetchingItem) {
+    <div>
+      <p class="pHead"><span style='font-family:"Arial",sans-serif;color:black;'>Re</span><span style='font-family:"Arial",sans-serif;color:black;'>sume</span></p>
+      @if (!userPersonnelCv) {
+        <p class="pHead"><span style='font-family:"Arial",sans-serif;color:black;'>Individual Consultant</span></p>
+      }
+      <p style='margin:0cm;font-size:15px;font-family:"Times New Roman",serif;'><strong><span style="font-size:16px;">&nbsp;</span></strong></p>
+      <table style="border-collapse:collapse;border:none;margin-left:auto;margin-right:auto;">
+        <tbody>
+          <tr>
+            <td colspan="20" class="pHead1">
+              <p class="pHelper"><strong><span style="font-size:16px;color:black;">PERSONAL DETAILS</span></strong></p>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="5" class="tdHelper">
+              <p class="pHelper"><span style="font-size:16px;">Name</span></p>
+            </td>
+            <td colspan="15" class="tdHelperRightBorder">
+              <p class="pHelper"><span style="font-size:16px;">{{personnelInformation?.firstName}} {{personnelInformation?.middleName}} {{personnelInformation?.lastName}}&nbsp;</span></p>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="5" class="tdHelper">
+              <p class="pHelper"><span style="font-size:16px;">Date of Birth</span></p>
+            </td>
+            <td colspan="15" class="tdHelperRightBorder">
+              <p class="pHelper"><span style="font-size:16px;">{{personnelInformation?.dateOfBirth}}&nbsp;</span></p>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="5" class="tdHelper">
+              <p class="pHelper"><span style="font-size:16px;">Gender&rsquo;</span></p>
+            </td>
+            <td colspan="15" class="tdHelperRightBorder">
+              <p class="pHelper"><span style="font-size:16px;">{{personnelInformation?.gender}}</span></p>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="5" class="tdHelper">
+              <p class="pHelper"><span style="font-size:16px;">Nationality*</span></p>
+            </td>
+            <td colspan="15" class="tdHelperRightBorder">
+              <p class="pHelper"><span style="font-size:16px;">{{tenderer?.operatingCountry?.name}}</span></p>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="5" class="tdHelper">
+              <p class="pHelper"><span style="font-size:16px;">Place of Birth*</span></p>
+            </td>
+            <td colspan="15" class="tdHelperRightBorder">
+              <p class="pHelper"><span style="font-size:16px;">{{personnelInformation?.placeOfBirth}}</span></p>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="20" class="tdHelper2">
+              <p class="pHelper"><strong><span style="font-size:16px;color:black;">CONTACTS DETAILS</span></strong></p>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="5" class="tdHelper3">
+              <p class="pHelper"><span style="font-size:16px;">Permanent address</span></p>
+            </td>
+            <td colspan="15" class="tdHelper4">
+              <p class="pHelper"><span style="font-size:16px;">{{personnelInformation?.presentAddress}}&nbsp;</span></p>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="5" class="tdHelper3">
+              <p class="pHelper"><span style="font-size:16px;">Mobile&nbsp;</span></p>
+            </td>
+            <td colspan="15" class="tdHelper4">
+              <p class="pHelper"><span style="font-size:16px;">{{personnelInformation?.phone}}&nbsp;</span></p>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="5" class="tdHelper3">
+              <p class="pHelper"><span style="font-size:16px;">Email</span></p>
+            </td>
+            <td colspan="15" class="tdHelper4">
+              <p class="pHelper"><span style="font-size:16px;">{{personnelInformation?.email}}&nbsp;</span></p>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="20" class="tdHelper2">
+              <p class="pHelper"><strong><span style="font-size:16px;color:black;">LANGUAGE PROFIENCY</span></strong></p>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="5" class="tdHelper3">
+              <p class="pHelper"><strong><span style="font-size:16px;">Language</span></strong></p>
+            </td>
+            <td colspan="5" class="tdHelper4">
+              <p class="pHelper"><strong><span style="font-size:16px;">Speak</span></strong></p>
+            </td>
+            <td colspan="5" class="tdHelper5">
+              <p class="pHelper"><strong><span style="font-size:16px;">Read</span></strong></p>
+            </td>
+            <td colspan="5" class="tdHelper6">
+              <p class="pHelper"><strong><span style="font-size:16px;">Write</span></strong></p>
+            </td>
+          </tr>
+          @for (language of tendererLanguageList; track language) {
+            <tr>
+              <td colspan="5" class="tdHelper3">
+                <p class="pHelper"><span style="font-size:16px;">{{language?.language?.name}}</span></p>
+              </td>
+              <td colspan="5" class="tdHelper3">
+                <p class="pHelper"><span style="font-size:16px;">{{language?.speak}}</span></p>
+              </td>
+              <td colspan="5" class="tdHelper4">
+                <p class="pHelper"><span style="font-size:16px;">{{language?.read}}&nbsp;</span></p>
+              </td>
+              <td colspan="5" class="tdHelper6">
+                <p class="pHelper"><span style="font-size:16px;">{{language?.write}}&nbsp;</span></p>
+              </td>
+            </tr>
+          }
+          <tr>
+            <td colspan="20" class="tdHelper7">
+              <p class="pHelper"><span style="font-size:16px;">&nbsp;</span></p>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="20" class="tdHelper8">
+              <p class="pHelper"><strong><span style="font-size:16px;color:black;">ACADEMIC QUALIFICATIONS</span></strong></p>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="4" class="tdHelper3">
+              <p class="pHelper"><strong><span style="font-size:16px;">Award</span></strong></p>
+            </td>
+            <td colspan="4" class="tdHelper4">
+              <p class="pHelper"><strong><span style="font-size:16px;">Institution</span></strong></p>
+            </td>
+            <td colspan="4" class="tdHelper4">
+              <p class="pHelper"><strong><span style="font-size:16px;">Qualification</span></strong></p>
+            </td>
+            <td colspan="2" class="tdHelper5">
+              <p class="pHelper"><strong><span style="font-size:16px;">From Date</span></strong></p>
+            </td>
+            <td colspan="2" class="tdHelper5">
+              <p class="pHelper"><strong><span style="font-size:16px;">To Date</span></strong></p>
+            </td>
+            <td colspan="4" class="tdHelper5">
+              <p class="pHelper"><strong><span style="font-size:16px;">Action</span></strong></p>
+            </td>
+          </tr>
+          @for (academic of userAcademicQualificationList; track academic) {
+            <tr>
+              <td colspan="4" class="tdHelper3">
+                <p class="pHelper"><span style="font-size:16px;">{{academic?.academicLevel?.levelName}}</span></p>
+              </td>
+              <td colspan="4" class="tdHelper4">
+                <p class="pHelper"><span style="font-size:16px;">{{academic?.offeringInstitute}}&nbsp;</span></p>
+              </td>
+              <td colspan="4" class="tdHelper5">
+                <p class="pHelper"><span style="font-size:16px;">{{academic?.qualificationName}}&nbsp;</span></p>
+              </td>
+              <td colspan="2" class="tdHelper6">
+                <p class="pHelper"><span style="font-size:16px;">{{academic?.fromDate}}&nbsp;</span></p>
+              </td>
+              <td colspan="2" class="tdHelper6">
+                <p class="pHelper"><span style="font-size:16px;">{{academic?.toDate}}&nbsp;</span></p>
+              </td>
+              <td colspan="4" class="tdHelper6">
+                @if (academic?.attachmentUuid) {
+                  <div class="pHelper cursor-pointer" (click)="viewCertificate(academic?.attachmentUuid)"><span style="font-size:16px;color:blue;font-weight:bold;">View Certificate</span>
+                  @if (fetchingAttachment[academic.attachmentUuid]) {
+                    <div style="height: 50px">
+                      <mat-progress-spinner [diameter]="20" mode="indeterminate"></mat-progress-spinner>
+                    </div>
+                  }
+                </div>
+              }
+            </td>
+          </tr>
+        }
+        <tr>
+          <td colspan="20" class="tdHelper7">
+            <p class="pHelper"><span style="font-size:16px;">&nbsp;</span></p>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="20" class="tdHelper2">
+            <p class="pHelper"><strong><span style="font-size:16px;color:black;">PROFESSIONAL CERTIFICATIONS</span></strong></p>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="5" class="tdHelper13">
+            <p class="pHelper"><strong><span style="font-size:16px;">Award</span></strong></p>
+          </td>
+          <td colspan="12" class="tdHelper27">
+            <p class="pHelper"><strong><span style="font-size:16px;">Description</span></strong></p>
+          </td>
+          <td colspan="3" class="tdHelper27">
+            <p class="pHelper"><strong><span style="font-size:16px;">Action</span></strong></p>
+          </td>
+        </tr>
+        @for (profession of userProfessionalQualificationList; track profession) {
+          <tr>
+            <td colspan="5" class="tdHelper13">
+              <p class="pHelper"><span style="font-size:16px;">{{profession?.qualificationName}}&nbsp;</span></p>
+            </td>
+            <td colspan="12" class="tdHelper27">
+              <p class="pHelper"><span style="font-size:16px;">{{profession?.description}}&nbsp;</span></p>
+            </td>
+            <td colspan="3" class="tdHelper6">
+              @if (profession?.attachmentUuid) {
+                <div class="pHelper cursor-pointer" (click)="viewCertificate(profession?.attachmentUuid)"><span style="font-size:16px;color:blue;font-weight:bold;">View Certificate</span>
+                @if (fetchingAttachment[profession?.attachmentUuid]) {
+                  <div style="height: 50px">
+                    <mat-progress-spinner [diameter]="20" mode="indeterminate"></mat-progress-spinner>
+                  </div>
+                }
+              </div>
+            }
+          </td>
+        </tr>
+      }
+      <tr>
+        <td colspan="20" class="tdHelper7">
+          <p class="pHelper"><span style="font-size:16px;">&nbsp;</span></p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="20" class="tdHelper2">
+          <p class="pHelper"><strong><span style="font-size:16px;color:black;">TRAINING AND WORKSHOP</span></strong></p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="5" class="tdHelper3">
+          <p class="pHelper"><strong><span style="font-size:16px;">Award</span></strong></p>
+        </td>
+        <td colspan="5" class="tdHelper4">
+          <p class="pHelper"><strong><span style="font-size:16px;">Institution</span></strong></p>
+        </td>
+        <td colspan="3" class="tdHelper5">
+          <p class="pHelper"><strong><span style="font-size:16px;">From Date</span></strong></p>
+        </td>
+        <td colspan="3" class="tdHelper5">
+          <p class="pHelper"><strong><span style="font-size:16px;">To Date</span></strong></p>
+        </td>
+        <td colspan="4" class="tdHelper5">
+          <p class="pHelper"><strong><span style="font-size:16px;">Action</span></strong></p>
+        </td>
+      </tr>
+      @for (training of tendererTrainingList; track training) {
+        <tr>
+          <td colspan="5" class="tdHelper3">
+            <p class="pHelper"><span style="font-size:16px;">{{training?.award}}</span></p>
+          </td>
+          <td colspan="5" class="tdHelper4">
+            <p class="pHelper"><span style="font-size:16px;">{{training?.offeringInstitute}}&nbsp;</span></p>
+          </td>
+          <td colspan="3" class="tdHelper6">
+            <p class="pHelper"><span style="font-size:16px;">{{training?.fromDate}}&nbsp;</span></p>
+          </td>
+          <td colspan="3" class="tdHelper6">
+            <p class="pHelper"><span style="font-size:16px;">{{training?.toDate}}&nbsp;</span></p>
+          </td>
+          <td colspan="4" class="tdHelper6">
+            @if (training?.attachmentUuid) {
+              <div class="pHelper cursor-pointer" (click)="viewCertificate(training?.attachmentUuid)"><span style="font-size:16px;color:blue;font-weight:bold;">View Certificate</span>
+              @if (fetchingAttachment[training.attachmentUuid]) {
+                <div style="height: 50px">
+                  <mat-progress-spinner [diameter]="20" mode="indeterminate"></mat-progress-spinner>
+                </div>
+              }
+            </div>
+          }
+        </td>
+      </tr>
+    }
+    <tr>
+      <td colspan="20" class="tdHelper7">
+        <p class="pHelper"><span style="font-size:16px;">&nbsp;</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="20" class="tdHelper16">
+        <p class="pHelper"><strong><span style="font-size:16px;color:black;">WORK EXPERIENCE</span></strong></p>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3" class="tdHelper3">
+        <p class="pHelper"><strong><span style="font-size:16px;">Employer Name</span></strong></p>
+      </td>
+      <td colspan="3" class="tdHelper4">
+        <p class="pHelper"><strong><span style="font-size:16px;">Address</span></strong></p>
+      </td>
+      <td colspan="3" class="tdHelper4">
+        <p class="pHelper"><strong><span style="font-size:16px;">Email</span></strong></p>
+      </td>
+      <td colspan="2" class="tdHelper5">
+        <p class="pHelper"><strong><span style="font-size:16px;">Phone</span></strong></p>
+      </td>
+      <td colspan="3" class="tdHelper5">
+        <p class="pHelper"><strong><span style="font-size:16px;">Type</span></strong></p>
+      </td>
+      <td colspan="3" class="tdHelper5">
+        <p class="pHelper"><strong><span style="font-size:16px;">Role</span></strong></p>
+      </td>
+      <td colspan="2" class="tdHelper5">
+        <p class="pHelper"><strong><span style="font-size:16px;">From Date</span></strong></p>
+      </td>
+      <td colspan="2" class="tdHelper5">
+        <p class="pHelper"><strong><span style="font-size:16px;">To Date</span></strong></p>
+      </td>
+    </tr>
+    @for (work of personnelWorkExperienceList; track work) {
+      <tr>
+        <td colspan="3" class="tdHelper3">
+          @if (work.employerType == 'PRIVATE_INSTITUTION') {
+            <p class="pHelper">
+              <span style="font-size:16px;">{{work?.employerName}}</span>
+            </p>
+          }
+          @if (work.employerType == 'PUBLIC_INSTITUTION') {
+            <p class="pHelper">
+              <span style="font-size:16px;">{{work?.procuringEntityName}}</span>
+            </p>
+          }
+        </td>
+        <td colspan="3" class="tdHelper4">
+          <p class="pHelper"><span style="font-size:16px;">{{work?.employerAddress}}&nbsp;</span></p>
+        </td>
+        <td colspan="2" class="tdHelper5">
+          <p class="pHelper"><span style="font-size:16px;">{{work?.employerEmail}}&nbsp;</span></p>
+        </td>
+        <td colspan="3" class="tdHelper6">
+          <p class="pHelper"><span style="font-size:16px;">{{work?.employerPhone}}&nbsp;</span></p>
+        </td>
+        <td colspan="3" class="tdHelper6">
+          <p class="pHelper"><span style="font-size:16px;">{{work?.employerType | lowercase}}&nbsp;</span></p>
+        </td>
+        <td colspan="3" class="tdHelper6">
+          <p class="pHelper"><span style="font-size:16px;">{{work?.role}}&nbsp;</span></p>
+        </td>
+        <td colspan="2" class="tdHelper6">
+          <p class="pHelper"><span style="font-size:16px;">{{work?.fromDate}}&nbsp;</span></p>
+        </td>
+        <td colspan="2" class="tdHelper6">
+          <p class="pHelper"><span style="font-size:16px;">{{work?.toDate}}&nbsp;</span></p>
+        </td>
+      </tr>
+    }
+    <tr>
+      <td colspan="20" class="tdHelper2">
+        <p class="pHelper"><strong><span style="font-size:16px;color:black;">OTHER COMPETENCY</span></strong></p>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="4" class="tdHelper3">
+        <p class="pHelper"><strong><span style="font-size:16px;">Award</span></strong></p>
+      </td>
+      <td colspan="4" class="tdHelper4">
+        <p class="pHelper"><strong><span style="font-size:16px;">Institution</span></strong></p>
+      </td>
+      <td colspan="4" class="tdHelper4">
+        <p class="pHelper"><strong><span style="font-size:16px;">Proficiency</span></strong></p>
+      </td>
+      <td colspan="4" class="tdHelper5">
+        <p class="pHelper"><strong><span style="font-size:16px;">From Date</span></strong></p>
+      </td>
+      <td colspan="4" class="tdHelper5">
+        <p class="pHelper"><strong><span style="font-size:16px;">To Date</span></strong></p>
+      </td>
+    </tr>
+    @for (competency of tendererCompetencyList; track competency) {
+      <tr>
+        <td colspan="4" class="tdHelper3">
+          <p class="pHelper"><span style="font-size:16px;">{{competency?.award}}</span></p>
+        </td>
+        <td colspan="4" class="tdHelper4">
+          <p class="pHelper"><span style="font-size:16px;">{{competency?.offeringInstitute}}&nbsp;</span></p>
+        </td>
+        <td colspan="4" class="tdHelper5">
+          <p class="pHelper"><span style="font-size:16px;">{{competency?.proficiency}}&nbsp;</span></p>
+        </td>
+        <td colspan="4" class="tdHelper6">
+          <p class="pHelper"><span style="font-size:16px;">{{competency?.fromDate}}&nbsp;</span></p>
+        </td>
+        <td colspan="4" class="tdHelper6">
+          <p class="pHelper"><span style="font-size:16px;">{{competency?.toDate}}&nbsp;</span></p>
+        </td>
+      </tr>
+    }
+    <tr>
+      <td colspan="20" class="tdHelper2">
+        <p class="pHelper"><strong><span style="font-size:16px;color:black;">PROFESSIONAL CERTIFICATIONS</span></strong></p>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="10" class="tdHelper20">
+        <p class="pHelper"><strong>Certification Name</strong></p>
+      </td>
+      <td colspan="10" class="tdHelper21">
+        <p class="pHelper"><strong>Description</strong></p>
+      </td>
+    </tr>
+    @for (profesional of userProfessionalQualificationList; track profesional) {
+      <tr>
+        <td colspan="10" class="tdHelper20">
+          <p class="pHelper">{{profesional?.qualificationName}}&nbsp;</p>
+        </td>
+        <td colspan="10" class="tdHelper21">
+          <p class="pHelper">{{profesional?.description}}&nbsp;</p>
+        </td>
+      </tr>
+    }
+    <tr>
+      <td colspan="20" class="tdHelper16">
+        <p class="pHelper"><strong><span style="font-size:16px;color:black;">REFEREES</span></strong></p>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="5" class="tdHelper3">
+        <p class="pHelper"><strong>Name</strong></p>
+      </td>
+      <td colspan="5" class="tdHelper4">
+        <p class="pHelper"><strong>Organization</strong></p>
+      </td>
+      <td colspan="4" class="tdHelper5">
+        <p class="pHelper"><strong>Title</strong></p>
+      </td>
+      <td colspan="3" class="tdHelper5">
+        <p class="pHelper"><strong>Email</strong></p>
+      </td>
+      <td colspan="3" class="tdHelper5">
+        <p class="pHelper"><strong>Phone Number</strong></p>
+      </td>
+    </tr>
+    @for (cv of tendererRefereeList; track cv) {
+      <tr>
+        <td colspan="5" class="tdHelper3">
+          <p class="pHelper">{{cv?.name}}&nbsp;</p>
+        </td>
+        <td colspan="5" class="tdHelper4">
+          <p class="pHelper">{{cv?.organization}}&nbsp;</p>
+        </td>
+        <td colspan="4" class="tdHelper5">
+          <p class="pHelper">{{cv?.designation}}&nbsp;</p>
+        </td>
+        <td colspan="3" class="tdHelper5">
+          <p class="pHelper">{{cv?.email}}&nbsp;</p>
+        </td>
+        <td colspan="3" class="tdHelper5">
+          <p class="pHelper">{{cv?.phoneNumber}}&nbsp;</p>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
+</div>
+}
+</div>

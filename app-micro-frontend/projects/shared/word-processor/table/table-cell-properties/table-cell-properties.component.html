@@ -1,0 +1,116 @@
+@if (!showTableOpionsDropDown) {
+  <button
+    (click)="tableOptionAction('show-options')"
+    matTooltip="Column and row settings"
+    class="w-4 h-4 -ml-4 text-lg grid text-gray-500 place-content-center drop-shadow-lg bg-white border border-gray-300 rounded-sm"
+    >
+    <mat-icon>arrow_drop_down</mat-icon>
+  </button>
+}
+
+
+@if (showTableOpionsDropDown) {
+  <div
+    (mouseleave)="mouseInProperties = false"
+    class="rounded-md overflow-hidden shadow-lg border-gray-100 bg-white text-[14px]"
+    >
+    <div [align]="'right'" class="flex justify-between text-black font-bold mt-1 py-2 px-2">
+      <p>Select Option</p>
+      <mat-icon class="custom-icon" (click)="hideTableOptions()">close</mat-icon>
+    </div>
+    <div class="px-2">
+      <select id="small" [(ngModel)]="rowValue" class="block w-full p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500">
+        @for (rowOption of rowOptions; track rowOption) {
+          <option [value]="rowOption.value">
+            {{rowOption.name}}
+          </option>
+        }
+      </select>
+      <div class="flex">
+        <input
+          type="number"
+          [(ngModel)]="columnWidth"
+          class="w-[80px] px-2 border rounded-sm border-gray-100 bg-gray-50"
+          /><button
+          class="!bg-primary text-white py-2 px-4 color-text"
+          (click)="setWidthOrHeight(rowValue)"
+          >
+        Set
+      </button>
+    </div>
+  </div>
+  <!--  <div class="p-2">-->
+  <!--    <div>Column Width</div>-->
+  <!--    <div class="flex">-->
+  <!--      <input-->
+  <!--        type="number"-->
+  <!--        [(ngModel)]="columnWidth"-->
+  <!--        class="w-[80px] px-2 border rounded-sm border-gray-100 bg-gray-50"-->
+  <!--      /><button-->
+  <!--        class="!bg-primary text-white py-2 px-4 color-text"-->
+  <!--        (click)="setWidthOrHeight('setWidth')"-->
+  <!--      >-->
+  <!--        Set-->
+<!--      </button>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--  <div class="p-2">-->
+<!--    <div>Column Height</div>-->
+<!--    <div class="flex">-->
+<!--      <input-->
+<!--        type="number"-->
+<!--        [(ngModel)]="columnHeight"-->
+<!--        class="w-[80px] px-2 border rounded-sm border-gray-100 bg-gray-50"-->
+<!--      /><button-->
+<!--      class="!bg-primary text-white py-2 px-4 color-text"-->
+<!--      (click)="setWidthOrHeight('setHeight')"-->
+<!--    >-->
+<!--      Set-->
+<!--    </button>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--  <div class="p-2">-->
+<!--    <div>Col Span</div>-->
+<!--    <div class="flex">-->
+<!--      <input-->
+<!--        type="number"-->
+<!--        [(ngModel)]="columnHeight"-->
+<!--        class="w-[80px] px-2 border rounded-sm border-gray-100 bg-gray-50"-->
+<!--      /><button-->
+<!--      class="!bg-primary text-white py-2 px-4 color-text"-->
+<!--      (click)="setWidthOrHeight('colSpan')"-->
+<!--    >-->
+<!--      Set-->
+<!--    </button>-->
+<!--    </div>-->
+<!--  </div>-->
+<div class="py divide-y">
+  <div
+    class="cursor-pointer flex p-2 hover:bg-gray-100"
+    (click)="tableOptionAction('add-row')"
+    >
+    Add Row
+  </div>
+  <div
+    class="cursor-pointer flex p-2 hover:bg-gray-100"
+    (click)="tableOptionAction('delete-row')"
+    >
+    Delete Row
+  </div>
+  <div
+    class="cursor-pointer flex p-2 hover:bg-gray-100"
+    (click)="deleteCell(this)"
+    >
+    Delete Cell
+  </div>
+  @if (selectedCells.length > 0) {
+    <div
+      class="cursor-pointer flex p-2 hover:bg-gray-100"
+      (click)="tableOptionAction('merge-cells')"
+      >
+      Merge Cells
+    </div>
+  }
+</div>
+</div>
+}

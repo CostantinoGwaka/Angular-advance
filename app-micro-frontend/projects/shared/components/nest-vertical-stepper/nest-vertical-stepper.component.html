@@ -1,0 +1,17 @@
+<div class="flex items-start p-1 gap-2 rounded-[10px] bg-[#FBFBFB]">
+  <div class="w-[400px] bg-white rounded-[10px] p-[13px]">
+    @for (step of steps; track step; let i = $index) {
+      <app-nest-vertical-step
+        [index]="i"
+        [title]="step.title"
+        [active]="step.active"
+        (onStepSelected)="onStepSelectedEvent(i)"
+        >
+        <!-- Step 1 content -->
+      </app-nest-vertical-step>
+    }
+  </div>
+  <div class="w-full flex items-start">
+    <ng-content></ng-content>
+  </div>
+</div>

@@ -1,0 +1,17 @@
+<div ngProjectAs="table">
+    <div class="flex justify-between">
+      <span class="text-lg">Annual Turnover</span>
+    </div>
+    <app-paginated-data-table
+    [query]="query"
+    [apolloNamespace]="uaaApolloNamespace"
+    [tableList]="items$ | async"
+    [resetTable]="refreshDataTable"
+    [tableConfigurations]="tableConfigurations"
+    [loading]="loading$ | async"
+    [actionButtons]="buttons"
+    [mapFunction]="mapFunction"
+    [title]="title"
+  ></app-paginated-data-table>
+  </div>
+

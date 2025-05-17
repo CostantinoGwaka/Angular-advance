@@ -1,0 +1,20 @@
+<div>
+	@if (gettingRequisition) {
+	<app-loader @fadeIn [message]="loadingMessage"></app-loader>
+	} @if(requisitionUuid && requisitionItemUuid){
+	<app-boqs-selector
+		[requisitionUuid]="requisitionUuid"
+		[requisitionItemUuid]="requisitionItemUuid"
+		[endPointName]="'getAllMergedMainProcurementRequisitionData'"
+		(onBoqSummarySumsChange)="getBoqSummarySums($event)"
+		[provisionSumPhysicalContingencyPercent]="physicalContingencyPercentagePS"
+		[onBOQSubItemChange]="onBOQSubItemChange"
+		[vatRequired]="vatRequired"
+		[provisionSumVariationOfPricesPercent]="pricesVariationPercentagePS"
+		[requisitionObjectFieldName]="'mergedProcurementRequisitions'"
+		[requisitionItemsFieldName]="'mergedProcurementRequisitionItems'"
+		[requisitionItemsItemizationsFieldName]="'worksRequisitionItemItemizations'"
+		[requisitionDate]="requisition.requisitionDate"
+	></app-boqs-selector>
+	}
+</div>

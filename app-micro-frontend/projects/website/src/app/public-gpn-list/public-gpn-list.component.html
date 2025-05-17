@@ -1,0 +1,210 @@
+<web-layout>
+  <parallax-container [title]="'General Procurement Notices'" [description]="'General Procurement Notices'">
+    <div class="p-2 justify-center min-h-[500px] items-center overflow-auto">
+      <div>
+        @for (app of publishedApps; track app) {
+          <div
+            class="p-2 bg-white first:rounded-t-lg last:rounded-b-lg  border-l border-r border-t  last:border-b ">
+            <div class="flex ">
+              <div class="w-3/4 grid grid-cols-12 gap-1">
+                <div class=" col-span-2 md:col-span-1 ">
+                  <div
+                    class="flex items-center justify-center inline-block p-2 ng-tns-c573-1 rounded-full border w-[80px] h-[80px] p-3">
+                    @if (!loadLogo[app.procurementEntityUuid] && peLogo[app.procurementEntityUuid]) {
+                      <img
+                        [src]="peLogo[app.procurementEntityUuid]" onerror="this.src='/assets/images/emblen.png';"
+                        class="w-[60%] sm:w-auto" />
+                    }
+                    @if (!loadLogo[app.procurementEntityUuid] && !peLogo[app.procurementEntityUuid]) {
+                      <img
+                        [src]="'/assets/images/emblen.png'" class="w-[60%] sm:w-auto" />
+                    }
+                    @if (loadLogo[app.procurementEntityUuid]) {
+                      <div
+                        class="aspect-square w-[80px] h-[80px] animate-pulse bg-slate-300 rounded-full">
+                      </div>
+                    }
+                  </div>
+                </div>
+                <div class="col-span-10 md:col-span-11">
+                  <h3 class="text-blue-400 font-medium inline-block">{{ app.procurementEntityName }}</h3>
+                  <div>
+                    <span class="font-medium">GPN Advert Date</span> : {{ app.generalProcurementNoticeAdvertDate|date
+                    }},
+                    <span class="font-medium">Total Number Of Tenders</span> : {{app.totalTenderCount}}, <span
+                  class="font-medium">Total Tender Value</span> : {{ app.estimatedBudget | currency:'':'' }}
+                  <!-- {{ app|json }} -->
+                </div>
+              </div>
+            </div>
+            <div class=" w-1/4 flex items-center justify-end ">
+              <div (click)="toggleView(app.appUuid)"
+                class="hover:bg-slate-300 active:bg-slate-400 inline-block cursor-pointer rounded-full p-2 h-[40px] w-[40px] flex items-center">
+                @if (!toggler[app.appUuid]) {
+                  <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
+                    fill="none">
+                    <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M7 16l6-6-6-6" />
+                  </svg>
+                }
+                @if (toggler[app.appUuid]) {
+                  <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
+                    fill="none">
+                    <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M4 7l6 6 6-6" />
+                  </svg>
+                }
+              </div>
+            </div>
+          </div>
+          @if (toggler[app.appUuid]) {
+            <ng-container @fadeIn>
+              <div class="bg-slate-200 rounded-[10px] p-2 mt-2">
+                @if (loadTenders) {
+                  <app-loader @fadeIn message="{{ 'LOADING' | translate }}"></app-loader>
+                }
+                <!-- {{ .length }} -->
+                @if (appPublishedTenders.length==0 && loadTenders ==false) {
+                  <div>
+                    No Tenders available
+                  </div>
+                }
+                @for (tender of appPublishedTenders; track tender) {
+                  <div
+                    class="p-2 bg-white first:rounded-t-lg last:rounded-b-lg  border-l border-r border-t  last:border-b ">
+                    <div class="flex">
+                      <div class="w-3/4">
+                        <div class="font-medium text-base text-blue-400">{{ tender.tenderDescription }}</div>
+                        <div class=""><span class="font-medium">Tender #:</span> {{ tender?.donorTenderNumber != '' || tender?.donorTenderNumber != null ? tender?.donorTenderNumber : tender?.tenderNumber }}
+                        &nbsp;&nbsp;<span class="font-medium">Category:</span> {{ tender.procurementCategoryName }}
+                        &nbsp;&nbsp;<span class="font-medium">Procurement Method:</span> {{ tender.procurementMethod
+                      }}</div>
+                      <div class=""><span class="font-medium">Invitation Date:</span> {{ tender.invitationDate|date }}
+                    </div>
+                  </div>
+                  <div class="w-1/4 flex items-center justify-end pl-2">
+                    <div (click)="toggleTenderView(tender.tenderUuid)"
+                      class="hover:bg-slate-300 active:bg-slate-400 inline-block cursor-pointer rounded-full p-2 h-[40px] w-[40px] flex items-center">
+                      @if (!togglerTender[tender.tenderUuid]) {
+                        <svg viewBox="0 0 20 20"
+                          xmlns="http://www.w3.org/2000/svg" fill="none">
+                          <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M7 16l6-6-6-6" />
+                        </svg>
+                      }
+                      @if (togglerTender[tender.tenderUuid]) {
+                        <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
+                          fill="none">
+                          <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 7l6 6 6-6" />
+                        </svg>
+                      }
+                    </div>
+                  </div>
+                </div>
+                @if (togglerTender[tender.tenderUuid]) {
+                  <ng-container @fadeIn>
+                    <div class="border-t pt-4 mt-2">
+                      <div class="rounded-md m-1 bg-white divide-y text-xs">
+                        <div class="p-3 bg-slate-50 rounded-[10px]">
+                          <div class="grid grid-cols-12 gap-3">
+                            <div class="col-span-3">
+                              <app-view-details-item key="Tender Category"
+                              [value]="tender.procurementCategoryName"></app-view-details-item>
+                            </div>
+                            <div class="col-span-3">
+                              <app-view-details-item key="Procurement Method"
+                              [value]="tender?.procurementMethod"></app-view-details-item>
+                            </div>
+                            <div class="col-span-3"><app-view-details-item key="ProcurementMethod Category"
+                            [value]="tender.procurementMethodCategory"></app-view-details-item></div>
+                            <div class="col-span-3">
+                              <app-view-details-item key="Selection Method"
+                              [value]="tender?.selectionMethod"></app-view-details-item>
+                            </div>
+                          </div>
+                          <div class="grid grid-cols-12 gap-3">
+                            <div class="col-span-3">
+                              <app-view-details-item key="Tender Sub Category"
+                              [value]="tender.tenderSubCategoryName"></app-view-details-item>
+                            </div>
+                            <div class="col-span-3">
+                              <app-view-details-item key="Budget Purpose"
+                              [value]="tender?.budgetPurpose"></app-view-details-item>
+                            </div>
+                            <div class="col-span-3">
+                              <app-view-details-item key="Source Of Fund"
+                              [value]="tender?.sourceOfFund"></app-view-details-item>
+                            </div>
+                            <div class="col-span-3">
+                              <app-view-details-item key="Contract Type"
+                              [value]="tender.contractType"></app-view-details-item>
+                            </div>
+                          </div>
+                          <div class="grid grid-cols-12 gap-3">
+                            <div class="col-span-4">
+                              <app-view-details-item key="CUIS"
+                              [value]="tender?.isCuis==true?'YES':'NO'"></app-view-details-item>
+                            </div>
+                            <div class="col-span-4">
+                              <app-view-details-item key="Is Lot"
+                              [value]="tender?.lot==true?'YES':'NO'"></app-view-details-item>
+                            </div>
+                            <div class="col-span-4">
+                              <app-view-details-item key="Invitation Date"
+                              [value]="tender.invitationDate|date"></app-view-details-item>
+                            </div>
+                          </div>
+                          <div class="grid grid-cols-12 gap-3">
+                            <div class="col-span-3">
+                              <app-view-details-item key="Submission Deadline"
+                              [value]="tender?.submissionOpeningDate|date"></app-view-details-item>
+                            </div>
+                            <div class="col-span-3">
+                              <app-view-details-item key="Approval Of Award"
+                              [value]="tender?.awardApprovalDate|date"></app-view-details-item>
+                            </div>
+                            <div class="col-span-3">
+                              <app-view-details-item key="Cool off period start"
+                              [value]="tender.coolOffStartDate|date"></app-view-details-item>
+                            </div>
+                            <div class="col-span-3">
+                              <app-view-details-item key="Cool off period end"
+                              [value]="tender.coolOffEndDate|date"></app-view-details-item>
+                            </div>
+                          </div>
+                          <div class="grid grid-cols-12 gap-3">
+                            <div class="col-span-3">
+                              <app-view-details-item key="Vetting of contract"
+                              [value]="tender.contractVettingDate|date"></app-view-details-item>
+                            </div>
+                            <div class="col-span-3">
+                              <app-view-details-item key="Award notification"
+                              [value]="tender?.awardNotificationDate|date"></app-view-details-item>
+                            </div>
+                            <div class="col-span-3">
+                              <app-view-details-item key="Signing of contract"
+                              [value]="tender?.contractSigningDate|date"></app-view-details-item>
+                            </div>
+                            <div class="col-span-3">
+                              <app-view-details-item key="Contract Start Date"
+                              [value]="tender.contractStartDate|date"></app-view-details-item>
+                            </div>
+                          </div>
+                          <br />
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+                }
+              </div>
+            }
+          </div>
+        </ng-container>
+      }
+    </div>
+  }
+</div>
+</div>
+</parallax-container>
+</web-layout>
